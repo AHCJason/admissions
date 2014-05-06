@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>FlexPaper Adaptive:UI</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<link rel="stylesheet" type="text/css" href="css/flexpaper.css" />
+	
+	<script src="js/jquery-1.5.1.min.js" type="text/javascript"></script>
+	<script src="js/flexpaper.js" type="text/javascript"></script>
+	<script src="js/flexpaper_handlers.js" type="text/javascript"></script>
+</head>
+<body>
+
+	<div class="viewercontainer" style="width:950px;height:500px;">
+		<div id="documentViewer" class="viewer"></div>
+	</div>
+	
+	<script type="text/javascript"> 
+		var fp = new FlexPaperViewer(	
+					 'FlexPaperViewer',
+					 'documentViewer', { config : {
+					 	
+					 SwfFile : 'docs/file53157.swf',
+					 PageImagePattern : 'docs/file53157_*.png',
+					 JSONFile : 'docs/file53157.js',
+					 key : '$41353f4295c5fb213f6',
+					 JSONPageDataFormat : {
+					 		pageWidth:'width',
+							pageHeight:'height',
+							textCollection:'text',
+					 		textFragment:'d',
+							textFont:'f',
+							textLeft:'l',
+							textTop:'t',
+							textWidth:'w',
+							textHeight:'h'
+					 },
+					 ViewerMode : 'html5', 
+					 Scale : 0.5, 
+					 ZoomInterval : 0.2,
+					 FitPageOnLoad : false,
+					 FitWidthOnLoad : false,
+					 PrintEnabled : true,
+					 FullScreenAsMaxWindow : false,
+					 ProgressiveLoading : false,
+					 MinZoomSize : 0.1,
+					 MaxZoomSize : 5,
+					 
+					 ViewModeToolsVisible : true,
+					 ZoomToolsVisible : true,
+					 NavToolsVisible : true,
+					 CursorToolsVisible : true,
+					 SearchToolsVisible : true,
+ 						
+ 					 localeChain: 'en_US'
+					 }});
+	
+        </script>
+   </body> 
+</html> 
