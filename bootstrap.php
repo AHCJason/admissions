@@ -39,7 +39,7 @@ if (DEVELOPMENT == TRUE && STAGING == FALSE) {
 }
 $db->host = "localhost";
 $db->username = "ahc";
-$db->password = "JpnW4Ts4bbaq";
+$db->password = "8uVoqNjvB6eq";
 $db->conn();
 
 // Site wide business stuff
