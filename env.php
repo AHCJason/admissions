@@ -14,7 +14,6 @@ $email_destination_whitelist = array(
 	$ENGINE_URL = "http://dev.aptitudecare.com/cms2-public";
 	$SITE_URL = "http://dev.aptitudecare.com";
 	$SECURE_CDN_URL = $SITE_URL;
-	$CSS = null;
 
 /*
 if (file_exists(dirname(__FILE__) . "/.development")) {
