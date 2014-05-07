@@ -6,7 +6,7 @@ $email_destination_whitelist = array(
 	"/khendershot24(?:\+.*)?@gmail\.com/i"
 );
 
-$directory = array_pop(explode('/', dirname(dirname(dirname(__FILE__)))));
+$directory = urldecode(array_pop(explode('/', dirname(dirname(dirname(__FILE__))))));
 
 if ($directory == 'aptitude') {
 	define('ENGINE_PROTECTED_PATH', '/home/aptitude/dev/cms2/protected');
