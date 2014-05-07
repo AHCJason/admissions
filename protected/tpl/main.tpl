@@ -40,6 +40,7 @@
 <link rel="stylesheet" type="text/css" href="{$SITE_URL}/css/modal.css" media="screen" />
 {if $isPrint != 1}<link type="text/css" rel="stylesheet" href="{$SITE_URL}/css/styles.css" media="all" />{/if}
 {if $isTV == 1}<link rel="stylesheet" href="{$SITE_URL}/css/tv.css" type="text/css" media="all" />{/if}
+{$if $CSS != ""}<link rel="stylesheet" href="{$SITE_URL}/css/{$CSS}.css" type="text/css" media="all" />{/if}
 {if $isPrint == 1}<link rel="stylesheet" href="{$SITE_URL}/css/print.css" type="text/css" media="all" />{/if}
 {jQueryReady}
 // date formats
