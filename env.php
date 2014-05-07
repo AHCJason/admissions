@@ -6,6 +6,7 @@ $email_destination_whitelist = array(
 	"/khendershot24(?:\+.*)?@gmail\.com/i"
 );
 
+$CSS = 'ahc';
 
 if (file_exists(dirname(__FILE__) . "/.development")) {
 	define('ENGINE_PROTECTED_PATH', '/home/aptitude/sites/ahc/dev/cms2/protected');
