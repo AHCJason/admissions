@@ -18,6 +18,7 @@ if ($directory == 'home') {
 		$ENGINE_URL = "http://dev.aptitudecare.com/cms2-public";
 		$SITE_URL = "http://dev.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
+		define('DEVELOPMENT', true);
 	} else {
 		define('APP_PATH', dirname(__FILE__));
 		define('APP_PROTECTED_PATH', APP_PATH . "/protected");
@@ -25,8 +26,10 @@ if ($directory == 'home') {
 		$ENGINE_URL = "http://demo.aptitudecare.com/cms2-public";
 		$SITE_URL = "http://demo.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
+		define('DEMO', true);
 	}
 } else {
+	$directory = array_pop(explode('/', dirname(dirname(__FILE__))));
 	if (file_exists(dirname(__FILE__) . "/.development")) {
 		define('APP_PATH', dirname(__FILE__));
 		define('APP_PROTECTED_PATH', APP_PATH . "/protected");

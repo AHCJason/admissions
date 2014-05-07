@@ -25,6 +25,7 @@ require_once ENGINE_PROTECTED_PATH . "/engine_load.php";
 //Load common functions
 require_once APP_PROTECTED_PATH . "/lib/common.php";
 
+/*  
 //CMSv2 MySQL db connection
 $dbCMS = new db_mysql();
 if (DEVELOPMENT == TRUE) {
@@ -37,14 +38,18 @@ $dbCMS->host = "localhost";
 $dbCMS->username = "cms2";
 $dbCMS->password = "2ooB6kHA";
 $dbCMS->conn();
-function dbCMS() { global $dbCMS; return $dbCMS; }
+*/
 
+function dbCMS() { global $dbCMS; return $dbCMS; }
 //MySQL db connection
 $db = new db_mysql();
-if (DEVELOPMENT == TRUE && STAGING == FALSE) {
-	$db->dbname = "admit";
+if (DEVELOPMENT == TRUE) {
+	
+	$db->dbname = "admit_dev";
+} elseif (DEMO == TRUE) {
+	$db->dbname = "admit_demo";
 } else {
-	$db->dbname = "admit";
+	//$db->dbname = "enter name here"
 }
 $db->host = "localhost";
 $db->username = "aptitude";
