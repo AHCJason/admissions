@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2014-05-07 09:24:05
+<?php /* Smarty version Smarty-3.1.13, created on 2014-05-07 10:41:32
          compiled from "/home/aptitude/dev/app/protected/tpl/main.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:842513190535ac5173880d1-55482998%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0a0416a8c2b68a4d8adbb6a2fa2990826dd32540' => 
     array (
       0 => '/home/aptitude/dev/app/protected/tpl/main.tpl',
-      1 => 1399476244,
+      1 => 1399480890,
       2 => 'file',
     ),
   ),
@@ -25,6 +25,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'action' => 0,
     'isPrint' => 0,
     'isTV' => 0,
+    'siteCss' => 0,
     'isMicro' => 0,
     'auth' => 0,
     'logo' => 0,
@@ -98,6 +99,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 /css/styles.css" media="all" /><?php }?>
 <?php if ($_smarty_tpl->tpl_vars['isTV']->value==1){?><link rel="stylesheet" href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['SITE_URL']->value, ENT_QUOTES, 'UTF-8');?>
 /css/tv.css" type="text/css" media="all" /><?php }?>
+<?php if ($_smarty_tpl->tpl_vars['siteCss']->value){?><link rel="stylesheet" href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['SITE_URL']->value, ENT_QUOTES, 'UTF-8');?>
+/css/site_files/<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['siteCss']->value, ENT_QUOTES, 'UTF-8');?>
+" type="text/css" media="all" /><?php }?>
 <?php if ($_smarty_tpl->tpl_vars['isPrint']->value==1){?><link rel="stylesheet" href="<?php echo htmlspecialchars($_smarty_tpl->tpl_vars['SITE_URL']->value, ENT_QUOTES, 'UTF-8');?>
 /css/print.css" type="text/css" media="all" /><?php }?>
 <?php $_smarty_tpl->smarty->_tag_stack[] = array('jQueryReady', array()); $_block_repeat=true; echo smarty_jQueryReady(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
