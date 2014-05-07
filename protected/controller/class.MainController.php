@@ -57,7 +57,9 @@ class MainController extends MainControllerBase {
 		
 		// Look for custom logo
 	
-		if (file_exists(APP_PUBLIC_PATH . '/images/logo.png')) {
+		if (file_exists(APP_PUBLIC_PATH . '/images/logo.jpg')) {
+			$logo = 'logo.jpg';
+		} elseif (file_exists(APP_PUBLIC_PATH . '/images/logo.png')) {
 			$logo = 'logo.png';
 		} else {
 			$logo = 'aptitudecare.png';
