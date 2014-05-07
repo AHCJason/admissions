@@ -7,8 +7,8 @@ define(APP_EMAIL, "");
 define(DEV_EMAIL, "test@localhost");
 
 /* if (DEVELOPMENT == true) { */
-	ini_set('html_errors', 'off');
-	ini_set('display_errors', 'off');
+	ini_set('html_errors', 'on');
+	ini_set('display_errors', 'on');
 /* } */
 //Before anything heavy gets loaded, branch out to image subsystem if necessary.
 if (isset($_REQUEST['image']) && $_REQUEST['image'] != '') {
