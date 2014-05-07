@@ -33,13 +33,13 @@ function dbCMS() { global $dbCMS; return $dbCMS; }
 //MySQL db connection
 $db = new db_mysql();
 if (DEVELOPMENT == TRUE && STAGING == FALSE) {
-	$db->dbname = "admit";
+	$db->dbname = "admit_ahc";
 } else {
-	$db->dbname = "admit";
+	$db->dbname = "admit_ahc";
 }
 $db->host = "localhost";
-$db->username = "aptitude";
-$db->password = "nd7NE9EmPpid";
+$db->username = "ahc";
+$db->password = "JpnW4Ts4bbaq";
 $db->conn();
 
 // Site wide business stuff
