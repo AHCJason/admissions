@@ -55,8 +55,11 @@ class MainController extends MainControllerBase {
 		$GLOBALS["datetimeDischargeDefault"] = $datetimeDischargeDefault;
 		
 		
-		// Look for custom logo
-	
+		/*
+		 *  Look for custom logo
+		 *
+		 */
+		 
 		if (file_exists(APP_PUBLIC_PATH . '/images/logo.jpg')) {
 			$logo = 'logo.jpg';
 		} elseif (file_exists(APP_PUBLIC_PATH . '/images/logo.png')) {
@@ -66,6 +69,22 @@ class MainController extends MainControllerBase {
 		}
 		
 		smarty()->assign('logo', $logo);
+		
+		/*
+		 * Look for additional CSS files 
+		 *
+		 */
+		 
+		$css_dir = preg_grep('/^([^.])/', scandir(APP_PUBLIC_PATH . '/css/site_css'));
+		$css = '';
+		foreach ($css_dir as $k => $v) {
+			if ($v != '.' || $v != '..') {
+				$css = $v;
+			}
+		}
+				
+		smarty()->assign('siteCss', $css);	
+		
 		
 		// leave this here
 		parent::init();
