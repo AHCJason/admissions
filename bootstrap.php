@@ -27,7 +27,12 @@ require_once APP_PROTECTED_PATH . "/lib/common.php";
 
 //CMSv2 MySQL db connection
 $dbCMS = new db_mysql();
-$dbCMS->dbname = "cms2";
+if (DEVELOPMENT == TRUE) {
+	$dbCMS->dbname = "cms2_dev";	
+} else {
+	$dbCMS->dbname = "cms2";
+}
+
 $dbCMS->host = "localhost";
 $dbCMS->username = "cms2";
 $dbCMS->password = "2ooB6kHA";
