@@ -34,8 +34,8 @@ if ($directory == 'aptitude') {
 		define('APP_PATH', dirname(__FILE__));
 		define('APP_PROTECTED_PATH', APP_PATH . "/protected");
 		define('APP_PUBLIC_PATH', APP_PATH . "/public");
-		$ENGINE_URL = "http://' . $directory . '.aptitudecare.com/cms2-public";
-		$SITE_URL = "http://' . $directory . '.aptitudecare.com";
+		$ENGINE_URL = "http://{$directory}.aptitudecare.com/cms2-public";
+		$SITE_URL = "http://{$directory}.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', false);
 		define('PRODUCTION', true);
