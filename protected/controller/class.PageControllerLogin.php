@@ -7,18 +7,18 @@ class PageControllerLogin extends PageController {
 	}
 
 	public function login() {
-		if (input()->post("password") == "ahcr00t010101") {
-			auth()->login(input()->post("email"), '', true);			
+		
+		//Look for @ symbol in username
+		if (strpos(input()->post("email"), "@")) {
+			auth()->login(input()->post("email"), input()->post("password"));
+		} elseif (SITE_EMAIL != "") { // if no @ symbol use the global email address
+			$username = input()->post("email") . SITE_EMAIL;
+			auth()->login($username, input()->post("password"));	
 		} else {
-			$username = strpos(input()->post("email"), "@");
-			if ($username != '') {
-				auth()->login(input()->post("email"), input()->post("password"));
-			} else {
-				$email = input()->post("email");
-				auth()->login($email, input()->post("password"));
-			}
-			
+			$username = input()->post("email") . "@aptitudeit.net";
+			auth()->login($username, input()->post("password"));	
 		}
+					
 		if (auth()->valid()) {
 			if (input()->path == '') {
 				$this->redirect(auth()->getRecord()->homeURL());

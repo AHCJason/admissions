@@ -5,6 +5,8 @@ define(TEST_EMAIL, "");
 define(APP_NAME, "AptitudeCare");
 define(APP_EMAIL, "");
 define(DEV_EMAIL, "test@localhost");
+define('SITE_EMAIL', null);
+
 
 if (DEVELOPMENT == true) {
 	ini_set('html_errors', 'off');
