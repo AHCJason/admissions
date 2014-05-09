@@ -14,6 +14,12 @@
 				<td>Username:</td>
 				<td><input type="text" name="email" value="" id="login_username" /></td>
 			</tr>
+			{if $site_email}
+			<tr>
+				<td>&nbsp;</td>
+				<td style="text-align: right">{$site_email}</td>
+			</tr>
+			{/if}
 			
 			<tr>
 				<td>Password:</td>
