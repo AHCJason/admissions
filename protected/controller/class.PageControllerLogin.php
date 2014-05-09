@@ -3,6 +3,11 @@
 class PageControllerLogin extends PageController {
 
 	public function index() {
+		if (SITE_EMAIL) {
+			smarty()->assign('site_email', SITE_EMAIL);
+		} else {
+			smarty()->assign('site_email', false);
+		}
 		smarty()->assign("path", input()->path);
 	}
 
