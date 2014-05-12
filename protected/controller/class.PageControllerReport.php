@@ -5,14 +5,14 @@ class PageControllerReport extends PageController {
 	public $reportTypes = array(
 		"admission" => "Admission",
 		"discharge_type" => "Discharge Type",
-/* 		"discharge_service" => "Discharge Service", */
-/* 		"discharge_history" => "Discharge History (4 Weeks)", */
-/* 		"facility_transfer" => "Facility Transfers",	 */
+		"discharge_service" => "Discharge Service",
+		"discharge_history" => "Discharge History (4 Weeks)",
+		"facility_transfer" => "Facility Transfers",	
 		"length_of_stay" => "Length of Stay",
-/* 		"cancelled" => "Not Admitted", */
+		"cancelled" => "Not Admitted",
 		"readmission" => "Re-Admission",
 		"returned_to_hospital" => "Returned to Hospital",
-/* 		"discharge_calls" => "30 Day Discharge Calls" */
+		"discharge_calls" => "30 Day Discharge Calls"
  	);
 	
 	public $viewOpts = array(
