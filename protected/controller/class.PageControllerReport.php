@@ -2,6 +2,7 @@
 
 class PageControllerReport extends PageController {
 		
+/*
 	public $reportTypes = array(
 		"admission" => "Admission",
 		"discharge_type" => "Discharge Type",
@@ -14,6 +15,7 @@ class PageControllerReport extends PageController {
 		"returned_to_hospital" => "Returned to Hospital",
 		"discharge_calls" => "30 Day Discharge Calls"
  	);
+*/
 	
 	public $viewOpts = array(
 			"month" => "Month",
@@ -25,7 +27,8 @@ class PageControllerReport extends PageController {
 	
 	
 	public function __construct() {
-		smarty()->assign("reportTypes", $this->reportTypes);
+		
+		smarty()->assign("reportTypes", $this->reportTypes());
 		smarty()->assign("type", input()->action);
 		smarty()->assign("viewOpts", $this->viewOpts);
 		smarty()->assign("yearOpts", $this->yearOpts());
@@ -66,12 +69,14 @@ class PageControllerReport extends PageController {
 		if (input()->summary != '') {
 			$summary = input()->summary;
 		}
+		
+		$report_types = $this->reportTypes();
 				
 		smarty()->assign("summary", $summary);
 		smarty()->assignByRef("dateStart", $_dateStart);
 		smarty()->assignByRef("dateEnd", $_dateEnd);
 		smarty()->assign("type", input()->type);
-		smarty()->assign("reportTypes", $this->reportTypes);
+		smarty()->assign("reportTypes", $report_types);
 		smarty()->assign("viewOpts", $this->viewOpts);
 		smarty()->assign("yearOpts", $this->yearOpts());
 	}
@@ -2577,6 +2582,18 @@ class PageControllerReport extends PageController {
 		}
 
 		
+	}
+	
+	
+	private function reportTypes() {
+		$report_types = CMS_Reports::fetchNames();
+				
+		$names = array();
+		foreach ($report_types as $type) {
+			$names[$type->name] = $type->description;
+		}
+		
+		return $names;
 	}
 	
 	
