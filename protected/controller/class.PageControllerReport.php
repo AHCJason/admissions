@@ -2,7 +2,12 @@
 
 class PageControllerReport extends PageController {
 		
+<<<<<<< HEAD
 /*
+=======
+/*  These are now tracked in the database allowing different reports for different companies
+    — Kemish W. Hendershot, 2014-05-13
+>>>>>>> e539245d25939a1def5a7c926e09b6efc0f549c3
 	public $reportTypes = array(
 		"admission" => "Admission",
 		"discharge_type" => "Discharge Type",
