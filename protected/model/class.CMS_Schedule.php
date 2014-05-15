@@ -1324,7 +1324,7 @@ class CMS_Schedule extends CMS_Table {
 		//$params[":admit_datetime"] = date('Y-m-d 12:59:59', strtotime($date));
 		//$params[":discharge_datetime"] = date('Y-m-d 11:00:01', strtotime($date));
 										
-		$sql = "SELECT count(`room`.`number`) AS census, adc.goal
+		$sql = "SELECT count(`room`.`number`) AS census/*, adc.goal*/
 					FROM `schedule` 
 					INNER JOIN `room` 
 						on `room`.`id` = `schedule`.`room`
@@ -1334,8 +1334,7 @@ class CMS_Schedule extends CMS_Table {
 					AND (`schedule`.`status` = 'Approved' OR `schedule`.`status` = 'Discharged') 
 					AND `schedule`.`datetime_admit` <= :datetime
 					AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL /*OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00'*/) OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end))
-					order by room.number asc
-";
+					order by room.number asc";
 		return $obj->fetchCustom($sql, $params);
 	}	
 	
@@ -1497,6 +1496,21 @@ class CMS_Schedule extends CMS_Table {
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 		
+	}
+
+	public function fetchAdcReport($time_period = false, $year = false, $facility = false) {
+		$params = array(
+			":time_period" => $time_period,
+			":datetime_start" => $year . "-01-01 00:00:01",
+			":datetime_end" => $year . "-12-31 23:59:59",
+			":facility" => $facility
+		);
+
+		$sql = "select admit_period as time_period, admission_count, discharge_count from ((select count(id) as admission_count, month(datetime_admit) as admit_period from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility group by admit_period) as admissions INNER JOIN (select count(id) as discharge_count, month(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility group by discharge_period) as discharges ON admissions.admit_period=discharges.discharge_period)";
+
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);
+
 	}
 	
 	
