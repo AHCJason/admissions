@@ -28,7 +28,7 @@
 			if (reportType.val() == "discharge_history") {
 				return SITE_URL + '/?page=report&action=' + $("#report-type option:selected").val() + '&facility=' + $("#facility option:selected").val() + '&week_start={"last Sunday - 1 week"|date_format: "Y-m-d"}';
 			}
-			if (reportType.val() == "length_of_stay" || reportType.val() == "discharge_type" || reportType.val() == "discharge_service") {
+			if (reportType.val() == "length_of_stay" || reportType.val() == "discharge_type" || reportType.val() == "discharge_service" || reportType.val() == "adc") {
 				return SITE_URL + '/?page=report&action=' + $("#report-type option:selected").val() + '&facility=' + $("#facility option:selected").val() + '&view=' + $('#view option:selected').val() + '&year=' + $('#year option:selected').val() + '&orderby={$orderby}';
 			} if (reportType.val() == "discharge_calls") {
 				return SITE_URL + '/?page=report&action=' + $("#report-type option:selected").val() + '&facility=' + $("#facility option:selected").val();
@@ -55,7 +55,7 @@
 					$(".other-types").hide();
 					window.location.href = redirectURL();
 				}
-				else if (reportType.val() == "length_of_stay" || reportType.val() == "discharge_type" || reportType.val() == "discharge_service") {
+				else if (reportType.val() == "length_of_stay" || reportType.val() == "discharge_type" || reportType.val() == "discharge_service" || reportType.val() == "adc") {
 					$(".length-of-stay").show();
 					$(".other-types").hide();
 					if ($('#facility').val() != '' && $('#view option:selected').val() != '' && $('#year option:selected').val() != '') {

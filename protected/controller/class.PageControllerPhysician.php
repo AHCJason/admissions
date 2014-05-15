@@ -2,6 +2,10 @@
 
 class PageControllerPhysician extends PageController {
 
+	public function init() {
+		Authentication::disallow();
+	}
+	
 	public function searchPhysicians() {
 		$user = auth()->getRecord();
 		$facility = new CMS_Facility($user->default_facility);

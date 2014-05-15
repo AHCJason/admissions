@@ -2,6 +2,10 @@
 
 class PageControllerHospital extends PageController {
 	
+	public function init() {
+		Authentication::disallow();
+	}
+	
 	public function searchHospital() {
 		$user = auth()->getRecord();
 		$facility = new CMS_Facility($user->default_facility);
