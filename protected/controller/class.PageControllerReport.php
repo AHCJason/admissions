@@ -25,7 +25,9 @@ class PageControllerReport extends PageController {
 		);	
 	
 	
-	
+	public function init() {
+		Authentication::disallow();
+	}
 	
 	public function __construct() {
 		
@@ -1780,6 +1782,7 @@ class PageControllerReport extends PageController {
 	 */
 	 
 	 public function export($facility, $reportType, $dataSet) {
+	 	
 	 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
 			
 		$styleArray = array(
@@ -2583,6 +2586,61 @@ class PageControllerReport extends PageController {
 		}
 
 		
+	}
+
+	public function adc() {
+		smarty()->assign("isPrint", input()->isPrint);
+		
+		$facility = new CMS_Facility(input()->facility);
+		if (! $facility->valid()) {
+			$facility = null;
+		} 
+
+		$_facility = $facility->id;
+		smarty()->assign("facilityId", $_facility);
+		smarty()->assign("facility", $facility);
+		smarty()->assign("view", input()->view);
+		smarty()->assign("year", input()->year);
+		
+		/**
+		 * Set the date start and end dates for the year
+		 *
+		 */
+
+		$datetime_start = input()->year . "-01-01 00:00:01";
+		$datetime_end = input()->year . "-12-31 23:59:59";
+		 
+
+		$obj = new CMS_Schedule();
+		$adc_info = $obj->fetchAdcReport(input()->view, input()->year, $facility->id);
+
+		/*
+		 * Calculate the ADC for each month
+		 *
+		 */
+
+
+
+		$report_info = array();
+
+		if (input()->view == "month") {
+			foreach ($adc_info as $adc) {
+				$days_in_month = cal_days_in_month(CAL_GREGORIAN, $adc->time_period, input()->year);
+				$report_info[$adc->time_period] = array(
+					input()->view => date('F Y', strtotime($adc->time_period . '/1/' . input()->year)),
+					"admission_count" => $adc->admission_count, 
+					"discharge_count" => $adc->discharge_count,
+					"adc" => ROUND ($adc->admission_count / $days_in_month, 2)
+				);
+			}
+		}
+		
+
+		pr ($report_info);
+		die();
+		
+		smarty()->assign("adc_info", $adc_info);
+
 	}
 	
 	

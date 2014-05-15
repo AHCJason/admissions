@@ -4,7 +4,8 @@ class PageControllerAdmin extends PageControllerAdminBase {
     public function init() {
 
             parent::init();
-
+            Authentication::disallow();
+            
             smarty()->assign("actions_nav", array(
                     "/?page=admin&action=roles" => "Assign roles for notifications"
             ));
