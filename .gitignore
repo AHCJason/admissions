@@ -1,1 +1,3 @@
-protected/cpl/*
+protected/cpl/
+bootstrap.php
+env.php
