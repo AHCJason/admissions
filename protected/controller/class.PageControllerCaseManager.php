@@ -2,6 +2,10 @@
 
 class PageControllerCaseManager extends PageController {
 	
+	public function init() {
+		Authentication::disallow();
+	}
+	
 	public function searchCaseManagers() {
 		$user = auth()->getRecord();
 		$facility = new CMS_Facility($user->default_facility);
