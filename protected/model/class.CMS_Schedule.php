@@ -1335,6 +1335,7 @@ class CMS_Schedule extends CMS_Table {
 					AND `schedule`.`datetime_admit` <= :datetime
 					AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL /*OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00'*/) OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end))
 					order by room.number asc";
+
 		return $obj->fetchCustom($sql, $params);
 	}	
 	
