@@ -1321,10 +1321,8 @@ class CMS_Schedule extends CMS_Table {
 		$params[":facility"] = $facility_id;
 		$params[":datetime"] = date('Y-m-d 23:59:59', strtotime($date));
 		$params[":bedhold_end"] = date('Y-m-d 11:00:00', strtotime($date));
-		//$params[":admit_datetime"] = date('Y-m-d 12:59:59', strtotime($date));
-		//$params[":discharge_datetime"] = date('Y-m-d 11:00:01', strtotime($date));
 										
-		$sql = "SELECT count(`room`.`number`) AS census/*, adc.goal*/
+		$sql = "SELECT count(`room`.`number`) AS census
 					FROM `schedule` 
 					INNER JOIN `room` 
 						on `room`.`id` = `schedule`.`room`
