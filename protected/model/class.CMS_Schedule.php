@@ -1321,10 +1321,8 @@ class CMS_Schedule extends CMS_Table {
 		$params[":facility"] = $facility_id;
 		$params[":datetime"] = date('Y-m-d 23:59:59', strtotime($date));
 		$params[":bedhold_end"] = date('Y-m-d 11:00:00', strtotime($date));
-		//$params[":admit_datetime"] = date('Y-m-d 12:59:59', strtotime($date));
-		//$params[":discharge_datetime"] = date('Y-m-d 11:00:01', strtotime($date));
 										
-		$sql = "SELECT count(`room`.`number`) AS census/*, adc.goal*/
+		$sql = "SELECT count(`room`.`number`) AS census
 					FROM `schedule` 
 					INNER JOIN `room` 
 						on `room`.`id` = `schedule`.`room`
@@ -1333,7 +1331,7 @@ class CMS_Schedule extends CMS_Table {
 					WHERE `schedule`.`facility` = :facility 
 					AND (`schedule`.`status` = 'Approved' OR `schedule`.`status` = 'Discharged') 
 					AND `schedule`.`datetime_admit` <= :datetime
-					AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL /*OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00'*/) OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end))
+					AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00') OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end))
 					order by room.number asc";
 
 		return $obj->fetchCustom($sql, $params);
