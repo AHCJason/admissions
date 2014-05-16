@@ -1498,6 +1498,7 @@ class CMS_Schedule extends CMS_Table {
 	}
 
 	public function fetchAdcReport($time_period = false, $year = false, $facility = false) {
+		
 		$params = array(
 			":time_period" => $time_period,
 			":datetime_start" => $year . "-01-01 00:00:01",
@@ -1505,8 +1506,70 @@ class CMS_Schedule extends CMS_Table {
 			":facility" => $facility
 		);
 
-		$sql = "select admit_period as time_period, admission_count, discharge_count from ((select count(id) as admission_count, month(datetime_admit) as admit_period from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility group by admit_period) as admissions INNER JOIN (select count(id) as discharge_count, month(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility group by discharge_period) as discharges ON admissions.admit_period=discharges.discharge_period)";
+		
+		switch ($time_period) {
+									
+			 case "month":
+				
+				$sql = "select time_period, admission_count, discharge_count, census from 
+				( 
+					(
+						select count(id) as admission_count, month(datetime_admit) as admit_period  from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by admit_period
+					) as admissions 
+					INNER JOIN 
+					(
+					select count(id) as discharge_count, month(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility and schedule.status = 'Discharged' group by discharge_period
+					) as discharges ON admissions.admit_period=discharges.discharge_period
+					INNER JOIN
+					(
+					select time_period, month(time_period) as adc_period, census_value as census, facility_id from census_data where time_period >= :datetime_start and time_period <= :datetime_end and facility_id = :facility  group by adc_period
+					) as adc ON discharges.discharge_period = adc.adc_period
+				)";
 
+				break;
+				
+			case "quarter":
+				
+				$sql = "select time_period, admission_count, discharge_count, census from 
+				( 
+					(
+						select count(id) as admission_count, quarter(datetime_admit) as admit_period  from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by admit_period
+					) as admissions 
+					INNER JOIN 
+					(
+					select count(id) as discharge_count, quarter(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility and schedule.status = 'Discharged' group by discharge_period
+					) as discharges ON admissions.admit_period=discharges.discharge_period
+					INNER JOIN
+					(
+					select time_period, quarter(time_period) as adc_period, census_value as census, facility_id from census_data where time_period >= :datetime_start and time_period <= :datetime_end and facility_id = :facility  group by adc_period
+					) as adc ON discharges.discharge_period = adc.adc_period
+				)";
+				
+				break;
+				
+			case "year":
+				
+				$sql = "select time_period, admission_count, discharge_count, census from 
+				( 
+					(
+						select count(id) as admission_count, year(datetime_admit) as admit_period  from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by admit_period
+					) as admissions 
+					INNER JOIN 
+					(
+					select count(id) as discharge_count, year(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility and schedule.status = 'Discharged' group by discharge_period
+					) as discharges ON admissions.admit_period=discharges.discharge_period
+					INNER JOIN
+					(
+					select time_period, year(time_period) as adc_period, census_value as census, facility_id from census_data where time_period >= :datetime_start and time_period <= :datetime_end and facility_id = :facility  group by adc_period
+					) as adc ON discharges.discharge_period = adc.adc_period
+				)";
+				
+				break;
+			
+			
+		}
+
+					
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 

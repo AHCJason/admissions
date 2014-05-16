@@ -12,11 +12,11 @@
 		<th>Average Daily Census</th>
 	</tr>
 	{foreach $adc_info as $adc}
-	<tr>
-		<td>{$adc->time_period}</td>
-		<td>{$adc->admissions_count}</td>
+	<tr bgcolor="{cycle values="#d0e2f0,#ffffff"}">
+		<td style="text-align: left">{if $view == "year"}{$year}{else}{$adc->time_period|date_format:"%B"}{/if}</td>
+		<td>{$adc->admission_count}</td>
 		<td>{$adc->discharge_count}</td>
-		<td>&nbsp;</td>
+		<td>{$adc->census}</td>
 	</tr>
 	{/foreach}
 </table>
