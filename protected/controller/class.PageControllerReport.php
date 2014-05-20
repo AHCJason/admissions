@@ -96,7 +96,7 @@ class PageControllerReport extends PageController {
 	 */
 	
 	public function admission() {
-	
+		
 		smarty()->assign("isPrint", input()->isPrint);
 		
 		$facility = new CMS_Facility(input()->facility);
@@ -200,6 +200,7 @@ class PageControllerReport extends PageController {
 			}
 			
 		}	
+		
 																			
 		smarty()->assign("orderby", $_orderby);
 		smarty()->assign("filterby",$_filterby);
@@ -269,7 +270,14 @@ class PageControllerReport extends PageController {
 		smarty()->assign('urlString', $urlString);
 		
 		
+		// Set views for detailed data reports
+		if ($_filterby == 'zip_code') {
+			$this->setView('report/admission', 'zip');
+		} elseif ($_filterby == 'hospital') {
+			$this->setView('report/admission', 'hospital');
+		}
 		
+
 		
 		
 		

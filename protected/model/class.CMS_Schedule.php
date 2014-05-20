@@ -597,7 +597,7 @@ class CMS_Schedule extends CMS_Table {
 			':facility_id' => $facility_id
 		);
 		
-		$sql = "select count(schedule.id), patient_admit.zip from schedule inner join patient_admit on patient_admit.id = schedule.patient_admit where schedule.datetime_admit >= :date_start and schedule.datetime_admit <= :date_end and schedule.facility = :facility_id group by patient_admit.zip";
+		$sql = "select count(schedule.id) as count, patient_admit.zip from schedule inner join patient_admit on patient_admit.id = schedule.patient_admit where schedule.datetime_admit >= :date_start and schedule.datetime_admit <= :date_end and schedule.facility = :facility_id group by patient_admit.zip order by count desc";
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
