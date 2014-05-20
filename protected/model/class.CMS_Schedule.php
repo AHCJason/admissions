@@ -590,6 +590,18 @@ class CMS_Schedule extends CMS_Table {
 		return $obj->fetchCustom($sql, $params);
 	}
 	
+	public static function fetchInfoByZip($date_start = false, $date_end = false, $facility_id = false) {
+		$params = array(
+			':date_start' => $date_start,
+			':date_end' => $date_end,
+			':facility_id' => $facility_id
+		);
+		
+		$sql = "select count(schedule.id), patient_admit.zip from schedule inner join patient_admit on patient_admit.id = schedule.patient_admit where schedule.datetime_admit >= :date_start and schedule.datetime_admit <= :date_end and schedule.facility = :facility_id group by patient_admit.zip";
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);
+	}
+	
 	public static function fetchDataForFilter($dateStart = false, $dateEnd = false, $facility = false, $patientStatus = false, $filterby = false, $viewby = false) {
 		if ($filterby == 'ortho') {
 			$table = "physician";
@@ -1574,6 +1586,7 @@ class CMS_Schedule extends CMS_Table {
 		return $obj->fetchCustom($sql, $params);
 
 	}
+	
 	
 	
 	

@@ -22,8 +22,7 @@ class PageControllerReport extends PageController {
 			"month" => "Month",
 			"quarter" => "Quarter",
 			"year" => "Year"
-		);	
-	
+		);		
 	
 	public function init() {
 		Authentication::disallow();
@@ -146,7 +145,8 @@ class PageControllerReport extends PageController {
 			'hospital' => 'Hospital',
 			'physician' => 'Attending Physician',
 			'ortho' => 'Orthopedic Surgeon/Specialist',
-			'case_manager' => 'Case Manager'
+			'case_manager' => 'Case Manager',
+			'zip_code' => 'Zip Code'
 		);
 		smarty()->assign("orderByOpts", $orderByOpts);
 		smarty()->assign("filterByOpts", $filterByOpts);
@@ -193,9 +193,14 @@ class PageControllerReport extends PageController {
 		// get data for filterby drop-down
 		if ($_filterby != false) {
 			$_patientStatus = 'datetime_admit';
-			$filterData = $obj->fetchFilterData($_dateStart, $_dateEnd, $_facility, $_filterby);
+			if ($_filterby == 'zip_code') {
+				$filterData = $obj->fetchInfoByZip($_dateStart, $_dateEnd, $_facility);
+			} else {
+				$filterData = $obj->fetchFilterData($_dateStart, $_dateEnd, $_facility, $_filterby);
+			}
+			
 		}	
-																	
+																			
 		smarty()->assign("orderby", $_orderby);
 		smarty()->assign("filterby",$_filterby);
 		smarty()->assign("viewby", $_viewby);
@@ -2605,11 +2610,39 @@ class PageControllerReport extends PageController {
 		// Get ADC report for the time period
 		$obj = new CMS_Schedule();
 		$adc = $obj->fetchAdcReport(input()->view , input()->year, $facility->id);
-		
+												
 		smarty()->assign("adc_info", $adc);
-
+		smarty()->assign("graphData", json_encode($graphData));
 	}
 	
+	public function getAdcData() {
+		$facility = new CMS_Facility(input()->facility);
+		if (! $facility->valid()) {
+			$facility = null;
+		} 
+
+
+		$obj = new CMS_Schedule();
+		$adc = $obj->fetchAdcReport(input()->view , input()->year, $facility->id);
+			
+		header("Content-type: text/javascript"); 
+		$json_data = $this->graphData($adc);
+		echo json_encode($json_data); 
+		session_write_close(); 
+		exit;		
+	}
+	
+	private function graphData($data = false) {
+		$returnData = array();
+		foreach ($data as $val) {
+			$returnData["categories"][] = date('F', strtotime($val->time_period));
+			$returnData["data"][] = $val->census;
+		}
+		
+		return $returnData;
+		
+	}
+		
 	
 	private function reportTypes() {
 		$report_types = CMS_Reports::fetchNames();

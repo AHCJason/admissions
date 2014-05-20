@@ -3,6 +3,7 @@
 <head>
 {include file="$cms_template_dir/_head.tpl"}
 {include file="$cms_template_dir/_javascript_auto.tpl"}
+
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery.hoverintent.r5.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/additional-methods.js"></script>
@@ -18,6 +19,10 @@
 <script type="text/javascript" src="{$SITE_URL}/js/shadowbox-3.0.3/shadowbox.js"></script>
 <link rel="stylesheet" href="{$SITE_URL}/js/shadowbox-3.0.3/shadowbox.css" type="text/css">
 <script type="text/javascript" src="{$SITE_URL}/js/modernizr.js"></script>
+
+<!-- Highcharts js framework -->
+<script src="{$SITE_URL}/js/highcharts/js/highcharts.js"></script>
+
 <script>
 	Shadowbox.init({
 		height: 425,
