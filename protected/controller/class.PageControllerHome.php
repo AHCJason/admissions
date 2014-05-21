@@ -61,11 +61,12 @@ class PageControllerHome extends PageController {
 		
 	}
 
+/*
 	public function adc() {
 
 		//start date
 		$start_date = '2011-06-01';
-		$facility = 2;
+		$facility = 3;
 		$first_day = date('01', strtotime($start_date));
 		$last_day = date('t', strtotime($start_date));
 		$censusTotal = 0;
@@ -83,7 +84,9 @@ class PageControllerHome extends PageController {
 					}
 				}
 
-				$adc[] = array('facility' => $facility, 'time_period' => date('Y-m', strtotime($start_date)), 'census_value' => round ($censusTotal / $last_day, 2));
+				
+				$adc[] = array('facility' => $facility, 'time_period' => date('Y-m-t', strtotime($start_date)), 'census_value' => round ($censusTotal / $last_day, 2));
+
 				$first_day = 0;
 
 				$dailyCensus = array();	
@@ -115,6 +118,7 @@ class PageControllerHome extends PageController {
 
 
 	}
+*/
 
 
 }

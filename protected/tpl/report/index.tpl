@@ -42,7 +42,7 @@
 			window.location.href = redirectURL();		
 		});
 	
-		$("#facility").change(function(e) {
+		$("#facility").change(function(e) {	
 			if ($("#report-type").val() != '' && ($("#start-date").val() != '' && $("#end-date").val() != '') || ($('#view option:selected').val() != '' && $('#year option:selected').val() != '')) {
 				window.location.href = redirectURL();
 			}	
