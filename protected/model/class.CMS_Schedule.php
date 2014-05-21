@@ -498,7 +498,7 @@ class CMS_Schedule extends CMS_Table {
 		return $results;
 	}
 	
-	public static function fetchAdmitsByFacility($date_start = false, $date_end = false, $facility_id = false, $filterby = false, $viewby = false) {
+	public static function fetchAdmitsByFacility($date_start = false, $date_end = false, $facility_id = false, $filterby = false, $viewby = false, $orderby = false) {
 					
 		if ($date_start != '') {
 			$params[":date_start"] = $date_start;
@@ -508,6 +508,9 @@ class CMS_Schedule extends CMS_Table {
 		}
 		if ($facility_id != '') {
 			$params[":facility_id"] = $facility_id;
+		}
+		if ($filterby == "surgeon") {
+			$filterby = "ortho";
 		}
 
 		
@@ -521,8 +524,10 @@ class CMS_Schedule extends CMS_Table {
 					$sql .= " AND surgeon.id = :viewby";
 				} elseif ($filterby == "case_manager") {
 					$sql .= " AND case_manager.id = :viewby";
-				} else {
+				} elseif ($filterby == "physician") {
 					$sql .= " AND physician.id = :viewby";
+				} elseif ($filterby == "zip_code") {
+					$sql .= " AND patient_admit.zip = :viewby";
 				}
 				$params[':viewby'] = $viewby;
 			} else {
@@ -544,12 +549,86 @@ class CMS_Schedule extends CMS_Table {
 				}
 			}
 		}
-							
+		
+		if ($orderby == 'room') {
+			$sql .= " order by room.number asc";
+		} elseif ($orderby == 'name') {
+			$sql .= " order by patient_admit.last_name asc";
+		} elseif ($orderby == 'admit_date') {
+			$sql .= " order by schedule.datetime_admit asc";
+		} elseif ($orderby == 'hospital') {
+			$sql .= " order by hospital.name asc";
+		} elseif ($orderby == 'physician') {
+			$sql .= " order by physician.last_name asc";
+		} elseif ($orderby == 'surgeon') {
+			$sql .= " order by surgeon.last_name asc";
+		} elseif ($orderby == 'case_manager') {
+			$sql.= " order by case_manager.last_name asc";
+		}
+				
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);		
 	}
 	
 	
+	
+	public function getAdmitFromName($filterby = false, $viewby = false) {
+		
+		if ($filterby == "surgeon") {
+			$filterby = "physician";
+		}
+		$sql = "select * from {$filterby} where {$filterby}.id = {$viewby}";
+		
+/*
+		if ($orderby) {
+			$sql .= " orderby {$orderby}";
+		}
+*/
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql);		
+		
+	}
+	
+	public static function fetchAdmitsByZip($date_start = false, $date_end = false, $facility_id = false, $filterby = false, $viewby = false, $orderby = false) {
+		if ($date_start != '') {
+			$params[":date_start"] = $date_start;
+		}
+		if ($date_end != '') {
+			$params[":date_end"] = $date_end;
+		}
+		if ($facility_id != '') {
+			$params[":facility_id"] = $facility_id;
+		}
+		if ($viewby != '') {
+			$params[":viewby"] = $viewby;
+		}
+		if ($filterby == "surgeon") {
+			$filterby = "ortho";
+		}
+		
+		$sql = "SELECT patient_admit.id, patient_admit.last_name, patient_admit.first_name, patient_admit.address, patient_admit.city, patient_admit.state, patient_admit.zip, room.number, hospital.name AS hospital_name, physician.last_name AS physician_last, physician.first_name AS physician_first, surgeon.last_name AS surgeon_last, surgeon.first_name AS surgeon_first, schedule.datetime_admit, case_manager.last_name AS cm_last, case_manager.first_name AS cm_first FROM patient_admit LEFT JOIN hospital ON patient_admit.hospital_id=hospital.id LEFT JOIN physician ON patient_admit.physician_id=physician.id LEFT JOIN physician AS surgeon ON patient_admit.ortho_id = surgeon.id INNER JOIN schedule ON patient_admit.id = schedule.patient_admit INNER JOIN room ON schedule.room=room.id LEFT JOIN case_manager on case_manager.id = patient_admit.case_manager_id WHERE schedule.datetime_admit >= :date_start AND schedule.datetime_admit <= :date_end AND schedule.facility = :facility_id AND (schedule.status = 'Approved' OR schedule.status = 'Discharged') and patient_admit.zip = :viewby";
+		
+				if ($orderby == 'room') {
+			$sql .= " order by room.number asc";
+		} elseif ($orderby == 'name') {
+			$sql .= " order by patient_admit.last_name asc";
+		} elseif ($orderby == 'admit_date') {
+			$sql .= " order by schedule.datetime_admit asc";
+		} elseif ($orderby == 'hospital') {
+			$sql .= " order by hospital.name asc";
+		} elseif ($orderby == 'physician') {
+			$sql .= " order by physician.last_name asc";
+		} elseif ($orderby == 'surgeon') {
+			$sql .= " order by surgeon.last_name asc";
+		} elseif ($orderby == 'case_manager') {
+			$sql.= " order by case_manager.last_name asc";
+		}
+				
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);		
+
+	}
 
 	
 	public static function fetchFilterData($date_start = false, $date_end = false, $facility_id = false, $filterby = false) {
@@ -574,6 +653,9 @@ class CMS_Schedule extends CMS_Table {
 		} elseif ($filterby == "case_manager") {
 			$sql .= " LEFT JOIN case_manager ON patient_admit.{$filterby}_id = case_manager.id";
 		} else {
+			if ($filterby == "surgeon") {
+				$filterby = "ortho";
+			}
 			$sql .= " LEFT JOIN physician ON patient_admit.{$filterby}_id = physician.id";
 		} 
 				
@@ -586,6 +668,7 @@ class CMS_Schedule extends CMS_Table {
 		} else {
 			$sql .= " AND physician.id IS NOT NULL GROUP BY physician.id ORDER BY physician.last_name ASC";
 		}
+		
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
@@ -597,7 +680,8 @@ class CMS_Schedule extends CMS_Table {
 			':facility_id' => $facility_id
 		);
 		
-		$sql = "select count(schedule.id) as count, patient_admit.zip from schedule inner join patient_admit on patient_admit.id = schedule.patient_admit where schedule.datetime_admit >= :date_start and schedule.datetime_admit <= :date_end and schedule.facility = :facility_id group by patient_admit.zip order by count desc";
+		$sql = "select count(schedule.id) as count, patient_admit.zip from schedule inner join patient_admit on patient_admit.id = schedule.patient_admit where schedule.datetime_admit >= :date_start and schedule.datetime_admit <= :date_end and schedule.facility = :facility_id and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by patient_admit.zip order by count desc";
+		
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}

@@ -1,4 +1,4 @@
-{setTitle title="Hospitals | Admission Report"}
+{setTitle title="Physicians | Admission Report"}
 {include file="patient/patient_search.tpl"}
 {include file="patient/export_icons.tpl"}
 
@@ -21,7 +21,7 @@
 	
 <table id="summary-table" cellpadding="5" cell-spacing="0">
 		<tr>
-			<th>Hospital Name</th>
+			<th>Physician Name</th>
 			<th>Number of <br />Admissions</th>
 			<th>% of <br />Total Admissions</th>
 		</tr>
