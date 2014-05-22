@@ -165,7 +165,7 @@ table#room-table {
 	border-color : black;
 }
 
-a.button, a.button:hover {
+div.button, a.button, a.button:hover {
 	display: block;
 	padding: 5px 8px;
 	color: #fff;
@@ -174,6 +174,24 @@ a.button, a.button:hover {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	float: left;
+}
+
+
+#normal-view a {
+	color: #f1f1f1;	
+	float: right;
+	margin: 0 5px 10px 5px;
+	display: inline-block;
+}
+
+#admission-bar {
+	position: relative;
+	margin: 10px auto;
+	width: 600px;
+}
+
+#admission-report-details {
+	margin: 0 0 10px 90px;
 }
 
 .printForm {
@@ -663,6 +681,10 @@ table#inquiry-form .edit-item {
 	margin-bottom: 20px;
 }
 
+#report-table th a {
+	color: #fff;
+}
+
 table#report-table {
 	border-collapse: collapse;
 }
@@ -1061,6 +1083,11 @@ tr.census {
 	float: left;
 	margin: 10px 0 15px 0;
 	clear: both;
+}
+
+.right-phrase {
+	float:right;
+	margin-top: 15px;
 }
 
 #view-by {
@@ -1462,6 +1489,10 @@ div.drag-hover {
 	float: right;
 }
 
+
+#map {
+	height: 400px;
+}
 
 
 

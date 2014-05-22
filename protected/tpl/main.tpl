@@ -23,6 +23,10 @@
 <!-- Highcharts js framework -->
 <script src="{$SITE_URL}/js/highcharts/js/highcharts.js"></script>
 
+<!-- Leaflet map framework -->
+<script src="{$SITE_URL}/js/leaflet-0.7.2/leaflet.js"></script>
+<link rel="stylesheet" href="{$SITE_URL}/js/leaflet-0.7.2/leaflet.css" />
+
 <script>
 	Shadowbox.init({
 		height: 425,
