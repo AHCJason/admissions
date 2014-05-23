@@ -377,6 +377,8 @@ class PageControllerReport extends PageController {
 			smarty()->assign('admits', $admits);
 			$this->setView('report/admission', 'admits_by_zip');
 		}
+		
+		echo 'hello';
 							
 		
 	}

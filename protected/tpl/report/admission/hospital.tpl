@@ -17,6 +17,8 @@
 -->
 
 {include file="elements/detail_options.tpl"}
+	<div id="normal-view" class="right"><a class="button">Return to Normal View</a></div>
+</div>
 
 	
 <table id="summary-table" cellpadding="5" cell-spacing="0">
