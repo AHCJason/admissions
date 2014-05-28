@@ -77,7 +77,14 @@ $().ready(function() {
 		var firstname = $("#first_name").val().toLowerCase();
 		var lastname = $("#last_name").val().toLowerCase();
 		if (firstname && lastname && !this.value) {
-			this.value = firstname + "." + lastname;
+			var username = firstname + "." + lastname;
+			this.value = username + SITE_EMAIL;
+
+			var searchString = $("#username");
+			var stringLength = username.length;
+			console.log(searchString[0]);
+			searchString.focus();
+			searchString[0].setSelectionRange(8, 10);
 		}
 	});
 

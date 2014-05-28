@@ -235,12 +235,20 @@ class PageControllerSiteUser extends PageController {
 			feedback()->error("You must provide a last name.");	
 		}
 		
-		if (input()->email != '') {	
+		/*
+		 * Now looks for the @ symbol in the email address.  If it does not exist the system will try
+		 * to use SITE_EMAIL if defined in bootstrap.php.
+		 *
+		 */
+		
+		if (strpos(input()->email, "@")) {
 			$user->email = input()->email;
+		} elseif (input()->email != "" && SITE_EMAIL != "") {
+			$user->email = input()->email . SITE_EMAIL;
 		} else {
 			feedback()->error("You must provide a username.");	
 		}
-		
+
 		if (input()->password != '' && input()->confirm_password != '') {
 			if (input()->password != input()->confirm_password) {
 				feedback()->error("Passwords do not match.");

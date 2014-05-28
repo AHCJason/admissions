@@ -38,10 +38,13 @@
 		overlayOpacity: "0.25"
 	});
 </script>
+
+{javascript}
+	var SITE_EMAIL = '{$SITE_EMAIL}';
+{/javascript}
+
+
 {if ($page == "patient" && $action == "printInquiry") || ($page == "patient" && $action == "printNursing")}
-
-
-
 </head>
 <body>
 {include file="$content_tpl"}

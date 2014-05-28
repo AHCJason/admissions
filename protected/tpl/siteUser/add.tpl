@@ -23,7 +23,7 @@
 		</tr>
 		<tr>
 			<td><label for="username">Username (Email Address):</label></td>
-			<td><input type="text" name="email" id="username" size="30" /></td>
+			<td><input type="text" name="email" id="username" size="50" /></td>
 		</tr>
 		<tr>
 			<td><label for="new-password">New Password:</label></td>
