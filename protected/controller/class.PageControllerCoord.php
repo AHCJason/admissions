@@ -217,52 +217,17 @@ class PageControllerCoord extends PageController {
 
 			$datetime = datetime(strtotime($datetime));
 			
+
+
 			/*
-			 * Note: Commented out 2013-07-15 by kwh
-			 * Changed from getting all rooms in the facility to getting only those rooms
-			 * which are currently empty or for which there is already a scheduled discharge.
+			 * Note: Get rooms which are or will be empty on the admission date & time
 			 *
 			 */
-			
-			
-			if (input()->goToApprove == 1) {
-				$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
-				$discharges = CMS_Room::fetchScheduledDischargesByFacility($facility->id, $datetime);
-				$rooms = CMS_Room::mergeFetchedRooms($empty, $discharges);
-			} else {
-				$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
-				$scheduled = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
-				$rooms = CMS_Room::mergeFetchedRooms($empty, $scheduled);
-			}
-			
-			
-			
-			//if (input()->type == '') {
-			//	$type = 'all';
-			//} else {
-			//	$type = input()->type;
-			//}
-			//if ($type == 'all') {
-			//	$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
-			//	$scheduled = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
-			//	$rooms = CMS_Room::mergeFetchedRooms($empty, $scheduled);
-			//}
-			//elseif ($type == 'empty') {
-			//	$empty = CMS_Room::fetchEmptyByFacility($facilty->id, $datetime);
-			//}
-			//elseif ($type == 'scheduled') {
-			//	$scheduled = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
-			//}
-			
-			
-			//$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
-			//$discharged = CMS_Room::fetchDischargedByFacility($facility->id, $datetime);
-			//$rooms = CMS_Room::mergeFetchedRooms($empty, $discharged);
-			
-			
-			// Fetch only empty rooms or rooms which have a discharge scheduled
-			//$availableRooms = CMS_Room::fetchAvailableByFacility($facility->id, $datetime);
-			
+
+			$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
+			$discharges = CMS_Room::fetchScheduledDischargesByFacility($facility->id, $datetime);
+			$rooms = CMS_Room::mergeFetchedRooms($empty, $discharges);
+					
 			smarty()->assignByRef("rooms", $rooms);
 			smarty()->assignByRef("facility", $facility);
 			smarty()->assign("goToApprove", input()->goToApprove);
@@ -284,8 +249,15 @@ class PageControllerCoord extends PageController {
 			$newAdmit = 0;
 		}
 		
+		if (input()->goToApprove == 1) {
+			$approved = true;
+		} else {
+			$approved = false;
+		}
 		
-		$result = CMS_Schedule::setFacilityAndRoom(input()->schedule, input()->facility, input()->room, input()->previous_room, input()->datetime_admit, $newAdmit);
+		$result = CMS_Schedule::assignRoom(input()->schedule, input()->facility, input()->room, input()->datetime_admit, $approved);
+
+		//$result = CMS_Schedule::setFacilityAndRoom(input()->schedule, input()->facility, input()->room, input()->previous_room, input()->datetime_admit, $newAdmit);
 		if ($result[0] == false) {
 			foreach ($result[1] as $m) {
 				feedback()->error($m);

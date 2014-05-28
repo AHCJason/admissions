@@ -103,19 +103,30 @@ $().ready(function() {
 		alert(msg);
 	});
 
-	$(".approve-admit-link").click(function(e) {
+	$(".approve").click(function(e) {
 		e.preventDefault();
-		var anchor = this;
-		jConfirm('Are you sure you want to approve this request? If you click OK, you will be prompted to assign this patient to a room.', 'Confirmation Required', function(r) {
-			if (r == true) {
-				location.href = $(anchor).attr("href");
-			} else {
-				return false;
-			}
-		});
+		var td = $(this).parent().parent().parent().parent().parent().parent().parent().find(".under-consideration");
+		//td.removeClass("text-red").addClass("text-black");
+		var url = SITE_URL + "/?page=facility&action=approveInquiry&schedule=";
+		var data = { page: "facility", action: "approveInquiry", schedule: $(this).attr("name"), status: "Approved"};
+		$.post(SITE_URL, data, function() { td.removeClass("under-consideration").addClass("approved"); } );
 
-		return false;
 	});
+
+
+	// $(".approve-admit-link").click(function(e) {
+	// 	e.preventDefault();
+	// 	var anchor = this;
+	// 	jConfirm('Are you sure you want to approve this request? If you click OK, you will be prompted to assign this patient to a room.', 'Confirmation Required', function(r) {
+	// 		if (r == true) {
+	// 			location.href = $(anchor).attr("href");
+	// 		} else {
+	// 			return false;
+	// 		}
+	// 	});
+
+	// 	return false;
+	// });
 	$(".cancel-admit-link").click(function(e) {
 		e.preventDefault();
 		var anchor = this;

@@ -2564,5 +2564,17 @@ elseif(input()->affirm == 'discharged_home') {
 	}
 
 
+	public function approveInquiry() {
+		$schedule = new CMS_Schedule(input()->schedule);
+		$schedule->status = input()->status;
+
+		try {
+			$schedule->save();
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+
 	
 }

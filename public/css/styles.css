@@ -156,6 +156,16 @@ table#room-table {
 	padding: 5px 10px;
 }
 
+.background-blue {
+	background: #6bbeff;
+	padding: 5px 10px;
+}
+
+.color-code {
+	margin: 2px;
+	border: 1px solid #c1c1c1;
+}
+
 .selected-page {
 	font-weight: bold;
 }
@@ -723,6 +733,10 @@ br#report-table {
 	margin-bottom: 20px;
 }
 
+#census-report-table tr.border-bottom td {
+	border-bottom: 1px dotted #c1c1c1;
+}
+
 .report-total {
 	background-color: #ccc;
 	font-weight: bold;
@@ -1165,8 +1179,8 @@ div.on-site h2 {
 /* UL styles */
 .dropdown dd ul { background:#FFFFFF none repeat scroll 0 0; display:none;
     list-style:none; padding:3px 0; position:absolute;
-    left:0px; width:200px; left:auto; right:0; border:1px solid #656565; cursor:pointer; z-index: 501;
-    box-shadow: 5px 5px 5px #666; }
+    left:0px; top: -75px; width:200px; left:auto; right:0; border:1px solid #656565; cursor:pointer; z-index: 501;
+    box-shadow: 8px 8px 8px #666; }
 .dropdown dd ul li{ background-color:#FFFFFF; margin:0; width:200px; }
 .dropdown span.value { display:none;}
 .dropdown dd ul li a { display:block; font-weight:normal; margin: 4px 0; font-style: normal; width:178px; text-align:left; overflow:hidden; padding:2px 4px 2px 19px; color:#333; text-decoration:none; font-size: 11px;}
@@ -1515,3 +1529,15 @@ div.drag-hover {
 	padding: 0;
 }
 
+.menu-header {
+	font-weight: bold;
+	padding: 4px 0 0 8px;
+}
+
+.under-consideration {
+	background: #6bbeff;
+}
+
+.approved {
+	background: none;
+}
