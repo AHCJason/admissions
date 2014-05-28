@@ -1935,10 +1935,13 @@ elseif(input()->affirm == 'discharged_home') {
 		 * of days between the two, total the days for all patients, and then divide
 		 * by the number of patients discharged in the timeframe.
 		 *
+		 * UPDATE:  Need to get the admission date for each patient discharged after the first 
+		 * day of the month, and then divide by the total number of discharges month-to-date
+		 *
 		 */
 		 
 		$date_start = date('Y-m-d 00:00:01', strtotime('first day of this month'));	 
-	 	$date_end = date('Y-m-d 23:59:59', strtotime('last day of this month'));
+	 	$date_end = date('Y-m-d 23:59:59', strtotime('now'));
 				 
 		 
 		 $obj = new CMS_Schedule();
