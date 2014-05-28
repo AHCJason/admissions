@@ -1,3 +1,4 @@
+{setTitle title="Manage Case Managers"}
 {jQueryReady}
 
 $("#cm-search").autocomplete({

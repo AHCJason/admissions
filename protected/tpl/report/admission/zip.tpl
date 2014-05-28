@@ -5,7 +5,7 @@
 {include file="report/index.tpl"}
 
 {include file="elements/detail_options.tpl"}
-	<div id="normal-view" class="right"><a class="button">Return to Normal View</a></div>
+	<div id="normal-view" class="right"><a class="button">Return to Normal View</a><a class="button" href="{$SITE_URL}/?page=report&action=zip_map&facility={$facility->pubid}&start_date={$start_date}&end_date={$end_date}&orderby={$orderby}&filterby={$filterby}">View on Graph</a></div>
 </div>
 	
 <table id="summary-table" cellpadding="5" cell-spacing="0">

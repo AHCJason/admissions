@@ -1,3 +1,7 @@
+{setTitle title="Add a Healthcare Location"}
+<script src="{$SITE_URL}/js/jquery-validation-1.12.0/dist/jquery.validate.min.js"></script>
+<script src="{$SITE_URL}/js/form-validation.js"></script>
+
 {jQueryReady}
 {$states = getUSAStates()}
 var states = [
@@ -39,7 +43,7 @@ $("#search-states").autocomplete(
 {/jQueryReady}
 <div class="lightbox">
 	<h1>Add a new Location</h1>
-	<form name="location" method="post" action="{$SITE_URL}" id="add-location">
+	<form name="location" method="post" action="{$SITE_URL}" id="addItem">
 		<input type="hidden" name="page" value="hospital" />
 		<input type="hidden" name="action" value="addLocation" />
 		<input type="hidden" name="_path" value="{urlencode(currentURL())}" />
@@ -48,13 +52,13 @@ $("#search-states").autocomplete(
 		{/if}
 		<table id="info-data" cellpadding="5" cellspacing="5">
 			<tr>
-				<td colspan="2"><strong>Location Name:</strong></td>
-				<td><strong>Location Type:</strong></td>
+				<td colspan="2"><label for="location_name">Location Name:</label></td>
+				<td><label for="location_type">Location Type:</label<label></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="text" name="name" size="50" /></td>
+				<td colspan="2"><input type="text" name="location_name" size="50" /></td>
 				<td>
-					<select name="type">
+					<select id="location_type" name="type">
 						<option value="">Select type...</option>
 						{foreach $locationTypes as $type}
 							<option value="{$type}" {if $type == $inputType} selected{/if}>{$type}</option>
@@ -63,29 +67,29 @@ $("#search-states").autocomplete(
 				</td>
 			</tr>
 			<tr>
-				<td><strong>Address</strong></td>
+				<td><label for="">Address</label<label></td>
 			</tr>
 			<tr>
 				<td colspan="3"><input type="text" name="address" size="50" /></td>
 			</tr>
 			<tr>
-				<td><strong>City</strong></td>
-				<td><strong>State</strong></td>
-				<td><strong>Zip</strong></td>
+				<td><label for="city">City</label<label></td>
+				<td><label for="state_name">State</label<label></td>
+				<td><label for="zip">Zip</label<label></td>
 			</tr>
 			<tr>
 				<td><input type="text" name="city" size="20" /></td>
-				<td><input type="text" id="search-states" size="8" /></td>
+				<td><input type="text" id="search-states" name="state_name" size="8" /></td>
 				<input type="hidden" name="state" id="state" />
-				<td><input type="text" name="zip" size="8" /></td>
+				<td><input type="text" name="zip" id="zip" size="8" /></td>
 			</tr>
 			<tr>
-				<td><strong>Phone</strong></td>
-				<td><strong>Fax</strong></td>
+				<td><label for="phone">Phone</label<label></td>
+				<td><label for="fax">Fax</label<label></td>
 			</tr>
 			<tr>
-				<td><input type="text" name="phone" /></td>
-				<td><input type="text" name="fax" /></td>
+				<td><input type="text" id="phone" name="phone" /></td>
+				<td><input type="text" id="fax" name="fax" /></td>
 			</tr>
 			<tr>
 				<td colspan="3"><input type="submit" value="Save" class="right" /></td>

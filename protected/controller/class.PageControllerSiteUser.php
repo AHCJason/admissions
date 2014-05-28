@@ -241,14 +241,14 @@ class PageControllerSiteUser extends PageController {
 			feedback()->error("You must provide a username.");	
 		}
 		
-		if (input()->password1 != '' && input()->password2 != '') {
-			if (input()->password1 != input()->password2) {
+		if (input()->password != '' && input()->confirm_password != '') {
+			if (input()->password != input()->confirm_password) {
 				feedback()->error("Passwords do not match.");
 			}
 		}
 
-		if (input()->password1 != '' && input()->password2 != '') {
-			auth()->getRecord()->password = input()->password1;
+		if (input()->password != '' && input()->confirm_password != '') {
+			auth()->getRecord()->password = input()->password;
 			$user->password = auth()->getRecord()->password;
 		}
 		
