@@ -1023,8 +1023,6 @@ class CMS_Schedule extends CMS_Table {
 		}
 		
 		$sql .= " `datetime_discharge` >= :dateStart AND `datetime_discharge` <= :dateEnd AND `schedule`.`facility` = :facility AND (`status` = 'Approved' OR `status` = 'Discharged')";
-		echo $sql;
-		pr ($params);
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
