@@ -135,6 +135,8 @@ table#room-table tr > td {
 .text-right { text-align: right; }
 .text-center { text-align: center; }
 .clear { clear: both; }
+.clear-left { clear: left; }
+.clear-right { clear: right; }
 .bold { font-weight: bold; }
 .text-purple { color: #A65878; }
 .background-purple {
@@ -1057,12 +1059,61 @@ tr.census {
 	display: none;
 }
 
-#physican-admits {
-	float: left;
+.grow {
+	height: 100px;
 	width: 250px;
 	margin: 20px 0;
 	padding: 8px;
-	background: #d0e2f0;
+	float: left;
+	position: relative;
+	transition: height 0.5s;
+	-webkit-transition: 0.5s;
+}
+
+.grow:hover {
+	height: auto;
+}
+
+.inner-grow {
+	height: 85%;
+	width: 94%;
+	margin: auto;
+	padding: 8px;
+	float: left;
+	position: relative;
+	transition: height 0.5s;
+	-webkit-transition: 0.5s;
+}
+
+.inner-grow:hover {
+	height: auto;
+}
+
+#physican-admits {
+/*	float: left;
+	width: 250px;
+	margin: 20px 0;
+	padding: 8px;
+*/	background: #d0e2f0;
+	padding: 8px;
+}
+
+.physician-stats {
+	background: #fff;
+	padding: 8px;
+	overflow: hidden;
+}
+
+.physician-stats p {
+	margin: 2px;
+}
+
+.physician-stats h2 {
+	font-weight: bold;
+	font-size: 14px;
+	text-align: center;
+	background: #185687;
+	color: #fff;
 }
 
 #physican-admits table {
@@ -1272,8 +1323,9 @@ table#info-form th {
 }
 
 #facility-search-box {
+	clear: right;
 	float: right;
-	margin: 50px 0 0 0;
+	margin: 30px 0 5px 0;
 }
 
 #report-search-box {

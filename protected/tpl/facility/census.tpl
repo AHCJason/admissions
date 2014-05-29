@@ -77,27 +77,18 @@
 
 {if $facility != ''}
 	{if $type != 'empty'}
-		<div id="physican-admits">
-			<table>
-				<tr>
-					<th colspan="2">Number of Patients by Physician:</th>
-				</tr>
-		
-			{foreach $physicians as $k => $p}
-				{$physician = CMS_Physician::generate()}
-				{$physician->load($k)}
-				{if $physician->id != ''}			
-					<tr>
-						<td>{$physician->last_name}, {$physician->first_name}:</td>
-						<td align="right">{$p}</td>
-					</tr>
-				{/if}
-			{/foreach}
-				<tr>
-					<td align="right">Total:</td>
-					<td><strong>{$physicianTotal}<strong></td>
-				</tr>
-			</table>
+		<div id="physican-admits" class="grow">
+			<div class="physician-stats inner-grow">
+				<h2>Attending Physicians</h2>
+				{foreach $physicians as $k => $p}
+					{$physician = CMS_Physician::generate()}
+					{$physician->load($k)}
+					{if $physician->id != ''}			
+						<p>{$physician->last_name}, {$physician->first_name}: <span class="right">{$p}</span></p>
+					{/if}
+				{/foreach}
+				<p align="right">Total: <strong>{$physicianTotal}</strong></p>
+			</div>
 		</div>
 	{/if}
 	<div class="census-info success">
