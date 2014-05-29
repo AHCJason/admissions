@@ -1575,7 +1575,6 @@ class CMS_Schedule extends CMS_Table {
 	}
 	
 	
-	
 	public function fetchDischargesByHomeHealthName($date_start = false, $date_end = false, $facility = false, $location_id = false) {
 		$params = array(
 			":date_start" => $date_start,
@@ -1602,6 +1601,7 @@ class CMS_Schedule extends CMS_Table {
 		
 	}
 	
+	
 	public function fetchPhoneCallReport($date_start = false, $date_end = false, $facility = false) {
 		$params = array(
 			":date_start" => $date_start,
@@ -1615,6 +1615,7 @@ class CMS_Schedule extends CMS_Table {
 		return $obj->fetchCustom($sql, $params);
 		
 	}
+
 
 	public function fetchAdcReport($time_period = false, $year = false, $facility = false) {
 		
