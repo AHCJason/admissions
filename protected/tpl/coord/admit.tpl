@@ -1,7 +1,7 @@
 {setTitle title="New Admit Request"}
 {jQueryReady}
 
-
+	var elective = 0;
 	$("#org-field").hide();
 	$("#physician-field").hide();
 	$("#case-manager-field").hide();
@@ -68,9 +68,14 @@
 			}
 		});
 	});
-	
+
+	$("#elective-checkbox").change(function() {
+		elective = this.checked ? this.value : 0;
+	});
+
 	$("#admit-request-submit-as-new").live("click", function(e) {
 		e.preventDefault();
+
 		if ($("#admit-request-date-admit").val() == '') {
 			jAlert('You must select an admission date/time.');
 			return false;
@@ -91,7 +96,7 @@
 			other_phone: $("#other-phone").val(),
 			home_health: $("#home-health").val(),
 			other_diagnosis: $("#other-diagnosis").val(),
-			elective: $("#elective").val()
+			elective: elective
 		}, function(json) {
 			if (json.status == true) {
 				jAlert("Admit request has been saved.", "Success!", function(r) {
@@ -354,7 +359,10 @@
 						</td>
  -->				</tr>
  					<tr>
- 						<td><input type="checkbox" id="elective" name="elective" value="1" /> Patient is an elective surgery</td>
+ 						<td><input type="checkbox" id="elective-checkbox" name="elective-check" value="1" /> 
+ 							<input type="hidden" value="1" id="hdnElective" name="elective" />
+ 							Patient is an elective surgery
+ 						</td>
  					</tr>
 					<tr>
 						<td colspan="3" align="right"><input type="button" value="Search" id="admit-request-search" style="margin-top: 20px;" /></td>			

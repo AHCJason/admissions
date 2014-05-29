@@ -142,7 +142,7 @@
 		{if $occupant != false}
 			<td class="text-center">{$room->number}</td>
 			<td style="text-align: left;">{$occupant->fullName()}</td>
-			<td style="text-align: left;">{scheduleMenu schedule=$occupantSchedule}</td>
+			<td style="text-align: left; width: 37px;">{scheduleMenu schedule=$occupantSchedule}</td>
 			<td>{$room->datetime_admit|date_format: "%m/%d/%Y"}</td>
 			<td class="discharge-datetime">{if $room->datetime_discharge_bedhold_end != ''}
 				Hold until<br />{$room->datetime_discharge_bedhold_end|date_format: "%m/%d/%Y %I:%M %P"}

@@ -153,12 +153,19 @@ END;
 			$message = implode(";", $msg);
 			$image = "bell_error.png";
 		} else {
-			$message = "This pending admit request is ready for approval.";	
+			$message = "This pending admit request<br /> is ready for approval.";	
 			$image = "flag_green.png";
 		}
-		echo <<<END
-<a class="admit-error-details" title="{$message}"><img title="{$message}" src="{$ENGINE_URL}/images/icons/{$image}" /></a>
+		if ($schedule->status != "Approved") {
+			echo <<<END
+				<a class="tooltip"><img src="{$ENGINE_URL}/images/icons/{$image}" /><span>{$message}</span></a>
+
 END;
+		} else {
+			echo <<<END
+				<div class="clear"></div>
+END;
+		}
 						
 	
 }

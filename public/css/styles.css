@@ -1596,3 +1596,43 @@ div.drag-hover {
 .approved {
 	background: none;
 }
+
+
+/* Tooltip */
+
+a.tooltip {outline:none; }
+a.tooltip strong {line-height:30px;}
+a.tooltip:hover {text-decoration:none;} 
+a.tooltip span {
+    z-index:600;
+    display:none; 
+    padding: 5px 8px;
+    margin-top: -10px; 
+    margin-left: 10px;
+    width: auto; 
+    line-height: 14px;
+}
+a.tooltip:hover span{
+    display:inline; 
+    position:absolute; 
+    color:#111;
+    border:1px solid #333; 
+    background:#fff;
+    z-index: 1;
+}
+
+.callout {
+	z-index:20;
+	position:absolute;
+	top:30px;
+	border:0;
+	left:-12px;
+}
+    
+/*CSS3 extras*/
+a.tooltip span
+{
+    border-radius:4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+ }
