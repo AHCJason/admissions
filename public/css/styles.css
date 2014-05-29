@@ -868,9 +868,9 @@ div.facility-admits {
 
 div.facility-admit {
 	background: #75dc6d;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -879,9 +879,9 @@ div.facility-admit {
 div.facility-hmo {
 	background: #ffff32;
 	border: 1px solid #333;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -890,9 +890,9 @@ div.facility-hmo {
 div.facility-pending-no-referral {
 	background: #e1e1e1;
 	border: 1px solid #333;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -901,9 +901,9 @@ div.facility-pending-no-referral {
 
 div.facility-admit-pending {
 	background: #6BBEFF;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -916,9 +916,9 @@ div.facility-discharges {
 
 div.facility-discharge {
 	background: #FF6A6A;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -926,9 +926,9 @@ div.facility-discharge {
 
 div.facility-sent {
 	background: #CC3170;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -937,7 +937,7 @@ div.facility-sent {
 div.facility-admits {
 	width: 920px;
 	height: auto;
-	font-size: 9px;
+	font-size: 11x;
 	border-bottom: 1px solid #195688;
 	padding-bottom: 5px;
 	margin: 0px 0px 20px 0px;
