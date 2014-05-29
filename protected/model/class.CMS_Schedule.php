@@ -170,7 +170,7 @@ class CMS_Schedule extends CMS_Table {
 
 		$schedule->room = $room->id;
 		$schedule->facility = $facility->id;
-		$schedule->datetime_admit = $datetime_admit;
+		$schedule->datetime_admit = date('Y-m-d g:i:s', strtotime($datetime_admit));
 		if ($status == 1) {
 			$schedule->status = "Approved";
 		} else {

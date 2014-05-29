@@ -244,12 +244,6 @@ class PageControllerCoord extends PageController {
 		$msg = array();
 		$facility = input()->facility;
 		if (input()->goToApprove == 1) {
-			$newAdmit = 1;
-		} else {
-			$newAdmit = 0;
-		}
-		
-		if (input()->goToApprove == 1) {
 			$approved = true;
 		} else {
 			$approved = false;

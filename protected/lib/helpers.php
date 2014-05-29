@@ -83,6 +83,10 @@ function scheduleMenu($params, &$smarty) {
 		
 	}
 
+	if ($schedule->room != '' & $schedule->status == 'Approved') {
+		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=room_transfer&amp;schedule={$schedule->pubid}'>Room Transfer</a></li>";
+	}
+
 
 
 	/*

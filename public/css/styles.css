@@ -103,6 +103,9 @@ table#room-table {
 	margin-top: 15px;
 }
 
+table#room-table tr > td {
+	padding: 8px 0;
+}
 
 
 /* General Use Clases */
