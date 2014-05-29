@@ -77,19 +77,21 @@
 
 {if $facility != ''}
 	{if $type != 'empty'}
-		<div id="physican-admits" class="grow">
-			<div class="physician-stats inner-grow">
-				<h2>Attending Physicians</h2>
-				{foreach $physicians as $k => $p}
-					{$physician = CMS_Physician::generate()}
-					{$physician->load($k)}
-					{if $physician->id != ''}			
-						<p>{$physician->last_name}, {$physician->first_name}: <span class="right">{$p}</span></p>
-					{/if}
-				{/foreach}
-				<p align="right">Total: <strong>{$physicianTotal}</strong></p>
+		{if !empty($physicians)}
+			<div id="physican-admits" class="grow">
+				<div class="physician-stats inner-grow">
+					<h2>Attending Physicians</h2>
+					{foreach $physicians as $k => $p}
+						{$physician = CMS_Physician::generate()}
+						{$physician->load($k)}
+						{if $physician->id != ''}			
+							<p>{$physician->last_name}, {$physician->first_name}: <span class="right">{$p}</span></p>
+						{/if}
+					{/foreach}
+					<p align="right">Total: <strong>{$physicianTotal}</strong></p>
+				</div>
 			</div>
-		</div>
+		{/if}
 	{/if}
 	<div class="census-info success">
 		{$datetime|date_format: "%B"} Avg LoS:&nbsp; <span class="text-16">{$avgLength}</span> days
