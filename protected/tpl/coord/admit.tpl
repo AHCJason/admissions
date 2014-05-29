@@ -119,7 +119,7 @@
 			jAlert('You must select a admit date.');
 			return false;
 		} else {
-			location.href = $(this).attr("href") + '&datetime_admit=' + $("#admit-request-date-admit").val() + "&facility=" + $("#admit-request-facility option:selected").val() + "&admit_from=" + $("#admit-from").val() + "&readmit_type=" + $("#readmit-type :checked").val() + "&elective=" + $("#elective").val() + "&home_health=" + $("#home-health").val() + "&hospital_id=" + $("#hospital").val() + "&physician_id=" + $("#physician").val() + "&case_manager_id=" + $("#case-manager").val() + "&other_name=" + $("#other-name").val() + "&other_phone=" + $("#other-phone").val();
+			location.href = $(this).attr("href") + '&datetime_admit=' + $("#admit-request-date-admit").val() + "&facility=" + $("#admit-request-facility option:selected").val() + "&admit_from=" + $("#admit-from").val() + "&readmit_type=" + $("#readmit-type :checked").val() + "&elective=" + elective + "&home_health=" + $("#home-health").val() + "&hospital_id=" + $("#hospital").val() + "&physician_id=" + $("#physician").val() + "&case_manager_id=" + $("#case-manager").val() + "&other_name=" + $("#other-name").val() + "&other_phone=" + $("#other-phone").val();
 		}
 	});
 	
