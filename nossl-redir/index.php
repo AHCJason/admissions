@@ -1,4 +1,4 @@
 <?php
 
-header("Location: https://dev.aptitudecare.com");
+header("Location: https://ahc-dev.aptitudecare.com");
 exit;
