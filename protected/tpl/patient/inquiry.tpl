@@ -913,7 +913,7 @@ $("#return-to-dashboard").click(function(e) {
 	<tr>
 		<td>&nbsp;</td>
 	</tr>
-	{if $schedule->elective == 1}
+	{if $schedule->elective}
 	<tr>
 		<td colspan="3" align="left">
 			<input type="checkbox" name="confirmed" value="1"{if $schedule->confirmed == 1} checked{/if} /> Elective admit has been confirmed 

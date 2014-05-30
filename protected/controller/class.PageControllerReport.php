@@ -377,8 +377,7 @@ class PageControllerReport extends PageController {
 			smarty()->assign('zip_code', input()->viewby);
 			smarty()->assign('admits', $admits);
 			$this->setView('report/admission', 'admits_by_zip');
-		}
-							
+		}							
 		
 	}
 	
@@ -390,8 +389,8 @@ class PageControllerReport extends PageController {
 		} 
 		
 	
-		$returnUrl = $SITE_URL . "/?page=report&action=admission&facility=" . $facility->pubid . "&start_date=" . input()->start_date . "&end_date=" . input()->end_date . "&orderby=" . input()->orderby . "&filterby=" . input()->filterby . "&viewby=" . input()->viewby;
-		smarty()->assign("returnUrl", $returnURL);
+		$returnUrl = "/?page=report&action=admission&facility=" . $facility->pubid . "&start_date=" . input()->start_date . "&end_date=" . input()->end_date . "&orderby=" . input()->orderby . "&filterby=" . input()->filterby . "&viewby=" . input()->viewby;
+		smarty()->assign("returnUrl", $returnUrl);
 		smarty()->assign("zipCode", input()->viewby);
 		smarty()->assign("facility", $facility);
 		

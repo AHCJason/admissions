@@ -1,3 +1,4 @@
+{setTitle title="Manage Users"}
 <h1 class="text-center">Manage Users</h1>
 
 {jQueryReady}

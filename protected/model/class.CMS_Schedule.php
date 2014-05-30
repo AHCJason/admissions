@@ -161,70 +161,94 @@ class CMS_Schedule extends CMS_Table {
 		return $obj->fetchCustom($sql, $params);
 
 	}
-	
-	public static function setFacilityAndRoom($s, $f, $r, $pr, $d, $a) {
-		$schedule = new CMS_Schedule($s);
-		$facility = new CMS_Facility($f);
-		$room = new CMS_Room($r);
-				
-		// validate
-		if ($schedule->valid() == false) {
-			$msg[] = "Scheduling record not found.";
-		}
-		if ($facility->valid() == false) {
-			$msg[] = "Invalid facility record.";
-		}
-		if ($room->valid() == false) {
-			$msg[] = "Invalid room record.";
-		}
-		
-		
-		/*
-		 * Check if the room to which the patient is being transferred is currently occupied.  If true then
-		 * the patient in the new room needs to be moved to the room from which the patient is being transferred.
-		 *	
-		 */
-		//if (! $room->isEmpty($schedule->datetime_admit)) {
-		//	$msg[] = "Room {$r->number} is not available for " . datetime_format($schedule->datetime_admit);
-		//}
-		
-		
-		$occupied = $schedule->checkAvailability(date('Y-m-d H:i:s', strtotime('now')), $room->id, $facility->id);
-		$current_occupant = $occupied[0];
-						
-		if (!empty ($occupied)) {
-			// Need to transfer this patient to the room the transfer patient is coming from
-			$current_occupant->room = $pr;
-			$current_occupant->datetime_room_transfer = datetime(strtotime($d));
-			$current_occupant->previous_room = $room->id;
-			
-			try {
-				$current_occupant->save();
-			} catch (Exception $e) {
-				return array(false, array("Unable to switch the occupant of the transfer to room to the transfer from room."));
-			}			
-		}
-		
-		if (count($msg) == 0) {
-			$schedule->room = $room->id;
-			$schedule->facility = $facility->id;
-			if ($a == 1) {
-				$schedule->datetime_admit = datetime(strtotime($d));
-			} else {
-				$schedule->datetime_room_transfer = datetime(strtotime($d));
-				$schedule->previous_room = $pr;
-			}
-			
-			try {
-				$schedule->save();
-				return array(true);
-			} catch (Exception $e) {
-				return array(false, array("Unknown error while saving room assignment."));
-			}
+
+
+	public static function assignRoom($schedule_id = false, $facility_id = false, $room = false, $datetime_admit = false, $approved = false) {
+		$schedule = new CMS_Schedule($schedule_id);
+		$facility = new CMS_Facility($facility_id);
+		$room = new CMS_Room($room);
+
+		$schedule->room = $room->id;
+		$schedule->facility = $facility->id;
+		$schedule->datetime_admit = date('Y-m-d g:i:s', strtotime($datetime_admit));
+		if ($status == 1) {
+			$schedule->status = "Approved";
 		} else {
-			return array(false, $msg);
+			$schedule->status = "Under Consideration";
+		}
+
+		try {
+			$schedule->save();
+			return array(true);
+		} catch (Exception $e) {
+			return array(false, array("Could not save room assignment."));
 		}
 	}
+
+	
+	// public static function setFacilityAndRoom($s, $f, $r, $pr, $d, $a) {
+	// 	$schedule = new CMS_Schedule($s);
+	// 	$facility = new CMS_Facility($f);
+	// 	$room = new CMS_Room($r);
+				
+	// 	// validate
+	// 	if ($schedule->valid() == false) {
+	// 		$msg[] = "Scheduling record not found.";
+	// 	}
+	// 	if ($facility->valid() == false) {
+	// 		$msg[] = "Invalid facility record.";
+	// 	}
+	// 	if ($room->valid() == false) {
+	// 		$msg[] = "Invalid room record.";
+	// 	}
+		
+		
+	// 	/*
+	// 	 * Check if the room to which the patient is being transferred is currently occupied.  If true then
+	// 	 * the patient in the new room needs to be moved to the room from which the patient is being transferred.
+	// 	 *	
+	// 	 */
+	// 	//if (! $room->isEmpty($schedule->datetime_admit)) {
+	// 	//	$msg[] = "Room {$r->number} is not available for " . datetime_format($schedule->datetime_admit);
+	// 	//}
+		
+		
+	// 	$occupied = $schedule->checkAvailability(date('Y-m-d H:i:s', strtotime('now')), $room->id, $facility->id);
+	// 	$current_occupant = $occupied[0];
+						
+	// 	if (!empty ($occupied)) {
+	// 		// Need to transfer this patient to the room the transfer patient is coming from
+	// 		$current_occupant->room = $pr;
+	// 		$current_occupant->datetime_room_transfer = datetime(strtotime($d));
+	// 		$current_occupant->previous_room = $room->id;
+			
+	// 		try {
+	// 			$current_occupant->save();
+	// 		} catch (Exception $e) {
+	// 			return array(false, array("Unable to switch the occupant of the transfer to room to the transfer from room."));
+	// 		}			
+	// 	}
+		
+	// 	if (count($msg) == 0) {
+	// 		$schedule->room = $room->id;
+	// 		$schedule->facility = $facility->id;
+	// 		if ($a == 1) {
+	// 			$schedule->datetime_admit = datetime(strtotime($d));
+	// 		} else {
+	// 			$schedule->datetime_room_transfer = datetime(strtotime($d));
+	// 			$schedule->previous_room = $pr;
+	// 		}
+			
+	// 		try {
+	// 			$schedule->save();
+	// 			return array(true);
+	// 		} catch (Exception $e) {
+	// 			return array(false, array("Unknown error while saving room assignment."));
+	// 		}
+	// 	} else {
+	// 		return array(false, $msg);
+	// 	}
+	// }
 	
 	
 	
@@ -1023,7 +1047,6 @@ class CMS_Schedule extends CMS_Table {
 		}
 		
 		$sql .= " `datetime_discharge` >= :dateStart AND `datetime_discharge` <= :dateEnd AND `schedule`.`facility` = :facility AND (`status` = 'Approved' OR `status` = 'Discharged')";
-		
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
@@ -1552,7 +1575,6 @@ class CMS_Schedule extends CMS_Table {
 	}
 	
 	
-	
 	public function fetchDischargesByHomeHealthName($date_start = false, $date_end = false, $facility = false, $location_id = false) {
 		$params = array(
 			":date_start" => $date_start,
@@ -1579,6 +1601,7 @@ class CMS_Schedule extends CMS_Table {
 		
 	}
 	
+	
 	public function fetchPhoneCallReport($date_start = false, $date_end = false, $facility = false) {
 		$params = array(
 			":date_start" => $date_start,
@@ -1592,6 +1615,7 @@ class CMS_Schedule extends CMS_Table {
 		return $obj->fetchCustom($sql, $params);
 		
 	}
+
 
 	public function fetchAdcReport($time_period = false, $year = false, $facility = false) {
 		

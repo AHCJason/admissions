@@ -1,3 +1,4 @@
+{setTitle title="Manage Healthcare Locations"}
 {jQueryReady}
 
 $("#hospital-search").autocomplete({

@@ -56,7 +56,8 @@ input, textarea, select {
 	color: #050505;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	background: #e8f2f9;
+	/*background: #e8f2f9;*/
+	background: #ffffff;
 }
 
 input[type="text"], input[type="password"] {
@@ -102,6 +103,9 @@ table#room-table {
 	margin-top: 15px;
 }
 
+table#room-table tr > td {
+	padding: 8px 0;
+}
 
 
 /* General Use Clases */
@@ -131,6 +135,8 @@ table#room-table {
 .text-right { text-align: right; }
 .text-center { text-align: center; }
 .clear { clear: both; }
+.clear-left { clear: left; }
+.clear-right { clear: right; }
 .bold { font-weight: bold; }
 .text-purple { color: #A65878; }
 .background-purple {
@@ -153,6 +159,16 @@ table#room-table {
 .background-orange {
 	background: orange;
 	padding: 5px 10px;
+}
+
+.background-blue {
+	background: #6bbeff;
+	padding: 5px 10px;
+}
+
+.color-code {
+	margin: 2px;
+	border: 1px solid #c1c1c1;
 }
 
 .selected-page {
@@ -275,25 +291,19 @@ div#nav ul li a {
 	text-decoration: none;
 }
 
-
-div #nav ul li ul li a:hover {
-	color: #000;
-	text-shadow: 1px 1px 1px #666;
-}
-
 div#nav ul li ul {
 /* 	right: -999em; */
 	display: none;
-	margin: 4px 0px 0px -8px;
-	padding: 5px 10px 0px 10px;
+	margin: 4px 0px 0px -9px;
+	padding: 6px;
 	background: url(../images/dropdown-bg.png) repeat;
-	border-right: 2px solid #fff;
-	border-bottom: 2px solid #fff;
-	border-left: 2px solid #fff;
-	border-bottom-left-radius: 3px;
-	-moz-border-radius-bottomleft: 3px;
-	border-bottom-right-radius: 3px;
-	-moz-border-radius-bottomright: 3px;
+	border-right: 1px dotted #333;
+	border-bottom: 1px dotted #333;
+	border-left: 1px dotted #333;
+	border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-right-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
 	float: none;
 	position: absolute;
 	z-index: 100;
@@ -308,21 +318,41 @@ div#nav li:hover ul {
 
 div#nav ul li ul li {
 	margin: 0;
-	padding: 5px 15px;
+	padding: 5px 4px;
 	display: block;
 	float: none;
-	background: none;
+	background: #fff;
 	border-top-left-radius: 0px;
 	-moz-border-radius-topleft: 0px;
 	border-top-right-radius: 0px;
 	-moz-border-radius-topright: 0px;
-	text-align: right;
+	text-align: left;
 	white-space: nowrap;
 	font-size: 12px;
 }
 
+div #nav ul li ul li a:hover {
+	color: #fff;
+}
+
+div #nav ul li ul li a {
+	display: block;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+div#nav ul li ul li:hover {
+	background: #185687;
+	color: #fff;
+}
+
+div#nav ul li ul li:hover a {
+	color: inherit;
+}
+
+
 div#nav ul li ul li:last-child {
-	margin-bottom: 10px;
+	margin-bottom: 0;
 }
 
 img.logo {
@@ -722,6 +752,10 @@ br#report-table {
 	margin-bottom: 20px;
 }
 
+#census-report-table tr.border-bottom td {
+	border-bottom: 1px dotted #c1c1c1;
+}
+
 .report-total {
 	background-color: #ccc;
 	font-weight: bold;
@@ -834,9 +868,9 @@ div.facility-admits {
 
 div.facility-admit {
 	background: #75dc6d;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -845,9 +879,9 @@ div.facility-admit {
 div.facility-hmo {
 	background: #ffff32;
 	border: 1px solid #333;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -856,9 +890,9 @@ div.facility-hmo {
 div.facility-pending-no-referral {
 	background: #e1e1e1;
 	border: 1px solid #333;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -867,9 +901,9 @@ div.facility-pending-no-referral {
 
 div.facility-admit-pending {
 	background: #6BBEFF;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -882,9 +916,9 @@ div.facility-discharges {
 
 div.facility-discharge {
 	background: #FF6A6A;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -892,9 +926,9 @@ div.facility-discharge {
 
 div.facility-sent {
 	background: #CC3170;
-	font-size: 9px;
-	line-height: 11px;
-	padding: 0px 3px;
+	font-size: 11px;
+	line-height: 12px;
+	padding: 3px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	margin: 0px 0px 3px 0px;
@@ -903,7 +937,7 @@ div.facility-sent {
 div.facility-admits {
 	width: 920px;
 	height: auto;
-	font-size: 9px;
+	font-size: 11x;
 	border-bottom: 1px solid #195688;
 	padding-bottom: 5px;
 	margin: 0px 0px 20px 0px;
@@ -1039,12 +1073,61 @@ tr.census {
 	display: none;
 }
 
-#physican-admits {
-	float: left;
+.grow {
+	height: 100px;
 	width: 250px;
 	margin: 20px 0;
 	padding: 8px;
-	background: #d0e2f0;
+	float: left;
+	position: relative;
+	transition: height 0.5s;
+	-webkit-transition: 0.5s;
+}
+
+.grow:hover {
+	height: auto;
+}
+
+.inner-grow {
+	height: 85%;
+	width: 94%;
+	margin: auto;
+	padding: 8px;
+	float: left;
+	position: relative;
+	transition: height 0.5s;
+	-webkit-transition: 0.5s;
+}
+
+.inner-grow:hover {
+	height: auto;
+}
+
+#physican-admits {
+/*	float: left;
+	width: 250px;
+	margin: 20px 0;
+	padding: 8px;
+*/	background: #d0e2f0;
+	padding: 8px;
+}
+
+.physician-stats {
+	background: #fff;
+	padding: 8px;
+	overflow: hidden;
+}
+
+.physician-stats p {
+	margin: 2px;
+}
+
+.physician-stats h2 {
+	font-weight: bold;
+	font-size: 14px;
+	text-align: center;
+	background: #185687;
+	color: #fff;
 }
 
 #physican-admits table {
@@ -1164,8 +1247,8 @@ div.on-site h2 {
 /* UL styles */
 .dropdown dd ul { background:#FFFFFF none repeat scroll 0 0; display:none;
     list-style:none; padding:3px 0; position:absolute;
-    left:0px; width:200px; left:auto; right:0; border:1px solid #656565; cursor:pointer; z-index: 501;
-    box-shadow: 5px 5px 5px #666; }
+    left:0px; top: -75px; width:200px; left:auto; right:0; border:1px solid #656565; cursor:pointer; z-index: 501;
+    box-shadow: 8px 8px 8px #666; }
 .dropdown dd ul li{ background-color:#FFFFFF; margin:0; width:200px; }
 .dropdown span.value { display:none;}
 .dropdown dd ul li a { display:block; font-weight:normal; margin: 4px 0; font-style: normal; width:178px; text-align:left; overflow:hidden; padding:2px 4px 2px 19px; color:#333; text-decoration:none; font-size: 11px;}
@@ -1254,8 +1337,9 @@ table#info-form th {
 }
 
 #facility-search-box {
+	clear: right;
 	float: right;
-	margin: 50px 0 0 0;
+	margin: 30px 0 5px 0;
 }
 
 #report-search-box {
@@ -1494,5 +1578,75 @@ div.drag-hover {
 	height: 400px;
 }
 
+.ui-state-highlight {
+	clear: both;
+}
+
+.ui-state-error {
+	background: none;
+}
+
+#form-error {
+	margin-top: 5px;
+	height: 15px;
+	padding: 2px 10px;
+	background: #ff9292;
+}
+
+#form-error p {
+	margin: 0;
+	padding: 0;
+}
+
+.menu-header {
+	font-weight: bold;
+	padding: 4px 0 0 8px;
+}
+
+.under-consideration {
+	background: #6bbeff;
+}
+
+.approved {
+	background: none;
+}
 
 
+/* Tooltip */
+
+a.tooltip {outline:none; }
+a.tooltip strong {line-height:30px;}
+a.tooltip:hover {text-decoration:none;} 
+a.tooltip span {
+    z-index:600;
+    display:none; 
+    padding: 5px 8px;
+    margin-top: -10px; 
+    margin-left: 10px;
+    width: auto; 
+    line-height: 14px;
+}
+a.tooltip:hover span{
+    display:inline; 
+    position:absolute; 
+    color:#111;
+    border:1px solid #333; 
+    background:#fff;
+    z-index: 1;
+}
+
+.callout {
+	z-index:20;
+	position:absolute;
+	top:30px;
+	border:0;
+	left:-12px;
+}
+    
+/*CSS3 extras*/
+a.tooltip span
+{
+    border-radius:4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+ }

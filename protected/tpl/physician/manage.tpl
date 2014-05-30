@@ -1,3 +1,4 @@
+{setTitle title="Manage Physicians"}
 {jQueryReady}
 
 $("#physician-search").autocomplete({

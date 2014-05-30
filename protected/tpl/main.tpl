@@ -4,21 +4,23 @@
 {include file="$cms_template_dir/_head.tpl"}
 {include file="$cms_template_dir/_javascript_auto.tpl"}
 
-<script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/jquery.validate.min.js"></script>
+ <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery.hoverintent.r5.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/additional-methods.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery.alerts-1.1/jquery.alerts.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery.maskedinput-011748c/src/jquery.maskedinput.js"></script>
 <script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/js/jquery-ui-1.8.12.custom.min.js"></script>
-<script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/development-bundle/external/jquery.cookie.js"></script>
+ <script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/development-bundle/external/jquery.cookie.js"></script>
 <script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/js/jquery.qtip.min.js"></script>
 <link rel="stylesheet" href="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/css/jquery.qtip.min.css" type="text/css" />
-<script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-ui-timepicker-addon.js"></script>
+ <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-ui-timepicker-addon.js"></script>
 <link rel="stylesheet" type="text/css" href="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/css/custom-theme/jquery-ui-1.8.12.custom.css" />
 <link rel="stylesheet" type="text/css" href="{$ENGINE_URL}/js/jquery/jquery.alerts-1.1/jquery.alerts.css" />
 <script type="text/javascript" src="{$SITE_URL}/js/shadowbox-3.0.3/shadowbox.js"></script>
 <link rel="stylesheet" href="{$SITE_URL}/js/shadowbox-3.0.3/shadowbox.css" type="text/css">
-<script type="text/javascript" src="{$SITE_URL}/js/modernizr.js"></script>
+<!-- <script type="text/javascript" src="{$SITE_URL}/js/modernizr.js"></script>
+ -->
+ <script type="text/javascript" src="{$SITE_URL}/js/general.js"></script>
 
 <!-- Highcharts js framework -->
 <script src="{$SITE_URL}/js/highcharts/js/highcharts.js"></script>
@@ -36,10 +38,13 @@
 		overlayOpacity: "0.25"
 	});
 </script>
+
+{javascript}
+	var SITE_EMAIL = '{$SITE_EMAIL}';
+{/javascript}
+
+
 {if ($page == "patient" && $action == "printInquiry") || ($page == "patient" && $action == "printNursing")}
-
-
-
 </head>
 <body>
 {include file="$content_tpl"}
@@ -51,136 +56,7 @@
 {if $isTV == 1}<link rel="stylesheet" href="{$SITE_URL}/css/tv.css" type="text/css" media="all" />{/if}
 {if $siteCss}<link rel="stylesheet" href="{$SITE_URL}/css/site_css/{$siteCss}" type="text/css" media="all" />{/if}
 {if $isPrint == 1}<link rel="stylesheet" href="{$SITE_URL}/css/print.css" type="text/css" media="all" />{/if}
-{jQueryReady}
-// date formats
-Date.firstDayOfWeek = 0;
-Date.format = 'mm/dd/yyyy';
 
-// date picker
-$(".date-picker").datepicker({
-	startDate: '01/01/2008',
-	clickInput: true,
-	createButton: false
-});
-
-// time picker
-$(".time-picker").datetimepicker({
-	ampm: true
-});
-$(".datetime-picker").datetimepicker({
-	ampm: true
-});
-
-$(".dialog").dialog({
-	autoOpen: false,
-	width: 'auto',
-	height: 'auto',
-	modal: true
-});
-
-$(".remote-dialog").live("click", function(e) {
-	e.preventDefault();
-	
-	var href = $(this).attr("href");
-	
-	$("#remote-dialog").dialog({
-		width: 'auto', 
-		height: 'auto',
-		modal: 'true',
-		open: function() {
-			$("#remote-dialog-frame").load(href + "&isMicro=1");
-		}
-	}).dialog("open")
-	
-	return false;
-});
-
-$("li#facility-dashboard").hoverIntent(
-	function() {
-		$("ul#facility-dashboard-dropdown").stop().fadeIn(500, function() {
-			$("ul#facility-dashboard-dropdown").show();	
-		});	
-	}, function() {
-		$("ul#facility-dashboard-dropdown").hide();
-	}
-);
-
-
-$(".dropdown dt a").click(function() {
-
-    // Change the behaviour of onclick states for links within the menu.
-	var toggleId = "#" + this.id.replace(/^link/,"ul");
-
-    // Hides all other menus depending on JQuery id assigned to them
-	$(".dropdown dd ul").not(toggleId).hide();
-	$(".dropdown dt a").not(toggleId).css("z-index", "1");
-	$(".dropdown dt").not(toggleId).css("z-index", "1");
-	$(".dropdown").not(toggleId).css("z-index", "1");
-
-    //Only toggles the menu we want since the menu could be showing and we want to hide it.
-	$(toggleId).toggle();
-	$(toggleId).parent().parent().css("z-index", 5000);
-	$(toggleId).parent().css("z-index", 5000);
-	$(toggleId).css("z-index", 5000);
-
-    //Change the css class on the menu header to show the selected class.
-	if($(toggleId).css("display") == "none"){
-		$(this).removeClass("selected");
-	}else{
-		$(this).addClass("selected");
-	}
-
-});
-
-$(".dropdown dd ul li a").click(function() {
-
-    // This is the default behaviour for all links within the menus
-    var text = $(this).html();
-    $(".dropdown dt a span").html(text);
-    $(".dropdown dd ul").hide();
-});
-
-$(document).bind('click', function(e) {
-
-    // Lets hide the menu when the page is clicked anywhere but the menu.
-    var $clicked = $(e.target);
-    if (! $clicked.parents().hasClass("dropdown")){
-        $(".dropdown dd ul").hide();
-		$(".dropdown dt a").removeClass("selected");
-	}
-
-});
-
-$(".admit-error-details").click(function() {
-	var msg = $(this).attr("title");
-	jAlert(msg);
-});
-
-$(".approve-admit-link").click(function(e) {
-	e.preventDefault();
-	var anchor = this;
-	jConfirm('Are you sure you want to approve this request? If you click OK, you will be prompted to assign this patient to a room.', 'Confirmation Required', function(r) {
-		if (r == true) {
-			location.href = $(anchor).attr("href");
-		} else {
-			return false;
-		}
-	});
-
-	return false;
-});
-$(".cancel-admit-link").click(function(e) {
-	e.preventDefault();
-	var anchor = this;
-	jConfirm('Are you sure you want to cancel this inquiry? This action cannot be undone.', 'Confirm Cancellation', function(r) {
-		if (r == true) {
-			location.href = $(anchor).attr("href");
-		}
-	});
-	return false;
-});
-
-{/jQueryReady}
 <body>
 {if $isMicro == 1}
 	{include file="_feedback.tpl"}
