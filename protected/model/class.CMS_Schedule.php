@@ -285,7 +285,7 @@ class CMS_Schedule extends CMS_Table {
 		
 		
 		if ($facilities != false) {
-			$sql .= "select `schedule`.*, `patient_admit`.`hospital_id`, `patient_admit`.`admit_from`, `patient_admit`.`case_manager_id`, `patient_admit`.`datetime_pickup`, `patient_admit`.`other_diagnosis`, `patient_admit`.`paymethod`, `facility`.`name` as `facility_name`, `patient_admit`.`referral` from `schedule` inner join `facility` on `schedule`.`facility`=`facility`.`id` inner join `patient_admit` on `patient_admit`.`id`=`schedule`.`patient_admit`";
+			$sql .= "select `schedule`.*, `patient_admit`.`hospital_id`, `patient_admit`.`admit_from`, `patient_admit`.`case_manager_id`, `patient_admit`.`datetime_pickup`, `patient_admit`.`other_diagnosis`, `patient_admit`.`paymethod`, `facility`.`name` as `facility_name`, `patient_admit`.`referral`,  `patient_admit`.`notes_file0` from `schedule` inner join `facility` on `schedule`.`facility`=`facility`.`id` inner join `patient_admit` on `patient_admit`.`id`=`schedule`.`patient_admit`";
 		} else {
 			$sql = "select * from `schedule`";
 		}
