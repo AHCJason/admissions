@@ -781,6 +781,28 @@ class PageControllerFacility extends PageController {
 		}
 	}
 	
+	
+	public function delete() {
+		if (input()->schedule_hospital == '') {
+			feedback()->error('Select a valid Hospital Visit');
+			$this->redirect(input()->_path);
+		} else {
+			$sh = new CMS_Schedule_Hospital(input()->schedule_hospital);
+			
+			
+			if ($sh->deleteVisit($sh->id)) {
+				feedback()->conf("The hospital visit was successfully deleted.");
+				$this->redirect(SITE_URL . "/?page=facility&action=census");
+			} else {
+				feedback()->error('Could not delete the hospital visit.');
+				$this->redirect(input()->_path);
+			}
+		}
+		
+	}
+
+
+	
 /*
 	public function cancelHospitalVisit() {
 		if (input()->schedule != '') {
@@ -2651,6 +2673,5 @@ elseif(input()->affirm == 'discharged_home') {
 			return false;
 		}
 	}
-
-	
+		
 }
