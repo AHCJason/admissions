@@ -9,7 +9,7 @@ class CalculateAndSaveADC extends CLIScript {
 	
 	
 	public static function exec() {
-		$date = date('Y-m-29 23:59:59', strtotime('now'));
+		$date = date('Y-m-d 23:59:00', strtotime('now'));
 		$dayCount = date('j', strtotime($date));
 		$currentVals = array();
 		
