@@ -2023,4 +2023,112 @@ class PageControllerPatient extends PageController {
 		return false;
 	}
 	
+	
+	public function upload() {
+		$facilities = auth()->getRecord()->getFacilities();
+		smarty()->assign('facilities', $facilities);
+	}
+	
+	public function uploadData() {
+		// Get CSV info and assign to the correct variables prior to saving
+		if ($_FILES["patient_data"]["tmp_name"] != '') {
+			$filename = $_FILES["patient_data"]["tmp_name"];
+		} else {
+			$filename = false;
+		}
+				
+		$facility = new CMS_Facility(input()->facility);
+		
+		// Get data from the uploaded csv file		
+		$data = $this->csv_to_array($filename);
+				
+		// Instantiate new objects and save data
+		foreach ($data as $d) {
+			if (!empty($d)) {
+				
+				$patient = new CMS_Patient_Admit();
+				
+				$patient->last_name = $d['last_name'];
+				$patient->first_name = $d['first_name'];
+				$patient->middle_name = $d['middle_name'];
+				$patient->datetime_created = datetime();
+				$patient->site_user_created = auth()->getRecord()->id;
+				$patient->person_id = generate_pubid();
+				$patient->address = $d['address'];
+				$patient->city = $d['city'];
+				$patient->state = $d['state'];
+				$patient->zip = $d['zip'];
+				$patient->phone = $d['phone'];
+				$patient->birthday = $d['birthday'];
+				$patient->sex = $d['sex'];
+				$patient->ssn = $d['ssn'];
+				$patient->paymethod = $d['paymethod'];
+				$patient->medicare_number = $d['medicare_number'];
+				
+				
+				try {
+					$patient->save();
+					feedback()->conf("The patient admit for {$patient->first_name} {$patient->last_name} has been saved.");
+				} catch (ORMException $e) {
+					feedback()->error("There was an error while attempting to save this new patient admit request.");
+				}
+				
+				// Need to find the id for the room number entered
+				$obj = new CMS_Room();		
+				$room = $obj->fetchRoom($d['room'], $facility->id);
+				
+				// Set items for the new patient schedule
+				$schedule = new CMS_Schedule();
+				$schedule->patient_admit = $patient->id;
+				$schedule->facility = $facility->id;
+				$schedule->status = "Approved";
+				$schedule->room = $room[0]->id;
+				$schedule->datetime_admit = date('Y-m-d 11:00:00', strtotime($d['datetime_admit']));
+				$schedule->long_term = $d['long_term'];	
+				
+				try {
+					$schedule->save();
+					feedback()->conf("The patient schedule for {$patient->first_name} {$patient->last_name} has been saved");
+				} catch (ORMException $e) {
+					feedback()->error("There was an error while attempting to add this new patient to the schedule");
+					CMS_Patient_Admit::delete($patient);
+				}
+			}
+					
+		}
+		
+		$this->redirect();
+		
+	}
+	
+	public function csv_to_array($filename = '', $delimiter = ',') {
+		
+		if(file_exists($filename) || is_readable($filename)) {
+			$f = fopen($filename, "r");
+			
+			$i = 0;
+			$header = array();
+			while ($row = fgetcsv($f)) {
+				foreach ($row as $key => $value) {
+					if ($i == 0) {
+						$header[] = $value;
+					} else {
+						foreach ($header as $k => $v) {
+							if ($k == $key) {
+								$data[$i][$v] = $value;
+								
+							}								
+						}						
+					}					
+				}
+				$i++;
+			}
+			fclose($f);	
+			return $data;
+		} else {
+			return false;
+		}
+        
+	}
+	
 }

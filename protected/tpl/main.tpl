@@ -91,6 +91,7 @@
 								{if $auth->getRecord()->isAdmissionsCoordinator() == 1}
 									<li><a href="{$SITE_URL}/?page=siteUser&amp;action=manage">Users</a></li>
 								{/if}
+								<li><a href="{$SITE_URL}/?page=patient&amp;action=upload">Upload Patients</a></li>
 							</ul>
 						</li>	
 					<li><a href="#">Facility Info</a>

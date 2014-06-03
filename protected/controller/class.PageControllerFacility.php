@@ -781,6 +781,28 @@ class PageControllerFacility extends PageController {
 		}
 	}
 	
+	
+	public function delete() {
+		if (input()->schedule_hospital == '') {
+			feedback()->error('Select a valid Hospital Visit');
+			$this->redirect(input()->_path);
+		} else {
+			$sh = new CMS_Schedule_Hospital(input()->schedule_hospital);
+			
+			
+			if ($sh->deleteVisit($sh->id)) {
+				feedback()->conf("The hospital visit was successfully deleted.");
+				$this->redirect(SITE_URL . "/?page=facility&action=census");
+			} else {
+				feedback()->error('Could not delete the hospital visit.');
+				$this->redirect(input()->_path);
+			}
+		}
+		
+	}
+
+
+	
 /*
 	public function cancelHospitalVisit() {
 		if (input()->schedule != '') {
@@ -1895,8 +1917,18 @@ elseif(input()->affirm == 'discharged_home') {
 		 * Note: Get ADC for each day of the current month and then divide by the number 
 		 * of days.
 		 *
+		 * UPDATE: The ADC will now be calculated nightly with a script and the value will
+		 * be stored in the census_data_month table
+		 *
 		 */
-		 
+		
+		
+		$census = CMS_Census_Data_Month::fetchCurrentCensus($facility->id);
+		
+		$adc = $census[0]->adc;
+		$adcGoal = $census[0]->goal;
+
+/*
 		$date = date("Y-m-d", mktime(0, 0, 0, date("m"), 1, date("Y")));
 				
 		$dailyCensus = array();
@@ -1923,6 +1955,7 @@ elseif(input()->affirm == 'discharged_home') {
 		}
 				
 		$adc = round ($censusTotal / $i, 2);
+*/
 		
 		
 		
@@ -2651,6 +2684,6 @@ elseif(input()->affirm == 'discharged_home') {
 			return false;
 		}
 	}
-
 	
+		
 }
