@@ -2,9 +2,9 @@
 
 class CalculateAndSaveADC extends CLIScript {
 	protected static $firstRun = '2014-05-30 23:59:00';
-	protected static $intervalDays = 0;
+	protected static $intervalDays = 1;
 	protected static $intervalHours = 0;
-	protected static $intervalMinutes = 5;
+	protected static $intervalMinutes = 0;
 	protected static $enabled = true;
 	
 	
