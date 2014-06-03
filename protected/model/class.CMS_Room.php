@@ -253,5 +253,16 @@ class CMS_Room extends CMS_Table {
 		return $census;
 
 	}
+	
+	public static function fetchRoom($number = false, $facility = false) {
+		$sql = "select * from room where number = :number and facility = :facility";
+		$params = array(
+			":number" => $number,
+			":facility" => $facility
+		);
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);
+	}
 
 }
