@@ -2045,54 +2045,68 @@ class PageControllerPatient extends PageController {
 		// Instantiate new objects and save data
 		foreach ($data as $d) {
 			if (!empty($d)) {
-				
-				$patient = new CMS_Patient_Admit();
-				
-				$patient->last_name = $d['last_name'];
-				$patient->first_name = $d['first_name'];
-				$patient->middle_name = $d['middle_name'];
-				$patient->datetime_created = datetime();
-				$patient->site_user_created = auth()->getRecord()->id;
-				$patient->person_id = generate_pubid();
-				$patient->address = $d['address'];
-				$patient->city = $d['city'];
-				$patient->state = $d['state'];
-				$patient->zip = $d['zip'];
-				$patient->phone = $d['phone'];
-				$patient->birthday = $d['birthday'];
-				$patient->sex = $d['sex'];
-				$patient->ssn = $d['ssn'];
-				$patient->paymethod = $d['paymethod'];
-				$patient->medicare_number = $d['medicare_number'];
-				
-				
-				try {
-					$patient->save();
-					feedback()->conf("The patient admit for {$patient->first_name} {$patient->last_name} has been saved.");
-				} catch (ORMException $e) {
-					feedback()->error("There was an error while attempting to save this new patient admit request.");
-				}
-				
+			
 				// Need to find the id for the room number entered
 				$obj = new CMS_Room();		
 				$room = $obj->fetchRoom($d['room'], $facility->id);
 				
-				// Set items for the new patient schedule
-				$schedule = new CMS_Schedule();
-				$schedule->patient_admit = $patient->id;
-				$schedule->facility = $facility->id;
-				$schedule->status = "Approved";
-				$schedule->room = $room[0]->id;
-				$schedule->datetime_admit = date('Y-m-d 11:00:00', strtotime($d['datetime_admit']));
-				$schedule->long_term = $d['long_term'];	
+				// Check if room is available
+				$availability = $obj->checkRoomStatus($room[0]->id, $d['datetime_admit']);
 				
-				try {
-					$schedule->save();
-					feedback()->conf("The patient schedule for {$patient->first_name} {$patient->last_name} has been saved");
-				} catch (ORMException $e) {
-					feedback()->error("There was an error while attempting to add this new patient to the schedule");
-					CMS_Patient_Admit::delete($patient);
+				if ($availability) {
+					// the room is currently available
+					
+					$patient = new CMS_Patient_Admit();
+					
+					$patient->last_name = $d['last_name'];
+					$patient->first_name = $d['first_name'];
+					$patient->middle_name = $d['middle_name'];
+					$patient->datetime_created = datetime();
+					$patient->site_user_created = auth()->getRecord()->id;
+					$patient->person_id = generate_pubid();
+					$patient->address = $d['address'];
+					$patient->city = $d['city'];
+					$patient->state = $d['state'];
+					$patient->zip = $d['zip'];
+					$patient->phone = $d['phone'];
+					$patient->birthday = $d['birthday'];
+					$patient->sex = $d['sex'];
+					$patient->ssn = $d['ssn'];
+					$patient->paymethod = $d['paymethod'];
+					$patient->medicare_number = $d['medicare_number'];
+					
+					
+					try {
+						$patient->save();
+						feedback()->conf("The patient admit for {$patient->first_name} {$patient->last_name} has been saved.");
+					} catch (ORMException $e) {
+						feedback()->error("There was an error while attempting to save this new patient admit request.");
+					}
+					
+					
+					// Set items for the new patient schedule
+					$schedule = new CMS_Schedule();
+					$schedule->patient_admit = $patient->id;
+					$schedule->facility = $facility->id;
+					$schedule->status = "Approved";
+					$schedule->room = $room[0]->id;
+					$schedule->datetime_admit = date('Y-m-d 11:00:00', strtotime($d['datetime_admit']));
+					$schedule->long_term = $d['long_term'];	
+					
+					try {
+						$schedule->save();
+						feedback()->conf("The patient schedule for {$patient->first_name} {$patient->last_name} has been saved");
+					} catch (ORMException $e) {
+						feedback()->error("There was an error while attempting to add this new patient to the schedule");
+						CMS_Patient_Admit::delete($patient);
+					}
+	
+						
+				} else {
+					// the room is currently occupied
+					feedback()->error("Room " . $room[0]->number . " is currently occupied.");
 				}
+					
 			}
 					
 		}

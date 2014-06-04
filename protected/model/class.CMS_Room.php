@@ -264,5 +264,23 @@ class CMS_Room extends CMS_Table {
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
+	
+	public static function checkRoomStatus($id = false, $datetime = false) {
+		$sql = "select id from schedule WHERE (`schedule`.`status` = 'Approved' OR `schedule`.`status` = 'Discharged') AND `schedule`.`datetime_admit` <= :datetime AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00') OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end)) and room = :room";
+		$params = array(
+			":room" => $id,
+			":datetime" => date('Y-m-d 23:59:59', strtotime($datetime)),
+			":bedhold_end" => date('Y-m-d 11:00:00', strtotime($datetime))
+		);
+		
+		$obj = static::generate();
+		$result = $obj->fetchCustom($sql, $params);		
+		
+		if (!empty($result)) {
+			return false;
+		}		
+		
+		return true;
+	}
 
 }
