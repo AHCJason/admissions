@@ -48,22 +48,9 @@ $("#type").change(function(e) {
 	<input type="hidden" name="goToApprove" value="{$goToApprove}" />
 	<input type="hidden" name="facility" value="{$facility->pubid}" />
 	
-<!--
-	<div class="sort-left">
-		<strong>{if $goToApprove == 1}Admission{else} Room Tranfer{/if} Date &amp; Time</strong> <input type="text" id="schedule-datetime" name="datetime_admit" value="{$datetime|date_format:"%m/%d/%Y %I:%M %P"}" />
-	</div>
-	<div class="sort-right">
-		<strong>Show:</strong>
-		<select id="type">
-			<option value="all"{if $type == 'all'} selected{/if}>All rooms</option>
-			<option value="empty"{if $type == 'empty'} selected{/if}>Just empty rooms</option>
-			<option value="scheduled"{if $type == 'scheduled'} selected{/if}>Just assigned rooms&nbsp;&nbsp;</option>
-		</select>
-	</div>
--->
 	<table id="room-table" cellpadding="5" cellspacing="0">
 		<tr>	
-			<td colspan="4"><strong>{if $goToApprove == 1}Admission{else} Room Tranfer{/if} Date &amp; Time</strong> <input type="text" id="schedule-datetime" name="datetime_admit" value="{$datetime|date_format:"%m/%d/%Y %I:%M %P"}" /></td>
+			<td colspan="4"><strong>{if $goToApprove == 1}Admission{else} Room Assignment{/if} Date &amp; Time</strong> <input type="text" id="schedule-datetime" name="datetime_admit" value="{$datetime|date_format:"%m/%d/%Y %I:%M %P"}" /></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

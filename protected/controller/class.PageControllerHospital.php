@@ -99,7 +99,7 @@ class PageControllerHospital extends PageController {
 			$shadowbox = false;
 		}
 						
-		if (input()->name == "") {
+		if (input()->location_name == "") {
 			feedback()->error("Enter the location name and try again.");
 			if ($shadowbox) {
 				$this->redirect(SITE_URL . "/?page=patient&action=close_window");
@@ -108,7 +108,7 @@ class PageControllerHospital extends PageController {
 			}
 			
 		} else {
-			$loc->name = input()->name;
+			$loc->name = input()->location_name;
 		}
 		
 		if (input()->type == "") {

@@ -77,28 +77,21 @@
 
 {if $facility != ''}
 	{if $type != 'empty'}
-		<div id="physican-admits">
-			<table>
-				<tr>
-					<th colspan="2">Number of Patients by Physician:</th>
-				</tr>
-		
-			{foreach $physicians as $k => $p}
-				{$physician = CMS_Physician::generate()}
-				{$physician->load($k)}
-				{if $physician->id != ''}			
-					<tr>
-						<td>{$physician->last_name}, {$physician->first_name}:</td>
-						<td align="right">{$p}</td>
-					</tr>
-				{/if}
-			{/foreach}
-				<tr>
-					<td align="right">Total:</td>
-					<td><strong>{$physicianTotal}<strong></td>
-				</tr>
-			</table>
-		</div>
+		{if !empty($physicians)}
+			<div id="physican-admits" class="grow">
+				<div class="physician-stats inner-grow">
+					<h2>Attending Physicians</h2>
+					{foreach $physicians as $k => $p}
+						{$physician = CMS_Physician::generate()}
+						{$physician->load($k)}
+						{if $physician->id != ''}			
+							<p>{$physician->last_name}, {$physician->first_name}: <span class="right">{$p}</span></p>
+						{/if}
+					{/foreach}
+					<p align="right">Total: <strong>{$physicianTotal}</strong></p>
+				</div>
+			</div>
+		{/if}
 	{/if}
 	<div class="census-info success">
 		{$datetime|date_format: "%B"} Avg LoS:&nbsp; <span class="text-16">{$avgLength}</span> days
@@ -144,16 +137,12 @@
 		{/if}
 
 	<!--table to display all current patients -->
-	<tr class="census" {if $room->datetime_discharge_bedhold_end != ''} bgcolor="yellow" {elseif $room->is_complete == 0 && $room->is_complete != null && $room->datetime_discharge < $datetime} bgcolor="#A65878"  {elseif $room->datetime_discharge != ''} bgcolor="#FF6A6A" {elseif $occupant == false} bgcolor="#FFA1A1" {elseif $room->transfer_request} bgcolor="orange" {else}bgcolor="{cycle values="#d0e2f0,#ffffff"}" {/if}>
+	<tr class="census border-bottom {if $room->status == 'Under Consideration'}under-consideration{/if}" {if $room->datetime_discharge_bedhold_end != ''} bgcolor="yellow" {elseif $room->is_complete == 0 && $room->is_complete != null && $room->datetime_discharge < $datetime} bgcolor="#A65878"  {elseif $room->datetime_discharge != ''} bgcolor="#FF6A6A" {elseif $occupant == false} bgcolor="#FFA1A1" {elseif $room->transfer_request} bgcolor="orange"{else}bgcolor="#ffffff"" {/if}>
 
 		{if $occupant != false}
 			<td class="text-center">{$room->number}</td>
-			{if $room->status == 'Under Consideration'}
-				<td style="text-align: left;" class="text-blue">{$occupant->fullName()}</td>
-			{else}
 			<td style="text-align: left;">{$occupant->fullName()}</td>
-			{/if}
-			<td style="text-align: left;">{scheduleMenu schedule=$occupantSchedule}</td>
+			<td style="text-align: left; width: 37px;">{scheduleMenu schedule=$occupantSchedule}</td>
 			<td>{$room->datetime_admit|date_format: "%m/%d/%Y"}</td>
 			<td class="discharge-datetime">{if $room->datetime_discharge_bedhold_end != ''}
 				Hold until<br />{$room->datetime_discharge_bedhold_end|date_format: "%m/%d/%Y %I:%M %P"}
@@ -200,10 +189,11 @@
 <br />
 <strong>Color Code Key:</strong><br />
 <br />
-<div class="background-yellow">Patient has already been discharged, but there is a current Bed Hold</div>
-<div class="background-purple">Patient has been sent to the hospital, but not discharged</div>
-<div class="background-red">Patient has been scheduled to be discharged.</div>
-<div class="background-orange">There has been a request to transfer to a different AHC facility.</div>
+<div class="color-code background-yellow">Patient has already been discharged, but there is a current Bed Hold</div>
+<div class="color-code background-purple">Patient has been sent to the hospital, but not discharged</div>
+<div class="color-code background-red">Patient has been scheduled to be discharged.</div>
+<div class="color-code background-orange">There has been a request to transfer to a different AHC facility.</div>
+<div class="color-code background-blue">Patient has not yet been approved.</div>
 
 
 

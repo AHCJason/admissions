@@ -193,7 +193,12 @@ $(".phone").mask("(999) 999-9999");
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2" align="right">
+			{if $atHospitalRecord->pubid}
+				<td><a href="{$SITE_URL}/?page=facility&action=delete&schedule_hospital={$atHospitalRecord->pubid}" class="button">Cancel Visit</a></td>
+			{else}
+				<td>&nbsp;</td>
+			{/if}
+			<td align="right">
 				<input type="submit" value="Save" />
 			</td>
 		</tr>

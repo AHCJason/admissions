@@ -161,70 +161,94 @@ class CMS_Schedule extends CMS_Table {
 		return $obj->fetchCustom($sql, $params);
 
 	}
-	
-	public static function setFacilityAndRoom($s, $f, $r, $pr, $d, $a) {
-		$schedule = new CMS_Schedule($s);
-		$facility = new CMS_Facility($f);
-		$room = new CMS_Room($r);
-				
-		// validate
-		if ($schedule->valid() == false) {
-			$msg[] = "Scheduling record not found.";
-		}
-		if ($facility->valid() == false) {
-			$msg[] = "Invalid facility record.";
-		}
-		if ($room->valid() == false) {
-			$msg[] = "Invalid room record.";
-		}
-		
-		
-		/*
-		 * Check if the room to which the patient is being transferred is currently occupied.  If true then
-		 * the patient in the new room needs to be moved to the room from which the patient is being transferred.
-		 *	
-		 */
-		//if (! $room->isEmpty($schedule->datetime_admit)) {
-		//	$msg[] = "Room {$r->number} is not available for " . datetime_format($schedule->datetime_admit);
-		//}
-		
-		
-		$occupied = $schedule->checkAvailability(date('Y-m-d H:i:s', strtotime('now')), $room->id, $facility->id);
-		$current_occupant = $occupied[0];
-						
-		if (!empty ($occupied)) {
-			// Need to transfer this patient to the room the transfer patient is coming from
-			$current_occupant->room = $pr;
-			$current_occupant->datetime_room_transfer = datetime(strtotime($d));
-			$current_occupant->previous_room = $room->id;
-			
-			try {
-				$current_occupant->save();
-			} catch (Exception $e) {
-				return array(false, array("Unable to switch the occupant of the transfer to room to the transfer from room."));
-			}			
-		}
-		
-		if (count($msg) == 0) {
-			$schedule->room = $room->id;
-			$schedule->facility = $facility->id;
-			if ($a == 1) {
-				$schedule->datetime_admit = datetime(strtotime($d));
-			} else {
-				$schedule->datetime_room_transfer = datetime(strtotime($d));
-				$schedule->previous_room = $pr;
-			}
-			
-			try {
-				$schedule->save();
-				return array(true);
-			} catch (Exception $e) {
-				return array(false, array("Unknown error while saving room assignment."));
-			}
+
+
+	public static function assignRoom($schedule_id = false, $facility_id = false, $room = false, $datetime_admit = false, $approved = false) {
+		$schedule = new CMS_Schedule($schedule_id);
+		$facility = new CMS_Facility($facility_id);
+		$room = new CMS_Room($room);
+
+		$schedule->room = $room->id;
+		$schedule->facility = $facility->id;
+		$schedule->datetime_admit = date('Y-m-d g:i:s', strtotime($datetime_admit));
+		if ($status == 1) {
+			$schedule->status = "Approved";
 		} else {
-			return array(false, $msg);
+			$schedule->status = "Under Consideration";
+		}
+
+		try {
+			$schedule->save();
+			return array(true);
+		} catch (Exception $e) {
+			return array(false, array("Could not save room assignment."));
 		}
 	}
+
+	
+	// public static function setFacilityAndRoom($s, $f, $r, $pr, $d, $a) {
+	// 	$schedule = new CMS_Schedule($s);
+	// 	$facility = new CMS_Facility($f);
+	// 	$room = new CMS_Room($r);
+				
+	// 	// validate
+	// 	if ($schedule->valid() == false) {
+	// 		$msg[] = "Scheduling record not found.";
+	// 	}
+	// 	if ($facility->valid() == false) {
+	// 		$msg[] = "Invalid facility record.";
+	// 	}
+	// 	if ($room->valid() == false) {
+	// 		$msg[] = "Invalid room record.";
+	// 	}
+		
+		
+	// 	/*
+	// 	 * Check if the room to which the patient is being transferred is currently occupied.  If true then
+	// 	 * the patient in the new room needs to be moved to the room from which the patient is being transferred.
+	// 	 *	
+	// 	 */
+	// 	//if (! $room->isEmpty($schedule->datetime_admit)) {
+	// 	//	$msg[] = "Room {$r->number} is not available for " . datetime_format($schedule->datetime_admit);
+	// 	//}
+		
+		
+	// 	$occupied = $schedule->checkAvailability(date('Y-m-d H:i:s', strtotime('now')), $room->id, $facility->id);
+	// 	$current_occupant = $occupied[0];
+						
+	// 	if (!empty ($occupied)) {
+	// 		// Need to transfer this patient to the room the transfer patient is coming from
+	// 		$current_occupant->room = $pr;
+	// 		$current_occupant->datetime_room_transfer = datetime(strtotime($d));
+	// 		$current_occupant->previous_room = $room->id;
+			
+	// 		try {
+	// 			$current_occupant->save();
+	// 		} catch (Exception $e) {
+	// 			return array(false, array("Unable to switch the occupant of the transfer to room to the transfer from room."));
+	// 		}			
+	// 	}
+		
+	// 	if (count($msg) == 0) {
+	// 		$schedule->room = $room->id;
+	// 		$schedule->facility = $facility->id;
+	// 		if ($a == 1) {
+	// 			$schedule->datetime_admit = datetime(strtotime($d));
+	// 		} else {
+	// 			$schedule->datetime_room_transfer = datetime(strtotime($d));
+	// 			$schedule->previous_room = $pr;
+	// 		}
+			
+	// 		try {
+	// 			$schedule->save();
+	// 			return array(true);
+	// 		} catch (Exception $e) {
+	// 			return array(false, array("Unknown error while saving room assignment."));
+	// 		}
+	// 	} else {
+	// 		return array(false, $msg);
+	// 	}
+	// }
 	
 	
 	
@@ -261,7 +285,7 @@ class CMS_Schedule extends CMS_Table {
 		
 		
 		if ($facilities != false) {
-			$sql .= "select `schedule`.*, `patient_admit`.`hospital_id`, `patient_admit`.`admit_from`, `patient_admit`.`case_manager_id`, `patient_admit`.`datetime_pickup`, `patient_admit`.`other_diagnosis`, `patient_admit`.`paymethod`, `facility`.`name` as `facility_name`, `patient_admit`.`referral` from `schedule` inner join `facility` on `schedule`.`facility`=`facility`.`id` inner join `patient_admit` on `patient_admit`.`id`=`schedule`.`patient_admit`";
+			$sql .= "select `schedule`.*, `patient_admit`.`hospital_id`, `patient_admit`.`admit_from`, `patient_admit`.`case_manager_id`, `patient_admit`.`datetime_pickup`, `patient_admit`.`other_diagnosis`, `patient_admit`.`paymethod`, `facility`.`name` as `facility_name`, `patient_admit`.`referral`,  `patient_admit`.`notes_file0` from `schedule` inner join `facility` on `schedule`.`facility`=`facility`.`id` inner join `patient_admit` on `patient_admit`.`id`=`schedule`.`patient_admit`";
 		} else {
 			$sql = "select * from `schedule`";
 		}
@@ -498,7 +522,7 @@ class CMS_Schedule extends CMS_Table {
 		return $results;
 	}
 	
-	public static function fetchAdmitsByFacility($date_start = false, $date_end = false, $facility_id = false, $filterby = false, $viewby = false) {
+	public static function fetchAdmitsByFacility($date_start = false, $date_end = false, $facility_id = false, $filterby = false, $viewby = false, $orderby = false) {
 					
 		if ($date_start != '') {
 			$params[":date_start"] = $date_start;
@@ -508,6 +532,9 @@ class CMS_Schedule extends CMS_Table {
 		}
 		if ($facility_id != '') {
 			$params[":facility_id"] = $facility_id;
+		}
+		if ($filterby == "surgeon") {
+			$filterby = "ortho";
 		}
 
 		
@@ -521,8 +548,10 @@ class CMS_Schedule extends CMS_Table {
 					$sql .= " AND surgeon.id = :viewby";
 				} elseif ($filterby == "case_manager") {
 					$sql .= " AND case_manager.id = :viewby";
-				} else {
+				} elseif ($filterby == "physician") {
 					$sql .= " AND physician.id = :viewby";
+				} elseif ($filterby == "zip_code") {
+					$sql .= " AND patient_admit.zip = :viewby";
 				}
 				$params[':viewby'] = $viewby;
 			} else {
@@ -544,12 +573,86 @@ class CMS_Schedule extends CMS_Table {
 				}
 			}
 		}
-							
+		
+		if ($orderby == 'room') {
+			$sql .= " order by room.number asc";
+		} elseif ($orderby == 'name') {
+			$sql .= " order by patient_admit.last_name asc";
+		} elseif ($orderby == 'admit_date') {
+			$sql .= " order by schedule.datetime_admit asc";
+		} elseif ($orderby == 'hospital') {
+			$sql .= " order by hospital.name asc";
+		} elseif ($orderby == 'physician') {
+			$sql .= " order by physician.last_name asc";
+		} elseif ($orderby == 'surgeon') {
+			$sql .= " order by surgeon.last_name asc";
+		} elseif ($orderby == 'case_manager') {
+			$sql.= " order by case_manager.last_name asc";
+		}
+				
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);		
 	}
 	
 	
+	
+	public function getAdmitFromName($filterby = false, $viewby = false) {
+		
+		if ($filterby == "surgeon") {
+			$filterby = "physician";
+		}
+		$sql = "select * from {$filterby} where {$filterby}.id = {$viewby}";
+		
+/*
+		if ($orderby) {
+			$sql .= " orderby {$orderby}";
+		}
+*/
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql);		
+		
+	}
+	
+	public static function fetchAdmitsByZip($date_start = false, $date_end = false, $facility_id = false, $filterby = false, $viewby = false, $orderby = false) {
+		if ($date_start != '') {
+			$params[":date_start"] = $date_start;
+		}
+		if ($date_end != '') {
+			$params[":date_end"] = $date_end;
+		}
+		if ($facility_id != '') {
+			$params[":facility_id"] = $facility_id;
+		}
+		if ($viewby != '') {
+			$params[":viewby"] = $viewby;
+		}
+		if ($filterby == "surgeon") {
+			$filterby = "ortho";
+		}
+		
+		$sql = "SELECT patient_admit.id, patient_admit.last_name, patient_admit.first_name, patient_admit.address, patient_admit.city, patient_admit.state, patient_admit.zip, room.number, hospital.name AS hospital_name, physician.last_name AS physician_last, physician.first_name AS physician_first, surgeon.last_name AS surgeon_last, surgeon.first_name AS surgeon_first, schedule.datetime_admit, case_manager.last_name AS cm_last, case_manager.first_name AS cm_first FROM patient_admit LEFT JOIN hospital ON patient_admit.hospital_id=hospital.id LEFT JOIN physician ON patient_admit.physician_id=physician.id LEFT JOIN physician AS surgeon ON patient_admit.ortho_id = surgeon.id INNER JOIN schedule ON patient_admit.id = schedule.patient_admit INNER JOIN room ON schedule.room=room.id LEFT JOIN case_manager on case_manager.id = patient_admit.case_manager_id WHERE schedule.datetime_admit >= :date_start AND schedule.datetime_admit <= :date_end AND schedule.facility = :facility_id AND (schedule.status = 'Approved' OR schedule.status = 'Discharged') and patient_admit.zip = :viewby";
+		
+				if ($orderby == 'room') {
+			$sql .= " order by room.number asc";
+		} elseif ($orderby == 'name') {
+			$sql .= " order by patient_admit.last_name asc";
+		} elseif ($orderby == 'admit_date') {
+			$sql .= " order by schedule.datetime_admit asc";
+		} elseif ($orderby == 'hospital') {
+			$sql .= " order by hospital.name asc";
+		} elseif ($orderby == 'physician') {
+			$sql .= " order by physician.last_name asc";
+		} elseif ($orderby == 'surgeon') {
+			$sql .= " order by surgeon.last_name asc";
+		} elseif ($orderby == 'case_manager') {
+			$sql.= " order by case_manager.last_name asc";
+		}
+				
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);		
+
+	}
 
 	
 	public static function fetchFilterData($date_start = false, $date_end = false, $facility_id = false, $filterby = false) {
@@ -574,6 +677,9 @@ class CMS_Schedule extends CMS_Table {
 		} elseif ($filterby == "case_manager") {
 			$sql .= " LEFT JOIN case_manager ON patient_admit.{$filterby}_id = case_manager.id";
 		} else {
+			if ($filterby == "surgeon") {
+				$filterby = "ortho";
+			}
 			$sql .= " LEFT JOIN physician ON patient_admit.{$filterby}_id = physician.id";
 		} 
 				
@@ -586,6 +692,20 @@ class CMS_Schedule extends CMS_Table {
 		} else {
 			$sql .= " AND physician.id IS NOT NULL GROUP BY physician.id ORDER BY physician.last_name ASC";
 		}
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);
+	}
+	
+	public static function fetchInfoByZip($date_start = false, $date_end = false, $facility_id = false) {
+		$params = array(
+			':date_start' => $date_start,
+			':date_end' => $date_end,
+			':facility_id' => $facility_id
+		);
+		
+		$sql = "select count(schedule.id) as count, patient_admit.zip from schedule inner join patient_admit on patient_admit.id = schedule.patient_admit where schedule.datetime_admit >= :date_start and schedule.datetime_admit <= :date_end and schedule.facility = :facility_id and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by patient_admit.zip order by count desc";
+		
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
@@ -927,7 +1047,6 @@ class CMS_Schedule extends CMS_Table {
 		}
 		
 		$sql .= " `datetime_discharge` >= :dateStart AND `datetime_discharge` <= :dateEnd AND `schedule`.`facility` = :facility AND (`status` = 'Approved' OR `status` = 'Discharged')";
-		
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
@@ -1321,10 +1440,8 @@ class CMS_Schedule extends CMS_Table {
 		$params[":facility"] = $facility_id;
 		$params[":datetime"] = date('Y-m-d 23:59:59', strtotime($date));
 		$params[":bedhold_end"] = date('Y-m-d 11:00:00', strtotime($date));
-		//$params[":admit_datetime"] = date('Y-m-d 12:59:59', strtotime($date));
-		//$params[":discharge_datetime"] = date('Y-m-d 11:00:01', strtotime($date));
 										
-		$sql = "SELECT count(`room`.`number`) AS census/*, adc.goal*/
+		$sql = "SELECT count(`room`.`number`) AS census
 					FROM `schedule` 
 					INNER JOIN `room` 
 						on `room`.`id` = `schedule`.`room`
@@ -1335,7 +1452,7 @@ class CMS_Schedule extends CMS_Table {
 					AND `schedule`.`datetime_admit` <= :datetime
 					AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00') OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end))
 					order by room.number asc";
-
+					
 		return $obj->fetchCustom($sql, $params);
 	}	
 	
@@ -1458,7 +1575,6 @@ class CMS_Schedule extends CMS_Table {
 	}
 	
 	
-	
 	public function fetchDischargesByHomeHealthName($date_start = false, $date_end = false, $facility = false, $location_id = false) {
 		$params = array(
 			":date_start" => $date_start,
@@ -1485,6 +1601,7 @@ class CMS_Schedule extends CMS_Table {
 		
 	}
 	
+	
 	public function fetchPhoneCallReport($date_start = false, $date_end = false, $facility = false) {
 		$params = array(
 			":date_start" => $date_start,
@@ -1499,7 +1616,9 @@ class CMS_Schedule extends CMS_Table {
 		
 	}
 
+
 	public function fetchAdcReport($time_period = false, $year = false, $facility = false) {
+		
 		$params = array(
 			":time_period" => $time_period,
 			":datetime_start" => $year . "-01-01 00:00:01",
@@ -1507,12 +1626,75 @@ class CMS_Schedule extends CMS_Table {
 			":facility" => $facility
 		);
 
-		$sql = "select admit_period as time_period, admission_count, discharge_count from ((select count(id) as admission_count, month(datetime_admit) as admit_period from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility group by admit_period) as admissions INNER JOIN (select count(id) as discharge_count, month(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility group by discharge_period) as discharges ON admissions.admit_period=discharges.discharge_period)";
+		
+		switch ($time_period) {
+									
+			 case "month":
+				
+				$sql = "select time_period, admission_count, discharge_count, census from 
+				( 
+					(
+						select count(id) as admission_count, month(datetime_admit) as admit_period  from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by admit_period
+					) as admissions 
+					INNER JOIN 
+					(
+					select count(id) as discharge_count, month(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility and schedule.status = 'Discharged' group by discharge_period
+					) as discharges ON admissions.admit_period=discharges.discharge_period
+					INNER JOIN
+					(
+					select time_period, month(time_period) as adc_period, census_value as census, facility_id from census_data where time_period >= :datetime_start and time_period <= :datetime_end and facility_id = :facility  group by adc_period
+					) as adc ON discharges.discharge_period = adc.adc_period
+				)";
 
+				break;
+				
+			case "quarter":
+				
+				$sql = "select time_period, admission_count, discharge_count, census from 
+				( 
+					(
+						select count(id) as admission_count, quarter(datetime_admit) as admit_period  from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by admit_period
+					) as admissions 
+					INNER JOIN 
+					(
+					select count(id) as discharge_count, quarter(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility and schedule.status = 'Discharged' group by discharge_period
+					) as discharges ON admissions.admit_period=discharges.discharge_period
+					INNER JOIN
+					(
+					select time_period, quarter(time_period) as adc_period, census_value as census, facility_id from census_data where time_period >= :datetime_start and time_period <= :datetime_end and facility_id = :facility  group by adc_period
+					) as adc ON discharges.discharge_period = adc.adc_period
+				)";
+				
+				break;
+				
+			case "year":
+				
+				$sql = "select time_period, admission_count, discharge_count, census from 
+				( 
+					(
+						select count(id) as admission_count, year(datetime_admit) as admit_period  from schedule where datetime_admit >= :datetime_start and datetime_admit <= :datetime_end and facility = :facility and (schedule.status = 'Approved' OR schedule.status = 'Discharged') group by admit_period
+					) as admissions 
+					INNER JOIN 
+					(
+					select count(id) as discharge_count, year(datetime_discharge) as discharge_period from schedule where datetime_discharge >= :datetime_start and datetime_discharge <= :datetime_end and facility = :facility and schedule.status = 'Discharged' group by discharge_period
+					) as discharges ON admissions.admit_period=discharges.discharge_period
+					INNER JOIN
+					(
+					select time_period, year(time_period) as adc_period, census_value as census, facility_id from census_data where time_period >= :datetime_start and time_period <= :datetime_end and facility_id = :facility  group by adc_period
+					) as adc ON discharges.discharge_period = adc.adc_period
+				)";
+				
+				break;
+			
+			
+		}
+
+					
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 
 	}
+	
 	
 	
 	

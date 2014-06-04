@@ -781,6 +781,28 @@ class PageControllerFacility extends PageController {
 		}
 	}
 	
+	
+	public function delete() {
+		if (input()->schedule_hospital == '') {
+			feedback()->error('Select a valid Hospital Visit');
+			$this->redirect(input()->_path);
+		} else {
+			$sh = new CMS_Schedule_Hospital(input()->schedule_hospital);
+			
+			
+			if ($sh->deleteVisit($sh->id)) {
+				feedback()->conf("The hospital visit was successfully deleted.");
+				$this->redirect(SITE_URL . "/?page=facility&action=census");
+			} else {
+				feedback()->error('Could not delete the hospital visit.');
+				$this->redirect(input()->_path);
+			}
+		}
+		
+	}
+
+
+	
 /*
 	public function cancelHospitalVisit() {
 		if (input()->schedule != '') {
@@ -1895,8 +1917,18 @@ elseif(input()->affirm == 'discharged_home') {
 		 * Note: Get ADC for each day of the current month and then divide by the number 
 		 * of days.
 		 *
+		 * UPDATE: The ADC will now be calculated nightly with a script and the value will
+		 * be stored in the census_data_month table
+		 *
 		 */
-		 
+		
+		
+		$census = CMS_Census_Data_Month::fetchCurrentCensus($facility->id);
+		
+		$adc = $census[0]->adc;
+		$adcGoal = $census[0]->goal;
+
+/*
 		$date = date("Y-m-d", mktime(0, 0, 0, date("m"), 1, date("Y")));
 				
 		$dailyCensus = array();
@@ -1923,6 +1955,7 @@ elseif(input()->affirm == 'discharged_home') {
 		}
 				
 		$adc = round ($censusTotal / $i, 2);
+*/
 		
 		
 		
@@ -1935,10 +1968,13 @@ elseif(input()->affirm == 'discharged_home') {
 		 * of days between the two, total the days for all patients, and then divide
 		 * by the number of patients discharged in the timeframe.
 		 *
+		 * UPDATE:  Need to get the admission date for each patient discharged after the first 
+		 * day of the month, and then divide by the total number of discharges month-to-date
+		 *
 		 */
 		 
 		$date_start = date('Y-m-d 00:00:01', strtotime('first day of this month'));	 
-	 	$date_end = date('Y-m-d 23:59:59', strtotime('last day of this month'));
+	 	$date_end = date('Y-m-d 23:59:59', strtotime('now'));
 				 
 		 
 		 $obj = new CMS_Schedule();
@@ -2117,6 +2153,82 @@ elseif(input()->affirm == 'discharged_home') {
 			
 	}
 	
+
+	public function room_transfer() {
+		$schedule = new CMS_Schedule(input()->schedule);
+		if ($schedule->valid()) {
+			smarty()->assignByRef("schedule", $schedule);
+
+			if (input()->facility != '') {
+				$facility = new CMS_Facility(input()->facility);
+				if ($facility->valid() == false) {
+					$facility = $schedule->related('facility');
+				}
+			} else {
+				$facility = $schedule->related('facility');
+			}
+			$datetime = datetime(strtotime('now'));
+			
+
+
+			/*
+			 * Note: Get rooms which are or will be empty on the admission date & time
+			 *
+			 */
+
+			$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
+			$discharges = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
+			$rooms = CMS_Room::mergeFetchedRooms($empty, $discharges);
+					
+			smarty()->assignByRef("rooms", $rooms);
+			smarty()->assignByRef("facility", $facility);
+			smarty()->assign("goToApprove", input()->goToApprove);
+			smarty()->assign("datetime", $datetime);
+		} else {
+			feedback()->error("Invalid scheduling selected.");
+			$this->redirect(SITE_URL . "/?page=coord");
+		}
+	}
+
+	public function submitRoomTransfer() {
+		// Get schedule info for the tranferring patient
+		$schedule = new CMS_Schedule(input()->schedule);
+		$facility = new CMS_Facility($schedule->facility);
+
+		// Get the room info for the new room
+		$new_room = new CMS_Room(input()->room);
+
+
+		/* If there is a patient currently in the room to which the patient is being tranferred
+		 * get the schedule info for that patient as well.  This patient will be transferred to
+		 * the room from which the new patient is being transferred.  If this patient needs to 
+		 * go to a different room this process will need to be repeated for that patient.
+		 */
+
+		if (input()->occupant != "") {
+			$previousOccupant = new CMS_Schedule(input()->occupant);
+
+			// Set the room to the from from which the new patient transferred
+			$previousOccupant->room = $schedule->room;
+			$room = new CMS_Room($schedule->room);
+		} else {
+			$previousOccupant = false;
+		}
+		
+		// Set the new room # for the transferring patient
+		$schedule->room = $new_room->id;
+
+		try {
+			$schedule->save();
+			if ($previousOccupant) {
+				$previousOccupant->save();
+			}
+			$this->redirect(SITE_URL . "/?page=facility&action=census&facility={$facility->pubid}");
+		} catch (Exception $e) {
+			$this->redirect(SITE_URL . "/?page=facility&action=room_transfer&schedule={$schedule->pubid}");
+		}
+
+	}
 	
 
 /*
@@ -2561,5 +2673,17 @@ elseif(input()->affirm == 'discharged_home') {
 	}
 
 
+	public function approveInquiry() {
+		$schedule = new CMS_Schedule(input()->schedule);
+		$schedule->status = input()->status;
+
+		try {
+			$schedule->save();
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
 	
+		
 }

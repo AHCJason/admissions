@@ -44,8 +44,8 @@
 		window.location = SITE_URL + "/?page=patient&action=search_results&patient_name=" + $("#patient-search").val();
 	});
 
-
 {/jQueryReady}
+
 <div id="facility-admit-section">
 	<h1 class="text-center">{$week[0]|date_format:"%B %d, %Y"} <span class="text-16">to</span> {$week[6]|date_format:"%B %d, %Y"}
 	<input type="hidden" class="alt-week" rel="#tab-{$facility->pubid}" /></h1>
@@ -158,14 +158,14 @@
 						{$physician->load($pending->getPatient()->physician_id)}
 					{/if}
 					
-					<div class="patient-box drag {if $pending->referral == 1}admit-pending{else}admit-pending-no-referral{/if}" draggable="true">
+					<div class="patient-box drag {if $pending->notes_file0}admit-pending{else}admit-pending-no-referral{/if}" draggable="true">
 						{conflictAlert schedule=$pending}				
 						<span class="admit-name">Room {$pending->getRoomNumber()}<br />
 							{foreach $onsite as $o}
-								{if $o->id != ''}<img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" />{/if}
+								{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 							{/foreach}
 							
-							{if $pending->confirmed == 1}<img src="{$PUBLIC_URL}/images/icons/star.png" style="height: 10px;" />{/if}
+							{if $pending->confirmed == 1}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
 							<strong>{$pending->getPatient()->fullName()}</strong><br />Admit From: {if $pending->transfer_facility != ''}{$pendingTransferFacility->name}{elseif $pending->getPatient()->admit_from != ''}{$pendingHospital->name}{else}{$pending->getPatient()->referral_org_name}{/if}
 	{if $pending->getPatient()->physician_id != ''}
 	<br />Physician: Dr. {$physician->last_name}

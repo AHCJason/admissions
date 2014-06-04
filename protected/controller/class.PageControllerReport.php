@@ -23,8 +23,7 @@ class PageControllerReport extends PageController {
 			"month" => "Month",
 			"quarter" => "Quarter",
 			"year" => "Year"
-		);	
-	
+		);		
 	
 	public function init() {
 		Authentication::disallow();
@@ -98,7 +97,7 @@ class PageControllerReport extends PageController {
 	 */
 	
 	public function admission() {
-	
+		
 		smarty()->assign("isPrint", input()->isPrint);
 		
 		$facility = new CMS_Facility(input()->facility);
@@ -132,7 +131,10 @@ class PageControllerReport extends PageController {
 		
 		smarty()->assign("summary", $summary);
 		smarty()->assignByRef("dateStart", $_dateStart);
-		smarty()->assignByRef("dateEnd", $_dateEnd);		
+		smarty()->assignByRef("dateEnd", $_dateEnd);
+		
+		smarty()->assign("start_date", input()->start_date);
+		smarty()->assign("end_date", input()->end_date);		
 
 		
 		// Create and assign report types, orderby, and filterby options		
@@ -146,8 +148,9 @@ class PageControllerReport extends PageController {
 		$filterByOpts = array(
 			'hospital' => 'Hospital',
 			'physician' => 'Attending Physician',
-			'ortho' => 'Orthopedic Surgeon/Specialist',
-			'case_manager' => 'Case Manager'
+			'surgeon' => 'Orthopedic Surgeon/Specialist',
+			'case_manager' => 'Case Manager',
+			'zip_code' => 'Zip Code'
 		);
 		smarty()->assign("orderByOpts", $orderByOpts);
 		smarty()->assign("filterByOpts", $filterByOpts);
@@ -190,17 +193,8 @@ class PageControllerReport extends PageController {
 			$_viewby = '';
 		}
 		$obj = CMS_Schedule::generate();
-	
-		// get data for filterby drop-down
-		if ($_filterby != false) {
-			$_patientStatus = 'datetime_admit';
-			$filterData = $obj->fetchFilterData($_dateStart, $_dateEnd, $_facility, $_filterby);
-		}	
-																	
-		smarty()->assign("orderby", $_orderby);
-		smarty()->assign("filterby",$_filterby);
-		smarty()->assign("viewby", $_viewby);
-		smarty()->assignByRef("filterData", $filterData);
+			
+																			
 				
 		// get admissions for selected time period
 		$admits = $obj->fetchAdmitsByFacility($_dateStart, $_dateEnd, $_facility, $_filterby, $_viewby);
@@ -214,48 +208,7 @@ class PageControllerReport extends PageController {
 		if (input()->viewby != '') {
 			$admitPercentage = number_format(($totalAdmitsByView/$countTotalAdmits) * 100, 0);
 		} 
-											
-		if (input()->summary) {	
-			$summary = input()->summary;			
-			$c = 0;				
-			$summaryReport = array();
-			
-			
-			while ($c < count($filterData)) {
-				foreach ($filterData as $data) {
-					$_data_id = $data->id;
-																	
-					$obj = CMS_Patient_Admit::generate();
-					
-					$numberOfAdmits = $obj->summaryReport($_dateStart, $_dateEnd, $_facility, $_data_id, $_filterby);
-																		
-					foreach ($numberOfAdmits as $n) {
-						$summaryReport[$c]['numberOfAdmits'] = $n->num_admits;
-						if ($_filterby == "hospital") {
-							$summaryReport[$c]['name'] = $n->name;
-						} else {
-							$summaryReport[$c]['name'] = $n->last_name . ', ' . $n->first_name;
-						}
-					}
-					$summaryReport[$c]['id'] = $_data_id;	
-					//$numberOfAdmits = $obj->summaryReport($_filterby, $dataId, $_dateStart, $_dateEnd, $_facility);
-					foreach ($numberOfAdmits as $a) {
-						$summaryReport[$c]['percentageOfAdmits'] = number_format(($a->num_admits/$countTotalAdmits) * 100, 1);
-					}
-					
-					$c++;
-				}
-				
-			}	
-			rsort($summaryReport);
-		}
-																			
-		smarty()->assign("facility", $facility);
-		smarty()->assignByRef("admits", $admits);
-		smarty()->assign("summaryReport", $summaryReport);
-		smarty()->assign("totalAdmitsByView", $totalAdmitsByView);
-		smarty()->assign("countTotalAdmits", $countTotalAdmits);
-		smarty()->assign("admitPercentage", $admitPercentage);
+																														
 				
 		
 		$startDate = date('Y-m-d', strtotime($_dateStart));
@@ -265,7 +218,73 @@ class PageControllerReport extends PageController {
 		smarty()->assign('urlString', $urlString);
 		
 		
-		
+		// Set views for detailed data reports
+		if ($_filterby) {
+			if ($_filterby == 'zip_code') {
+				$filterData = $obj->fetchInfoByZip($_dateStart, $_dateEnd, $_facility);
+				$this->setView('report/admission', 'zip');
+			} else {
+				$filterData = $obj->fetchFilterData($_dateStart, $_dateEnd, $_facility, $_filterby);
+				$summary = input()->summary;			
+				$c = 0;				
+				$summaryReport = array();
+								
+				
+				while ($c < count($filterData)) {
+					foreach ($filterData as $data) {
+						$_data_id = $data->id;
+																		
+						$obj = CMS_Patient_Admit::generate();
+						
+						$numberOfAdmits = $obj->summaryReport($_dateStart, $_dateEnd, $_facility, $_data_id, $_filterby);
+																			
+						foreach ($numberOfAdmits as $n) {
+							$summaryReport[$c]['numberOfAdmits'] = $n->num_admits;
+							if ($_filterby == "hospital") {
+								$summaryReport[$c]['name'] = $n->name;
+							} else {
+								$summaryReport[$c]['name'] = $n->last_name . ', ' . $n->first_name;
+							}
+						}
+						$summaryReport[$c]['id'] = $_data_id;	
+						//$numberOfAdmits = $obj->summaryReport($_filterby, $dataId, $_dateStart, $_dateEnd, $_facility);
+						foreach ($numberOfAdmits as $a) {
+							$summaryReport[$c]['percentageOfAdmits'] = number_format(($a->num_admits/$countTotalAdmits) * 100, 1);
+						}
+						
+						$c++;
+					}
+					
+				}	
+				rsort($summaryReport);
+							
+				if ($_filterby == 'hospital') {
+					$this->setView('report/admission', 'hospital');
+				} elseif ($_filterby == 'surgeon') {
+					$this->setView('report/admission/', 'surgeon');
+				} elseif ($_filterby == 'physician') {
+					$this->setView('report/admission/', 'physician');
+				} elseif ($_filterby == 'case_manager') {
+					$this->setView('report/admission/', 'case_manager');
+				}
+			}
+
+		}
+						
+		smarty()->assign("summaryReport", $summaryReport);
+		smarty()->assign("orderby", $_orderby);
+		smarty()->assign("filterby",$_filterby);
+		smarty()->assign("viewby", $_viewby);
+		smarty()->assignByRef("filterData", $filterData);
+		smarty()->assign("facility", $facility);
+		smarty()->assignByRef("admits", $admits);
+		smarty()->assign("totalAdmitsByView", $totalAdmitsByView);
+		smarty()->assign("countTotalAdmits", $countTotalAdmits);
+		smarty()->assign("admitPercentage", $admitPercentage);
+
+
+
+
 		
 		
 		
@@ -313,7 +332,70 @@ class PageControllerReport extends PageController {
 					
 	}
 	
+	public function details() {
+		$facility = new CMS_Facility(input()->facility);
+		if (! $facility->valid()) {
+			$facility = null;
+		} 
+		
+		
+		$_facility = $facility->id;
+		smarty()->assign("facilityId", $_facility);
+		smarty()->assign("facility", $facility);
+		smarty()->assign("filterby", input()->filterby);
+		smarty()->assign("viewby", input()->viewby);
+		smarty()->assign("start_date", input()->start_date);
+		smarty()->assign("end_date", input()->end_date);
+				
+		$returnUrl = $SITE_URL . "/?page=report&action=admission&facility=" . $facility->pubid . "&start_date=" . input()->start_date . "&end_date=" . input()->end_date . "&orderby=" . input()->orderby . "&filterby=" . input()->filterby . "&viewby=" . input()->viewby;
+		smarty()->assign('returnUrl', $returnUrl);
+		
+		$date_start = date('Y-m-d 00:00:01', strtotime(input()->start_date));
+		$date_end = date('Y-m-d 23:59:59', strtotime(input()->end_date));
+		$filterby = input()->filterby;
+		$viewby = input()->viewby;
+		
+		if (input()->orderby != '') {
+			$orderby = input()->orderby;
+		} else {
+			$orderby = false;
+		}
+		
+		// Get admission source name
+		$obj = new CMS_Schedule();	
+		if ($filterby != "zip_code") {
+			$admitFrom = $obj->getAdmitFromName($filterby, $viewby);
+			$admits = $obj->fetchAdmitsByFacility($date_start, $date_end, $_facility, $filterby, $viewby, $orderby);
+			
+			smarty()->assign('admits', $admits);
+			smarty()->assign('admitFrom', $admitFrom[0]);
+			
+			$this->setView('report/admission', 'details');	
+		} else {
+			$admits = $obj->fetchAdmitsByZip($date_start, $date_end, $_facility, $filterby, $viewby, $orderby);
+			
+			smarty()->assign('zip_code', input()->viewby);
+			smarty()->assign('admits', $admits);
+			$this->setView('report/admission', 'admits_by_zip');
+		}							
+		
+	}
 	
+	
+	public function zip_map() {
+		$facility = new CMS_Facility(input()->facility);
+		if (! $facility->valid()) {
+			$facility = null;
+		} 
+		
+	
+		$returnUrl = "/?page=report&action=admission&facility=" . $facility->pubid . "&start_date=" . input()->start_date . "&end_date=" . input()->end_date . "&orderby=" . input()->orderby . "&filterby=" . input()->filterby . "&viewby=" . input()->viewby;
+		smarty()->assign("returnUrl", $returnUrl);
+		smarty()->assign("zipCode", input()->viewby);
+		smarty()->assign("facility", $facility);
+		
+		$this->setView('report/admission', 'zip_map');
+	}
 	
 	
 	
@@ -2602,48 +2684,43 @@ class PageControllerReport extends PageController {
 		smarty()->assign("facility", $facility);
 		smarty()->assign("view", input()->view);
 		smarty()->assign("year", input()->year);
-		
-		/**
-		 * Set the date start and end dates for the year
-		 *
-		 */
-
-		$datetime_start = input()->year . "-01-01 00:00:01";
-		$datetime_end = input()->year . "-12-31 23:59:59";
 		 
-
+		// Get ADC report for the time period
 		$obj = new CMS_Schedule();
-		$adc_info = $obj->fetchAdcReport(input()->view, input()->year, $facility->id);
-
-		/*
-		 * Calculate the ADC for each month
-		 *
-		 */
-
-
-
-		$report_info = array();
-
-		if (input()->view == "month") {
-			foreach ($adc_info as $adc) {
-				$days_in_month = cal_days_in_month(CAL_GREGORIAN, $adc->time_period, input()->year);
-				$report_info[$adc->time_period] = array(
-					input()->view => date('F Y', strtotime($adc->time_period . '/1/' . input()->year)),
-					"admission_count" => $adc->admission_count, 
-					"discharge_count" => $adc->discharge_count,
-					"adc" => ROUND ($adc->admission_count / $days_in_month, 2)
-				);
-			}
-		}
-		
-
-		pr ($report_info);
-		die();
-		
-		smarty()->assign("adc_info", $adc_info);
-
+		$adc = $obj->fetchAdcReport(input()->view , input()->year, $facility->id);
+												
+		smarty()->assign("adc_info", $adc);
+		smarty()->assign("graphData", json_encode($graphData));
 	}
 	
+	public function getAdcData() {
+		$facility = new CMS_Facility(input()->facility);
+		if (! $facility->valid()) {
+			$facility = null;
+		} 
+
+
+		$obj = new CMS_Schedule();
+		$adc = $obj->fetchAdcReport(input()->view , input()->year, $facility->id);
+			
+		header("Content-type: text/javascript"); 
+		$json_data = $this->graphData($adc);
+		echo json_encode($json_data); 
+		session_write_close(); 
+		exit;		
+	}
+	
+	private function graphData($data = false) {
+		$returnData = array();
+		foreach ($data as $val) {
+			$returnData["categories"][] = date('F', strtotime($val->time_period));
+			$returnData["data"][] = $val->census;
+		}
+		
+		return $returnData;
+		
+	}
+		
 	
 	private function reportTypes() {
 		$report_types = CMS_Reports::fetchNames();

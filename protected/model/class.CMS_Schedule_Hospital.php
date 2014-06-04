@@ -3,7 +3,11 @@
 class CMS_Schedule_Hospital extends CMS_Table {
 
 	public static $table = "schedule_hospital";
-
+	public static $modelTitle = "ScheduleHospital";
+	protected static $metadata = array();
+	public static $in_admin = true;
+	
+	
 
 	public function dischargeNurse() {
 		return new CMS_Site_User($this->discharge_nurse);
@@ -42,20 +46,15 @@ class CMS_Schedule_Hospital extends CMS_Table {
 		return $result;
 	}
 	
-	public function deleteVisit($id) {
 	
-		if ($id != '') {
-			$sql = "delete from `schedule_hospital` where `schedule_hospital`.`id`=" . $id;
-			$obj = new CMS_Schedule_Hospital();
-			$result = $obj->fetchCustom($sql);
-			
-		} else {
-			$result = false;
-		}
+	public function deleteVisit($id) {
+		db()->query("delete from schedule_hospital where id=:pid", array(
+			":pid" => $id
+		));
 		
-		return $result;
-		
+		return true;
 	}
+
 
 
 	

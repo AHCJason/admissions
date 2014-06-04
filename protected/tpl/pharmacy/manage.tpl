@@ -1,3 +1,4 @@
+{setTitle title="Manage Pharmacies"}
 {jQueryReady}
 
 $("#pharmacy-search").autocomplete({

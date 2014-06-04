@@ -60,9 +60,6 @@ $(window).load(function() {
 
 
 <div class="clear"></div>
-<hr>
-<br />
-
 
 <div class="tv-week-links">
 

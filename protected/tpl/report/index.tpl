@@ -1,4 +1,3 @@
-{setTitle title="AHC Reports"}
 <div id="reports">
 	{if $type == ''}
 	<h1 class="text-center">AHC Reports</h1>
@@ -42,7 +41,7 @@
 			window.location.href = redirectURL();		
 		});
 	
-		$("#facility").change(function(e) {
+		$("#facility").change(function(e) {	
 			if ($("#report-type").val() != '' && ($("#start-date").val() != '' && $("#end-date").val() != '') || ($('#view option:selected').val() != '' && $('#year option:selected').val() != '')) {
 				window.location.href = redirectURL();
 			}	
@@ -106,7 +105,7 @@
 		});
 		
 		$("#filterby").change(function(e) {
-			window.location.href = redirectURL() + "&filterby=" + $("#filterby option:selected").val() + '&viewby=';
+			window.location.href = redirectURL() + "&filterby=" + $("#filterby option:selected").val() + '&viewby=' + '&summary=1';
 		});
 		
 		$("#view-by").hide();

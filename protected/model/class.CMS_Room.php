@@ -241,6 +241,46 @@ class CMS_Room extends CMS_Table {
 		return $obj->fetchCustom($sql, $params);
 	}
 	
+	public static function fetchCurrentCensus($date = false) {
+		$sql = "SELECT count(`room`.`number`) AS census, schedule.facility FROM `schedule` INNER JOIN `room` on `room`.`id` = `schedule`.`room`INNER JOIN patient_admit on patient_admit.id = schedule.patient_admit WHERE (`schedule`.`status` = 'Approved' OR `schedule`.`status` = 'Discharged') AND `schedule`.`datetime_admit` <= :datetime AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00') OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end)) group by schedule.facility order by schedule.facility asc";
+
+		
+		$params[":datetime"] = date('Y-m-d 23:59:59', strtotime($date));
+		$params[":bedhold_end"] = date('Y-m-d 11:00:00', strtotime($date));
+		
+		$obj = static::generate();
+		$census[] = $obj->fetchCustom($sql, $params);
+		return $census;
+
+	}
 	
+	public static function fetchRoom($number = false, $facility = false) {
+		$sql = "select * from room where number = :number and facility = :facility";
+		$params = array(
+			":number" => $number,
+			":facility" => $facility
+		);
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);
+	}
+	
+	public static function checkRoomStatus($id = false, $datetime = false) {
+		$sql = "select id from schedule WHERE (`schedule`.`status` = 'Approved' OR `schedule`.`status` = 'Discharged') AND `schedule`.`datetime_admit` <= :datetime AND ((`schedule`.`datetime_discharge` >= :datetime OR `schedule`.`datetime_discharge` IS NULL OR `schedule`.`datetime_discharge` = '0000-00-00 00:00:00') OR (`schedule`.`discharge_to` = 'Discharge to Hospital (Bed Hold)' and `schedule`.`datetime_discharge_bedhold_end` > :bedhold_end)) and room = :room";
+		$params = array(
+			":room" => $id,
+			":datetime" => date('Y-m-d 23:59:59', strtotime($datetime)),
+			":bedhold_end" => date('Y-m-d 11:00:00', strtotime($datetime))
+		);
+		
+		$obj = static::generate();
+		$result = $obj->fetchCustom($sql, $params);		
+		
+		if (!empty($result)) {
+			return false;
+		}		
+		
+		return true;
+	}
 
 }
