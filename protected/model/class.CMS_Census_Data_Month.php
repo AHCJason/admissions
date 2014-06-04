@@ -22,8 +22,7 @@ class CMS_Census_Data_Month extends CMS_Table {
 		$obj->datetime = $d;
 		$obj->save();
 		return true;
-	}
-	
+	}	
 	
 	public static function fetchCurrentCensus($facility = false) {
 		$sql = "select round(avg(census_data_month.census_value), 2) as adc, adc.goal from census_data_month inner join adc on adc.facility = census_data_month.facility_id where census_data_month.facility_id = :facility";
@@ -31,4 +30,13 @@ class CMS_Census_Data_Month extends CMS_Table {
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
+	
+	public static function calcCensusForMonth() {
+		$sql = "select round(avg(census_data_month.census_value), 2) as adc, facility_id from census_data_month group by facility_id";
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql);
+	}
+	
+	
 }

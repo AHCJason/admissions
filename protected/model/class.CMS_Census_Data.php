@@ -15,6 +15,39 @@ class CMS_Census_Data extends CMS_Table {
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}
+	
+	public static function calcAndSaveData() {
+		$obj = static::generate();
+		$result = $obj->calcCensusForMonth();
+		$obj->saveCensusData($result);
+	}
+	
+	
+	private function calcCensusForMonth() {
+		$sql = "select round(avg(census_data_month.census_value), 2) as census_value, facility_id from census_data_month group by facility_id";
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql);
+	}
+	
+	public function saveCensusData($data = array()) {
+		if (!empty ($data)) {
+			foreach ($data as $d) {
+				$census = new CMS_Census_Data();
+				$census->facility_id = $d->facility_id;
+				$census->census_value = $d->census_value;
+				$census->time_period = date('Y-m-t', strtotime("now - 1 month"));
+				$census->save();
+			}
+			
+			return true;
+		}
+		
+		
+		return false;
+		
+		
+	}
 
 	
 }
