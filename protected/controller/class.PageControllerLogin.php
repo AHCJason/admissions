@@ -3,8 +3,11 @@
 class PageControllerLogin extends PageController {
 
 	public function index() {
-		if (SITE_EMAIL) {
-			smarty()->assign('site_email', SITE_EMAIL);
+	
+		// Get site email address from database
+		$site_email = CMS_Company::getEmailExt();
+		if ($site_email != '') {
+			smarty()->assign('site_email', $site_email);
 		} else {
 			smarty()->assign('site_email', false);
 		}
@@ -12,12 +15,15 @@ class PageControllerLogin extends PageController {
 	}
 
 	public function login() {
+	
+		// Get site email address from database
+		$site_email = CMS_Company::getEmailExt();
 		
 		//Look for @ symbol in username
 		if (strpos(input()->post("email"), "@")) {
 			auth()->login(input()->post("email"), input()->post("password"));
 		} elseif (SITE_EMAIL != "") { // if no @ symbol use the global email address
-			$username = input()->post("email") . SITE_EMAIL;
+			$username = input()->post("email") . $site_email;
 			auth()->login($username, input()->post("password"));	
 		} else {
 			$username = input()->post("email") . "@aptitudeit.net";
