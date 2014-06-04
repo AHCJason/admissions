@@ -1,5 +1,5 @@
 protected/cpl/
-bootstrap.php
 .DS_Store
 public/js/.DS_Store
 nossl-redir/index.php
+protected/config/database.php
