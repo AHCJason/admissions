@@ -7,61 +7,107 @@ $email_destination_whitelist = array(
 );
 
 $directory = array_pop(explode('/', dirname(dirname(dirname(__FILE__)))));
-define('ENGINE_PROTECTED_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/protected');
-define('ENGINE_PUBLIC_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/public');
-
 $site_name = basename(__DIR__);
 
-if ($directory == 'Sites') {
+// Set unchanging variables
+define('APP_PATH', dirname(__FILE__));
+define('APP_PROTECTED_PATH', APP_PATH . "/protected");
+define('APP_PUBLIC_PATH', APP_PATH . "/public");
+
+
+if ($directory == 'Sites') { // then this is a local directory
 	if (file_exists(dirname(__FILE__) . "/.development")) {
-		define('APP_PATH', dirname(__FILE__));
+	
+		// set local paths
+		define('ENGINE_PROTECTED_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/protected');
+		define('ENGINE_PUBLIC_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/public');
+
+		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', basename(__DIR__));
-		define('APP_PROTECTED_PATH', APP_PATH . "/protected");
-		define('APP_PUBLIC_PATH', APP_PATH . "/public");
+		
+		// set urls
 		$ENGINE_URL = "https://local.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://local.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
-	} elseif ($directory == 'aptitudecare') {
-		define('APP_PATH', dirname(__FILE__));
-		define('ROOT_PATH', dirname(dirname(dirname(__FILE__))));
+	} 
+	
+	
+} elseif ($directory == 'aptitudecare') {  // this is the local sites directory
+	// set local paths
+	define('ENGINE_PROTECTED_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/protected');
+	define('ENGINE_PUBLIC_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/public');
+	
+	// set root path and site name for use in script files
+	define('ROOT_PATH', dirname(dirname(dirname(__FILE__))));
+	define('SITE_NAME', basename(__DIR__));
+	
+	// set urls --- will use the site_name in the url
+	$ENGINE_URL = "https://{$site_name}-local.aptitudecare.com/cms2-public";
+	$SITE_URL = "https://{$site_name}-local.aptitudecare.com";
+	$SECURE_CDN_URL = $SITE_URL;
+	define('DEVELOPMENT', true);
+
+} elseif ($directory == "home") {  // this is a remote directory
+	if (file_exists(dirname(__FILE__) . "/.development")) {
+		// set remote paths
+		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
+		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
+
+		// set root path and site name for use in script files
+		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', basename(__DIR__));
-		define('APP_PROTECTED_PATH', APP_PATH . "/protected");
-		define('APP_PUBLIC_PATH', APP_PATH . "/public");
-		$ENGINE_URL = "https://{$site_name}-local.aptitudecare.com/cms2-public";
-		$SITE_URL = "https://{$site_name}-local.aptitudecare.com";
+		
+		// set urls
+		$ENGINE_URL = "https://dev.aptitudecare.com/cms2-public";
+		$SITE_URL = "https://dev.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
-	} else {
-		define('APP_PATH', dirname(__FILE__));
+	} else { // this is the remote demo site
+		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
+		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
+		
+		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
-		define('SITE_NAME', '');
-		define('APP_PROTECTED_PATH', APP_PATH . "/protected");
-		define('APP_PUBLIC_PATH', APP_PATH . "/public");
+		define('SITE_NAME', "");
+		
+		// set urls
 		$ENGINE_URL = "https://demo.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://demo.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEMO', true);
 	}
+
+
 } else {
 	$directory = array_pop(explode('/', dirname(dirname(__FILE__))));
-	if (file_exists(dirname(__FILE__) . "/.development")) {
-		define('APP_PATH', dirname(__FILE__));
+	
+	if (file_exists(dirname(__FILE__) . "/.development")) { // if this file exists then it is a dev directory
+		// set remote paths
+		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
+		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
+	
+		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', '');
-		define('APP_PROTECTED_PATH', APP_PATH . "/protected");
-		define('APP_PUBLIC_PATH', APP_PATH . "/public");
+		
+		// set urls
 		$ENGINE_URL = "https://{$directory}-dev.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://{$directory}-dev.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
-	} else {
-		define('APP_PATH', dirname(__FILE__));
+	
+	} else {  // otherwise we are in the live site
+		// set remote paths
+		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
+		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
+	
+		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', basename(basename(__DIR__)));
-		define('APP_PROTECTED_PATH', APP_PATH . "/protected");
-		define('APP_PUBLIC_PATH', APP_PATH . "/public");
+		
+		// set urls
 		$ENGINE_URL = "https://{$directory}.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://{$directory}.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
@@ -69,3 +115,4 @@ if ($directory == 'Sites') {
 		define('PRODUCTION', true);
 	}
 }
+
