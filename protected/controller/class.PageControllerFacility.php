@@ -2685,5 +2685,70 @@ elseif(input()->affirm == 'discharged_home') {
 		}
 	}
 	
+	public function adc() {
+		$date = date('Y-m-01 23:59:00', strtotime('now'));
+		$dayCount = date('j', strtotime($date));
+		$currentVals = array();
+		
+		$obj = new CMS_Census_Data_Month();
+		
+		// If first day of month
+		if ($dayCount == 1) {
+			// Calculate total ADC for month and save to the census_data table
+			CMS_Census_Data::calcAndSaveData();
+			
+			// clear the census_data month table for all locations
+			$obj->clearTable();
+		} 
+		
+				
+		// Get the census for today for all locations
+		$todayCensus = CMS_ROOM::fetchCurrentCensus($date);
+		
+		
+		// save census info to census_data_month
+		foreach ($todayCensus[0] as $c) {
+			$obj->saveDayCensusData($c->facility, $c->census, $date);
+		}	
+
+/*
+		$i = 0;
+		while ($i < 4) {
+			if ($i != 0) {
+				$date = date('Y-m-d 23:59:59', strtotime($date . " + 1 days"));
+			}
+			
+			$todayCensus = CMS_ROOM::fetchCurrentCensus($date);
+			
+			// save census info to census_data_month
+			foreach ($todayCensus[0] as $c) {
+				$obj->saveDayCensusData($c->facility, $c->census, $date);
+			}	
+			$i++;
+		}
+*/
+
+	
+	}
+	
 		
 }
+
+
+/*
+		// Get the census for today for all locations
+		$i = 0;
+		while ($i < 31) {
+			if ($i != 0) {
+				$date = date('Y-m-d 23:59:59', strtotime($date . " + 1 days"));
+			}
+			
+			$todayCensus = CMS_ROOM::fetchCurrentCensus($date);
+			
+			// save census info to census_data_month
+			foreach ($todayCensus[0] as $c) {
+				$obj->saveDayCensusData($c->facility, $c->census, $date);
+			}	
+			$i++;
+		}
+*/
