@@ -25,6 +25,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', basename(__DIR__));
+		define('DB', 'admit_dev');
 		
 		// set urls
 		$ENGINE_URL = "https://local.aptitudecare.com/cms2-public";
@@ -42,6 +43,7 @@ if ($directory == 'Sites') { // then this is a local directory
 	// set root path and site name for use in script files
 	define('ROOT_PATH', dirname(dirname(dirname(__FILE__))));
 	define('SITE_NAME', basename(__DIR__));
+	define('DB', "admit_{$site_name}");
 	
 	// set urls --- will use the site_name in the url
 	$ENGINE_URL = "https://{$site_name}-local.aptitudecare.com/cms2-public";
@@ -58,6 +60,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', basename(__DIR__));
+		define('DB', 'admit_dev');
 		
 		// set urls
 		$ENGINE_URL = "https://dev.aptitudecare.com/cms2-public";
@@ -71,6 +74,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', "");
+		define('DB', '');
 		
 		// set urls
 		$ENGINE_URL = "https://demo.aptitudecare.com/cms2-public";
@@ -91,6 +95,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set root path and site name for use in script files
 		define('ROOT_PATH', dirname(dirname(__FILE__)));
 		define('SITE_NAME', '');
+		define('DB', '');
 		
 		// set urls
 		$ENGINE_URL = "https://{$directory}-dev.aptitudecare.com/cms2-public";
@@ -104,9 +109,10 @@ if ($directory == 'Sites') { // then this is a local directory
 		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
 	
 		// set root path and site name for use in script files
-		define('ROOT_PATH', dirname(dirname(__FILE__)));
-		define('SITE_NAME', basename(basename(__DIR__)));
-		
+		define('ROOT_PATH', dirname(dirname(dirname(dirname(__FILE__)))));
+		define('SITE_NAME', $directory);
+		define('DB', "admit_{$directory}");
+				
 		// set urls
 		$ENGINE_URL = "https://{$directory}.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://{$directory}.aptitudecare.com";

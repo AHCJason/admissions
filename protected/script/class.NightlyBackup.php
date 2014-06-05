@@ -12,14 +12,15 @@ class NightlyBackup extends CLIScript {
 		$now = date('Y-m-d', strtotime('now'));
 		$path = ROOT_PATH;
 		$site = SITE_NAME;
+		$db = DB;
 		$folder = $now . "_" . $site;
-		
+						
 		if ($site != '') {
 			//create a new folder for today's backup
 			mkdir(ROOT_PATH . "/backups/{$folder}");
 			
 			// Backup database
-			exec("mysqldump -e admit_dev > {$path}/backups/{$folder}/admit_dev_{$now}.sql");
+			exec("mysqldump -e admit_dev > {$path}/backups/{$folder}/{$db}_{$now}.sql");
 			
 			// Backup code
 			exec("rsync -avzp --exclude protected/assets/* {$path}/dev/ {$path}/backups/{$folder}/{$site}");
