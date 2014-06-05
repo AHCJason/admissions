@@ -1,7 +1,7 @@
 <?php
 
 class CalculateAndSaveADC extends CLIScript {
-	protected static $firstRun = '2014-06-05 23:59:00';
+	protected static $firstRun = '2014-06-06 00:01:00';
 	protected static $intervalDays = 1;
 	protected static $intervalHours = 0;
 	protected static $intervalMinutes = 0;
@@ -9,7 +9,8 @@ class CalculateAndSaveADC extends CLIScript {
 	
 	
 	public static function exec() {
-		$date = date('Y-m-d 23:59:00', strtotime('now'));
+		$date = date('Y-m-d 23:59:59', strtotime('now - 1 day'));
+		
 		$dayCount = date('j', strtotime($date));
 		$currentVals = array();
 		
