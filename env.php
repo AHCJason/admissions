@@ -17,6 +17,8 @@ define('APP_PUBLIC_PATH', APP_PATH . "/public");
 
 if ($directory == 'Sites') { // then this is a local directory
 	if (file_exists(dirname(__FILE__) . "/.development")) {
+		define(APP_NAME, "AptitudeCareDev");
+
 	
 		// set local paths
 		define('ENGINE_PROTECTED_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/protected');
@@ -36,6 +38,8 @@ if ($directory == 'Sites') { // then this is a local directory
 	
 	
 } elseif ($directory == 'aptitudecare') {  // this is the local sites directory
+	define(APP_NAME, $site_name);
+
 	// set local paths
 	define('ENGINE_PROTECTED_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/protected');
 	define('ENGINE_PUBLIC_PATH', '/mnt/hgfs/Sites/aptitudecare/cms2/public');
@@ -53,6 +57,8 @@ if ($directory == 'Sites') { // then this is a local directory
 
 } elseif ($directory == "home") {  // this is a remote directory
 	if (file_exists(dirname(__FILE__) . "/.development")) {
+		define(APP_NAME, "AptitudeCareLiveDev");
+
 		// set remote paths
 		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
 		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
@@ -68,6 +74,8 @@ if ($directory == 'Sites') { // then this is a local directory
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
 	} else { // this is the remote demo site
+		define(APP_NAME, "");
+
 		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
 		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
 		
@@ -88,6 +96,8 @@ if ($directory == 'Sites') { // then this is a local directory
 	$directory = array_pop(explode('/', dirname(dirname(__FILE__))));
 	
 	if (file_exists(dirname(__FILE__) . "/.development")) { // if this file exists then it is a dev directory
+		define(APP_NAME, "{$directory}_dev");
+
 		// set remote paths
 		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
 		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
@@ -104,6 +114,8 @@ if ($directory == 'Sites') { // then this is a local directory
 		define('DEVELOPMENT', true);
 	
 	} else {  // otherwise we are in the live site
+		define(APP_NAME, $directory);
+
 		// set remote paths
 		define('ENGINE_PROTECTED_PATH', '/home/aptitude/cms2/protected');
 		define('ENGINE_PUBLIC_PATH', '/home/aptitude/cms2/public');
