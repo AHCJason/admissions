@@ -9,7 +9,7 @@ define('SITE_EMAIL', "@ahcfacilities.com");
 
 if (DEVELOPMENT == true) {
 	ini_set('html_errors', 'on');
-	ini_set('display_errors', 'on');
+	ini_set('display_errors', 'off');
 } else {
 	ini_set('html_errors', 'off');
 	ini_set('display_errors', 'off');
