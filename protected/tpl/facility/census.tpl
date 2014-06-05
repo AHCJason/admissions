@@ -68,9 +68,9 @@
 	<div style="float: right; margin-bottom: 20px">
 		<strong>Show:</strong>
 		<select id="type">
-			<option value="all"{if $type == 'all'} selected{/if}>All rooms</option>
-			<option value="empty"{if $type == 'empty'} selected{/if}>Just empty rooms</option>
-			<option value="scheduled"{if $type == 'scheduled'} selected{/if}>Just assigned rooms&nbsp;&nbsp;</option>
+			<option value="all"{if $type == 'all'} selected{/if}>All Rooms</option>
+			<option value="short_term"{if $type == 'short_term'} selected{/if}>Short-term patients</option>
+			<option value="long_term"{if $type == 'long_term'} selected{/if}>Long-term patients&nbsp;&nbsp;</option>
 		</select>
 	</div>
 </div>
@@ -137,7 +137,7 @@
 		{/if}
 
 	<!--table to display all current patients -->
-	<tr class="census border-bottom {if $room->status == 'Under Consideration'}under-consideration{/if}" {if $room->datetime_discharge_bedhold_end != ''} bgcolor="yellow" {elseif $room->is_complete == 0 && $room->is_complete != null && $room->datetime_discharge < $datetime} bgcolor="#A65878"  {elseif $room->datetime_discharge != ''} bgcolor="#FF6A6A" {elseif $occupant == false} bgcolor="#FFA1A1" {elseif $room->transfer_request} bgcolor="orange"{else}bgcolor="#ffffff"" {/if}>
+	<tr class="census border-bottom {if $room->status == 'Under Consideration'}under-consideration{/if}" {if $room->datetime_discharge_bedhold_end != ''} bgcolor="yellow" {elseif $room->is_complete == 0 && $room->is_complete != null && $room->datetime_discharge < $datetime} bgcolor="#A65878"  {elseif $room->datetime_discharge != ''} bgcolor="#FF6A6A" {elseif $occupant == false} bgcolor="#FFA1A1" {elseif $room->transfer_request} bgcolor="orange"{elseif $occupantSchedule->long_term}bgcolor="#e8e8e8"{else}bgcolor="#ffffff"" {/if}>
 
 		{if $occupant != false}
 			<td class="text-center">{$room->number}</td>
