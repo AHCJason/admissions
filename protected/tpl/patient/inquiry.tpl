@@ -968,16 +968,22 @@ $("#return-to-dashboard").click(function(e) {
 		<br />
 		<div style="float: right;"><input type="submit" value="Save" /></div> -->
 	{if $mode == 'edit'}
+	<tr>
+		<td colspan="5">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="5">&nbsp;</td>
+	</tr>
 	<tr> 
-		<td colspan="5"> 
+		<td colspan="3" style="text-align: right; margin-right: 5px;"> 
+			<a href="{$SITE_URL}" style="margin-right: 8px;" class="button">Cancel</a> 
+		</td> 
+		<td colspan="2"> 
 			<input type="submit" style="float: right" id="submit-button" value="Submit" /> 
 		</td> 
 	</tr>
 	<tr> 
-		<td colspan="5" style="text-align: right; margin-right: 5px;"> 
-			<a href="{$SITE_URL}" style="margin-right: 8px;">Cancel</a> 
-		</td> 
-	</tr>  
+			</tr>  
 	{/if}	
 	</table> 
 	
