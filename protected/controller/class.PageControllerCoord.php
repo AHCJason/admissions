@@ -38,7 +38,7 @@ class PageControllerCoord extends PageController {
 		$_dateStart = false;		// any start
 		$_dateEnd = false;			// any end
 		$_status = 'Under Consideration';			// any status
-		$_orderby = "`facility_name`, `datetime_admit` ASC";	// order by datetime, sooner at the top.
+		$_orderby = "`facility`, `datetime_admit` ASC";	// order by datetime, sooner at the top.
 		$pendingAdmits = CMS_Schedule::fetchAdmits($_dateStart, $_dateEnd, $_status, $_facilities, $_orderby);
  		// smarty()->assignByRef("pendingAdmits", $pendingAdmits);
 

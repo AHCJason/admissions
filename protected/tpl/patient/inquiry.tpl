@@ -770,6 +770,11 @@ $("#return-to-dashboard").click(function(e) {
 			<input type="text" name="hmo_number" style="width: 232px;" value="{$data.hmo_number}" /> 
 		</td> 
 	</tr> 
+	<tr class="form-header-row">
+		<td>Patient Type:<br /><br />
+			<input type="radio" name="patient_type" value="0" style="font-weight: normal" {if $schedule->long_term == 0} checked{elseif $schedule->long_term == ''} checked{/if} /><span class="normal-font">Short Term</span> &nbsp;&nbsp;
+			<input type="radio" name="patient_type" value="1"  {if $schedule->long_term == 1} checked{/if} /><span class="normal-font">Long Term</span>
+		</td>
 	<tr>
 		<td>&nbsp;</td>
 	</tr>
@@ -963,16 +968,22 @@ $("#return-to-dashboard").click(function(e) {
 		<br />
 		<div style="float: right;"><input type="submit" value="Save" /></div> -->
 	{if $mode == 'edit'}
+	<tr>
+		<td colspan="5">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="5">&nbsp;</td>
+	</tr>
 	<tr> 
-		<td colspan="5"> 
+		<td colspan="3" style="text-align: right; margin-right: 5px;"> 
+			<a href="{$SITE_URL}" style="margin-right: 8px;" class="button">Cancel</a> 
+		</td> 
+		<td colspan="2"> 
 			<input type="submit" style="float: right" id="submit-button" value="Submit" /> 
 		</td> 
 	</tr>
 	<tr> 
-		<td colspan="5" style="text-align: right; margin-right: 5px;"> 
-			<a href="{$SITE_URL}" style="margin-right: 8px;">Cancel</a> 
-		</td> 
-	</tr>  
+			</tr>  
 	{/if}	
 	</table> 
 	
