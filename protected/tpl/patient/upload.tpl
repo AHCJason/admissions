@@ -4,7 +4,7 @@
 	<h1 class="text-center">Bulk Upload Patient Data</h1>
 	<br />
 	<br />
-	<p>This page can be used to perfom a bulk upload of patient data.  The uploaded file must be an MS-DOS CSV format with as columns outlined below.  You can download the CSV Template file by clicking on the CSV icon below for use in entering your data.  A few of the columns including paymethod and long term need to be entered as described below or they will not correctly save.</p>
+	<p>This page can be used to perfom a bulk upload of patient data.  The uploaded file must be in a Windows CSV format with as columns outlined below.  You can download the CSV Template file by clicking on the CSV icon below for use in entering your data.  A few of the columns including paymethod and long term need to be entered as described below or they will not correctly save.</p>
 	<br />
 	<a href="{$SITE_URL}/templates/patient_upload.csv"><img src="{$SITE_URL}/images/icons/csv.png" /></a>
 	<br />

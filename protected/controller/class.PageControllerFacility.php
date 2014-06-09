@@ -1871,12 +1871,20 @@ elseif(input()->affirm == 'discharged_home') {
 		} else {
 			$datetime = datetime(strtotime(input()->datetime));
 		}
+		
 		if (input()->type == '') {
 			$type = 'all';
 		} else {
 			$type = input()->type;
 		}
+		
+		
 		if ($type == 'all') {
+			$patients = CMS_Room::fetchRooms($facility->id, $datetime);
+			
+			
+			
+/*
 			$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
 			$scheduled = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
 			$rooms = CMS_Room::mergeFetchedRooms($empty, $scheduled);
@@ -1892,7 +1900,17 @@ elseif(input()->affirm == 'discharged_home') {
 		elseif ($type == 'scheduled') {
 			$rooms = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
 			$assignedRooms = count($rooms);
-		}
+*/
+		} elseif ($type) {
+			// fetch only rooms that have long term patients
+			$patients = CMS_Room::fetchRooms($facility->id, $datetime, $type);
+		} 
+		
+		$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
+		$rooms = CMS_Room::mergeFetchedRooms($empty, $patients);
+		$assignedRooms = count($patients);
+		$emptyRooms = count($empty);
+		smarty()->assignByRef("empty", $empty);
 				
 		// get total number of rooms for the facility
 		$totalRooms = CMS_Room::fetchRoomCount($facility->id);
@@ -1924,6 +1942,7 @@ elseif(input()->affirm == 'discharged_home') {
 		
 		
 		$census = CMS_Census_Data_Month::fetchCurrentCensus($facility->id);
+		
 		
 		$adc = $census[0]->adc;
 		$adcGoal = $census[0]->goal;

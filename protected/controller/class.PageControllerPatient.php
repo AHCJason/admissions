@@ -743,7 +743,7 @@ class PageControllerPatient extends PageController {
 			feedback()->error("Invalid patient/admit record requested.");
 			$this->redirect(SITE_URL . "/?page=coord");
 		}
-				
+						
 	}
 	
 	public function submitInquiry() {
@@ -1145,6 +1145,9 @@ class PageControllerPatient extends PageController {
 		$obj->hmo_name = input()->hmo_name;
 		$obj->hmo_number = input()->hmo_number;
 		$obj->hmo_auth_number = input()->hmo_auth_number;
+		
+		// Patient type -- long-term or short-term?
+		$schedule->long_term = input()->patient_type;
 		
 		// Private pay guarantor
 		$obj->private_pay_guarantor_name = input()->private_pay_guarantor_name;
@@ -2041,7 +2044,7 @@ class PageControllerPatient extends PageController {
 		
 		// Get data from the uploaded csv file		
 		$data = $this->csv_to_array($filename);
-				
+						
 		// Instantiate new objects and save data
 		foreach ($data as $d) {
 			if (!empty($d)) {
