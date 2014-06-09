@@ -338,7 +338,7 @@ class CMS_Schedule extends CMS_Table {
 		} else {
 			$sql .= " order by schedule.admit_order ASC, {$orderby}";
 		}
-				
+								
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);
 	}

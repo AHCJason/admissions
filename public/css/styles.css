@@ -1076,7 +1076,8 @@ tr.census {
 }
 
 .grow {
-	height: 100px;
+	height: 90px;
+	max-height: auto !important;
 	width: 250px;
 	margin: 20px 0;
 	padding: 8px;

@@ -12,6 +12,71 @@ class CMS_Room extends CMS_Table {
 		return $this->related("facility")->name . " #" . $this->number;
 	}
 	
+	public static function fetchRooms($facility_id, $datetime, $type = false) {
+		$datetime = datetime(strtotime($datetime));
+		$obj = static::generate();
+		
+		$params = array(
+			":facilityid" => $facility_id,
+			":datetime" => $datetime,
+		);
+		
+		
+		$sql = "select distinct
+				`room`.*,
+				`patient_admit`.`pubid` as `patient_admit_pubid`,
+				`patient_admit`.`physician_id`,
+				`schedule`.`pubid` as `schedule_pubid`,
+				`schedule`.`datetime_admit` as `datetime_admit`,
+				`schedule`.`datetime_discharge` as `datetime_discharge`,
+				`schedule`.`discharge_to` as `discharge_to`,
+				`schedule`.`datetime_discharge_bedhold_end` as `datetime_discharge_bedhold_end`,
+				`schedule`.`status` as `status`,
+				`schedule`.`transfer_request`,
+				`schedule_hospital`.`is_complete`,
+				`schedule_hospital`.`datetime_sent`
+				from `room` 
+				inner join `schedule` on `schedule`.`room`=`room`.`id` 
+				inner join `patient_admit` on `schedule`.`patient_admit`=`patient_admit`.`id`
+				left join `schedule_hospital` on `schedule_hospital`.`schedule`=`schedule`.`id`
+				where `room`.`facility`=:facilityid 
+				and (`schedule`.`status`='Approved' OR `schedule`.`status`='Under Consideration' OR `schedule`.`status` = 'Discharged')
+				and :datetime >= `datetime_admit` 
+				and 
+				(
+					(`datetime_discharge` IS NULL)
+					OR
+					(
+					`datetime_discharge` >= :datetime
+					)
+					OR
+					(
+					`discharge_to`!='Discharge to Hospital (Bed Hold)' and (:datetime < `datetime_discharge`)
+					)
+					or
+					(
+					`discharge_to`='Discharge to Hospital (Bed Hold)' and :datetime < `datetime_discharge_bedhold_end`
+					)
+				)";
+		
+		if ($type) {
+			if ($type == "long_term") {
+				$params[":type"] = 1;
+			} else {
+				$params[":type"] = 0;
+			}
+			
+			$sql .= " and `schedule`.`long_term` = :type";
+		}
+		
+		$sql .= " GROUP BY `id`
+				ORDER BY `number`
+				";
+								
+		return $obj->fetchCustom($sql, $params);
+
+	}
+	
 	
 	public static function fetchEmptyByFacility($facility_id, $datetime) {
 		return static::_fetchByFacility($facility_id, "empty", $datetime);
@@ -28,6 +93,14 @@ class CMS_Room extends CMS_Table {
 	
 	public static function fetchScheduledDischargesByFacility($facility_id, $datetime) {
 		return static::_fetchByFacility($facility_id, "scheduled_discharge", $datetime);
+	}
+	
+	public static function fetchLongTermByFacility($facility_id, $datetime) {
+		return static::_fetchByFacility($facility_id, "long_term", $datetime);
+	}
+	
+	public static function fetchShortTermByFacility($facility_id, $datetime) {
+		return static::_fetchByFacility($facility_id, "short_term", $datetime);
 	}
 	
 	
@@ -164,8 +237,69 @@ class CMS_Room extends CMS_Table {
 				and schedule.datetime_discharge <= :datetime_end
 				ORDER BY `number`";
 				break;
-		}
+				
+			case "long_term":
+				$params[": datetime"] = $datetime;
+				$sql = "select * from `room` where facility=:facilityid and id not in (
+					select `room`.`id` from `room` 
+					inner join `schedule` on `schedule`.`room`=`room`.`id` 
+					where `room`.`facility`=:facilityid 
+					and :datetime >= `datetime_admit` 
+					and (`schedule`.`status`='Approved' || `schedule`.`status`='Under Consideration' || `schedule`.`status` = 'Discharged')
+					and `schedule`.`long_term` = 1
+					and 
+					(
+						(`datetime_discharge` IS NULL)
+						OR
+						(
+						`datetime_discharge` >= :datetime
+						)
+						OR
+						(
+						`discharge_to`!='Discharge to Hospital (Bed Hold)' and :datetime < `datetime_discharge`
+						)
+						or
+						(
+						`discharge_to`='Discharge to Hospital (Bed Hold)' and :datetime < `datetime_discharge_bedhold_end`
+						)
+					)
+				) 
+				ORDER BY `number`
+				";
 
+			break;
+			
+			case "short_term":
+				$params[": datetime"] = $datetime;
+				$sql = "select * from `room` where facility=:facilityid and id not in (
+					select `room`.`id` from `room` 
+					inner join `schedule` on `schedule`.`room`=`room`.`id` 
+					where `room`.`facility`=:facilityid 
+					and :datetime >= `datetime_admit` 
+					and (`schedule`.`status`='Approved' || `schedule`.`status`='Under Consideration' || `schedule`.`status` = 'Discharged')
+					and `schedule`.`long_term` = 0
+					and 
+					(
+						(`datetime_discharge` IS NULL)
+						OR
+						(
+						`datetime_discharge` >= :datetime
+						)
+						OR
+						(
+						`discharge_to`!='Discharge to Hospital (Bed Hold)' and :datetime < `datetime_discharge`
+						)
+						or
+						(
+						`discharge_to`='Discharge to Hospital (Bed Hold)' and :datetime < `datetime_discharge_bedhold_end`
+						)
+					)
+				) 
+				ORDER BY `number`
+				";
+			break;
+		}
+		
 		if ($sql != '') {
 			$params[":facilityid"] = $facility_id;
 			$records = $obj->fetchCustom($sql, $params);

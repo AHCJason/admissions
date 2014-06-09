@@ -118,11 +118,13 @@
 						</ul>
 					</li>	
 					<li id="facility-dashboard"><a href="{$SITE_URL}/?page=facility&amp;id={$defaultFacility->pubid}">{$defaultFacility->name} Dashboard</a>
+						{if !empty ($myFacilities)}
 						<ul id="facility-dashboard-dropdown">
 						{foreach $myFacilities as $f}
 							<li><a href="{$SITE_URL}/?page=facility&amp;id={$f->pubid}">{$f->name} Dashboard</a></li>
 						{/foreach}
 						</ul>
+						{/if}
 					</li>
 
 					{if $auth->getRecord()->isAdmissionsCoordinator() == 1}<li><a href="{$SITE_URL}/?page=coord">Home</a></li>{/if}
