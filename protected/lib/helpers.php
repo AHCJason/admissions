@@ -129,15 +129,16 @@ function scheduleMenu($params, &$smarty) {
 		if ($schedule->status == 'Approved') {
 			$options .= "\n<li><a href='{$SITE_URL}/?page=patient&amp;action=transferRequest&amp;schedule={$schedule->pubid}'>Enter a Transfer Request</a></li>";
 		}
-		if ($schedule->room == '' || date('Y-m-d', strtotime($schedule->datetime_admit)) >= date('Y-m-d', strtotime('now'))) {
-			$options .= "\n<li><a class='cancel-admit-link' href='{$SITE_URL}/?page=coord&amp;action=cancelSchedule&amp;id={$schedule->pubid}'>Cancel this inquiry</a></li>";
-		}
 		//$options .= "\n<li><a href='{$SITE_URL}/?page=patient&amp;action=patient_schedule&amp;schedule={$schedule->pubid}'>Edit Patient Schedule</a></li>";
 		if ($schedule->discharge_to == "Discharge to Hospital (Bed Hold)") {
 			$options .= "\n<li id=\"cancel-bedhold\"><a  href='{$SITE_URL}/?page=facility&amp;action=cancelBedHold&amp;schedule={$schedule->pubid}'>Cancel the Bed Hold</a></li>";
 		}
-
 	}
+	
+	if ($schedule->room == '') {
+		$options .= "\n<li><a class='cancel-admit-link' href='{$SITE_URL}/?page=coord&amp;action=cancelSchedule&amp;id={$schedule->pubid}'>Cancel this inquiry</a></li>";
+	}
+		
 	
 	echo <<<END
 		<dl style="" class="dropdown">
