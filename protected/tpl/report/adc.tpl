@@ -61,7 +61,7 @@
 {include file="report/index.tpl"}
 
 {if $view != 'year'}
-<div id="container" style="width:100%; height:400px;"></div>
+<!-- <div id="container" style="width:100%; height:400px;"></div> -->
 {/if}
 
 <table id="report-table" cellpadding="5" cellspacing="0">
