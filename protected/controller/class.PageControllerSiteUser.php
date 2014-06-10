@@ -240,11 +240,14 @@ class PageControllerSiteUser extends PageController {
 		 * to use SITE_EMAIL if defined in bootstrap.php.
 		 *
 		 */
+		 
+		// Get site email address from database
+		$site_email = CMS_Company::getEmailExt();
 		
 		if (strpos(input()->email, "@")) {
 			$user->email = input()->email;
-		} elseif (input()->email != "" && SITE_EMAIL != "") {
-			$user->email = input()->email . SITE_EMAIL;
+		} elseif (input()->email != "" && $site_email != "") {
+			$user->email = input()->email . $site_email;
 		} else {
 			feedback()->error("You must provide a username.");	
 		}
