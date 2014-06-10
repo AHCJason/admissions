@@ -83,7 +83,7 @@ function scheduleMenu($params, &$smarty) {
 		
 	}
 
-	if ($schedule->room != '' & $schedule->status == 'Approved') {
+	if ($schedule->room != '' && ($schedule->status == 'Approved')  || ($schedule->status == 'Discharged' && strtotime($schedule->datetime_discharge) >= strtotime('now'))) {
 		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=room_transfer&amp;schedule={$schedule->pubid}'>Room Transfer</a></li>";
 	}
 
@@ -157,7 +157,7 @@ END;
 			$message = "This pending admit request<br /> is ready for approval.";	
 			$image = "flag_green.png";
 		}
-		if ($schedule->status != "Approved") {
+		if ($schedule->status == "Under Consideration") {
 			echo <<<END
 				<a class="tooltip"><img src="{$ENGINE_URL}/images/icons/{$image}" /><span>{$message}</span></a>
 
