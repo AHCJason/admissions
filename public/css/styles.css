@@ -134,6 +134,7 @@ table#room-table tr > td {
 .text-left { text-align: left; }
 .text-right { text-align: right; }
 .text-center { text-align: center; }
+.text-justify { text-align: justify; }
 .clear { clear: both; }
 .clear-left { clear: left; }
 .clear-right { clear: right; }
@@ -193,8 +194,6 @@ div.button, a.button, a.button:hover {
 }
 
 
-
-
 #normal-view a {
 	color: #f1f1f1;	
 	float: right;
@@ -224,6 +223,26 @@ div.button, a.button, a.button:hover {
 
 .right {
 	float: right;
+}
+
+
+#confirm-review {
+	display: none;
+	text-align: center;
+}
+
+#confirm-review button {
+	margin: 5px 15px;
+}
+
+#confirm-review p {
+	margin: 0 5px 10px 5px;
+	text-align: justify;
+}
+
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
 }
 
 

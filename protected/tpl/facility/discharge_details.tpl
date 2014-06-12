@@ -5,6 +5,8 @@ $("#facility").change(function(e) {
 	location.href = SITE_URL + '/?page=facility&action=discharge&facility=' + $("option:selected",this).val();
 });
 
+$(".flag-reason").hide();
+
 {$states = getUSAStates()}
 var states = [
 {foreach $states as $abbr => $state}
@@ -181,6 +183,14 @@ $("#home-health-search").autocomplete({
 		stepMinute: 15, 
 		hour: 11		
 	});
+	
+	$("input[name=flag_readmission]").click(function(e) {
+	if ($(this).attr("checked") == "checked") {
+		$(".flag-reason").show();
+	} else {
+		$(".flag-reason").hide();
+	}
+});
 
 
 {/jQueryReady}
@@ -342,6 +352,14 @@ $("#home-health-search").autocomplete({
 					<tr>
 						<td style="vertical-align: top; text-align: right;"><strong>Comment:</strong></td>
 						<td  colspan="2"><textarea name="discharge_comment" cols="60" rows="5">{$schedule->discharge_comment}</textarea></td>
+					</tr>
+					<tr>
+						<td class="text-right" id="flag"><input type="checkbox" value="1" name="flag_readmission" /></td>
+						<td>Flag this patient for re-admission <a class="tooltip"><img src="{$SITE_URL}/images/icons/information.png" /><span>When selected this patient will be flagged<br /> for review prior to re-admission.</span></a></td>
+					</tr>
+					<tr class="flag-reason">
+						<td style="vertical-align: top; text-align: right;"><strong>Flag Reason:</strong></td>
+						<td><textarea name="flag_reason" cols="60" rows="5">{$schedule->reason_flagged}</textarea></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
