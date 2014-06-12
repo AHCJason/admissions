@@ -1879,39 +1879,40 @@ elseif(input()->affirm == 'discharged_home') {
 		}
 		
 		
-		if ($type == 'all') {
-			$patients = CMS_Room::fetchRooms($facility->id, $datetime);
+		if ($facility->short_term) {  // if a facility only offers short term show empty and full rooms
+			if ($type == 'all') {	
+				$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
+				$scheduled = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
+				$rooms = CMS_Room::mergeFetchedRooms($empty, $scheduled);
+				$emptyRooms = count($empty);
+				$assignedRooms = count($scheduled);
+				smarty()->assignByRef("empty", $empty);
+			} elseif ($type == 'empty') {
+				$rooms = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
+				$emptyRooms = count($rooms);
+			} elseif ($type == 'scheduled') {
+				$rooms = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
+				$assignedRooms = count($rooms);
+			}
 			
+
+		} else {
+			if ($type == 'all') { // otherwise show rooms by long-term or short-term patients
+				$patients = CMS_Room::fetchRooms($facility->id, $datetime);
+			} elseif ($type) {
+				// fetch only rooms that have long term patients
+				$patients = CMS_Room::fetchRooms($facility->id, $datetime, $type);
+			}
 			
-			
-/*
 			$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
-			$scheduled = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
-			$rooms = CMS_Room::mergeFetchedRooms($empty, $scheduled);
+			$rooms = CMS_Room::mergeFetchedRooms($empty, $patients);
+			$assignedRooms = count($patients);
 			$emptyRooms = count($empty);
-			$assignedRooms = count($scheduled);
 			smarty()->assignByRef("empty", $empty);
 
-		}		
-		elseif ($type == 'empty') {
-			$rooms = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
-			$emptyRooms = count($rooms);
 		}
-		elseif ($type == 'scheduled') {
-			$rooms = CMS_Room::fetchScheduledByFacility($facility->id, $datetime);
-			$assignedRooms = count($rooms);
-*/
-		} elseif ($type) {
-			// fetch only rooms that have long term patients
-			$patients = CMS_Room::fetchRooms($facility->id, $datetime, $type);
-		} 
 		
-		$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
-		$rooms = CMS_Room::mergeFetchedRooms($empty, $patients);
-		$assignedRooms = count($patients);
-		$emptyRooms = count($empty);
-		smarty()->assignByRef("empty", $empty);
-				
+					
 		// get total number of rooms for the facility
 		$totalRooms = CMS_Room::fetchRoomCount($facility->id);
 										
