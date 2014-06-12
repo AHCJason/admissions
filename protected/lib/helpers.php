@@ -109,30 +109,34 @@ function scheduleMenu($params, &$smarty) {
 	 *
 	 */
 
-	if ($schedule->status == "Approved") {
+	if ($schedule->status != "Under Consideration") {
 		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=discharge_details&amp;schedule={$schedule->pubid}'>Manage Discharge</a></li>";
 		$atHospitalRecord = $schedule->atHospitalRecord();
-		if ($atHospitalRecord->id != '') {
-			$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Manage Hospital Stay</a></li>";
-		} elseif ($schedule->status == "Approved") {
-			$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Initiate Hospital Stay</a></li>";
-		}
 		
-		//$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=cancelHospitalVisit&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Cancel Hospital Stay</a></li>";
+	}
+	
+	if ($atHospitalRecord->id != '') {
+		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Manage Hospital Stay</a></li>";
+	} elseif ($schedule->status != "Under Consideration") {
+		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Initiate Hospital Stay</a></li>";
+	}
 		
+	//$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=cancelHospitalVisit&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Cancel Hospital Stay</a></li>";
+	
+	if ($schedule->status == "Approved" || ($schedule->status == 'Discharged' && strtotime($schedule->datetime_discharge) >= strtotime('now'))) {
 		if ($schedule->getPatient()->physician_id != "") {
 			$options .= "\n<li id=\"record-visit\"><a href='{$SITE_URL}/?page=patient&amp;action=visit&amp;patient={$schedule->getPatient()->pubid}&schedule={$schedule->pubid}'>Record Physician Visit</a></li>";
 		}
-		
-		$backurl = urlencode(currentURL());
-		
-		if ($schedule->status == 'Approved') {
-			$options .= "\n<li><a href='{$SITE_URL}/?page=patient&amp;action=transferRequest&amp;schedule={$schedule->pubid}'>Enter a Transfer Request</a></li>";
-		}
-		//$options .= "\n<li><a href='{$SITE_URL}/?page=patient&amp;action=patient_schedule&amp;schedule={$schedule->pubid}'>Edit Patient Schedule</a></li>";
-		if ($schedule->discharge_to == "Discharge to Hospital (Bed Hold)") {
-			$options .= "\n<li id=\"cancel-bedhold\"><a  href='{$SITE_URL}/?page=facility&amp;action=cancelBedHold&amp;schedule={$schedule->pubid}'>Cancel the Bed Hold</a></li>";
-		}
+	}
+	
+	$backurl = urlencode(currentURL());
+	
+	if ($schedule->status == 'Approved') {
+		$options .= "\n<li><a href='{$SITE_URL}/?page=patient&amp;action=transferRequest&amp;schedule={$schedule->pubid}'>Enter a Transfer Request</a></li>";
+	}
+	//$options .= "\n<li><a href='{$SITE_URL}/?page=patient&amp;action=patient_schedule&amp;schedule={$schedule->pubid}'>Edit Patient Schedule</a></li>";
+	if ($schedule->discharge_to == "Discharge to Hospital (Bed Hold)") {
+		$options .= "\n<li id=\"cancel-bedhold\"><a  href='{$SITE_URL}/?page=facility&amp;action=cancelBedHold&amp;schedule={$schedule->pubid}'>Cancel the Bed Hold</a></li>";
 	}
 	
 	if ($schedule->room == '') {
