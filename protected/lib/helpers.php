@@ -117,7 +117,7 @@ function scheduleMenu($params, &$smarty) {
 	
 	if ($atHospitalRecord->id != '') {
 		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Manage Hospital Stay</a></li>";
-	} elseif ($schedule->status != "Under Consideration") {
+	} elseif ($schedule->status == "Approved" || ($schedule->status == 'Discharged' && strtotime($schedule->datetime_discharge) >= strtotime('now'))) {
 		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Initiate Hospital Stay</a></li>";
 	}
 		
