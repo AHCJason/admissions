@@ -1337,8 +1337,7 @@ elseif(input()->affirm == 'discharged_home') {
 		$datetime = datetime(strtotime(input()->datetime));
 		$schedule = new CMS_Schedule(input()->schedule);
 		$patient = new CMS_Patient_Admit($schedule->patient_admit);
-		
-		
+				
 		// validate facility
 		if ($facility->valid() == false) {
 			feedback()->error("Invalid facility selected.");
@@ -1540,6 +1539,14 @@ elseif(input()->affirm == 'discharged_home') {
 					$schedule->discharge_phone = input()->discharge_phone;
 				}
 			}
+		}
+		
+		if (input()->flag_readmission) {
+			$schedule->flag_readmission = 1;
+		}
+		
+		if (input()->flag_reason != '') {
+			$schedule->flag_reason = input()->flag_reason;
 		}
 		
 		

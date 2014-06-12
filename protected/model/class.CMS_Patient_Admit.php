@@ -168,10 +168,13 @@ class CMS_Patient_Admit extends CMS_Table {
 	
 	public static function searchByName($last, $first, $middle) {
 
-		$sql = "select max(patient_admit.id) as patient_id,patient_admit.pubid,person_id,first_name,middle_name,
-					last_name,birthday,sex,ssn,max(schedule.patient_admit),max(schedule.datetime_discharge) as datetime_discharge, 
+/*
+		$sql = "select max(patient_admit.id) as patient_id, patient_admit.pubid, person_id, first_name, middle_name,
+					last_name, birthday, sex, ssn, max(schedule.patient_admit), max(schedule.datetime_discharge) as datetime_discharge, 
 					max(schedule.datetime_admit) as datetime_admit, schedule_hospital.is_complete from `" . static::$table . "`, `schedule` 
 					left join `schedule_hospital` on `schedule_hospital`.`schedule` = `schedule`.`id` where patient_admit.id=schedule.patient_admit and last_name like :last";
+*/
+		$sql = "select max(patient_admit.id) as patient_id, patient_admit.pubid, patient_admit.person_id, patient_admit.last_name, patient_admit.first_name, patient_admit.middle_name, patient_admit.birthday, patient_admit.sex, patient_admit.ssn, schedule.datetime_discharge, schedule.datetime_admit, schedule.flag_readmission, schedule.flag_reason, schedule_hospital.is_complete from patient_admit inner join schedule on schedule.patient_admit = patient_admit.id left join schedule_hospital on schedule_hospital.schedule = schedule.id where patient_admit.last_name like :last and schedule.status = 'Discharged'";
 		$params = array(
 			":last" => "%{$last}%"
 		);
