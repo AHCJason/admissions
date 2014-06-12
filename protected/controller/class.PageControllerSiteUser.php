@@ -111,7 +111,7 @@ class PageControllerSiteUser extends PageController {
 		if (feedback()->wasError()) {
 			$this->redirect(SITE_URL . "/?page=siteUser&action=edit&facility={$facility->pubid}&user={$editUser->pubid}");
 		} else {
-			$this->redirect(SITE_URL . "/?page=siteUser&action=manage");
+			$this->redirect(SITE_URL . "/?page=siteUser&action=manage&facility={$facility->pubid}");
 		}
 		
 	}

@@ -25,7 +25,7 @@ class PageControllerPatient extends PageController {
 
 				$empty = "<span class=\"text-grey\">n/a</span>";
 
-				if ($patient->birthday != '') {
+				if ($patient->birthday != '' && $patient->birthday != '0000-00-00') {
 					$birthday = date("m/d/Y", strtotime($patient->birthday));
 				} else {
 					$birthday = $empty;
@@ -55,16 +55,22 @@ class PageControllerPatient extends PageController {
 					$date_discharge = $empty;
 				}
 				
-/*
-				if ($patient->do_not_readmit == true) {
-					$no_readmit = "Do not readmit this patient";
+				if ($patient->flag_readmission == true) {
+					$flag_readmit = true;
 				} else {
-					$no_readmit = '';
+					$flag_readmit = false;
 				}
-*/
+				
+				if ($patient->flag_reason != '') {
+					$flag_reason = "<strong>Flag Reason:</strong>&nbsp;&nbsp;" . $patient->flag_reason;
+				} else {
+					$flag_reason = "This person has been flagged for re-admission; however, no reasons have been provided.";
+				}
 
 				$results[] = array(
 					"label" => "{$patient->fullName()}",
+					"flag_readmission" => $flag_readmit,
+					"flag_reason" => $flag_reason,
 					"person_id" => $patient->person_id,
 					"birthday" => $birthday,
 					"sex" => $gender,
@@ -296,7 +302,7 @@ class PageControllerPatient extends PageController {
 	public function submitAdmitRequestExistingPatient() {	
 
 		$readmitType = input()->readmit_type;
-
+				
 		// validate facility
 		if (input()->facility == '') {
 			feedback()->error("You did not provide a facility.");
@@ -364,8 +370,8 @@ class PageControllerPatient extends PageController {
 		
 		// Go away on error
 		if (feedback()->wasError()) {
-			$this->redirect();
-			// $this->redirect(SITE_URL . "/?page=coord&action=admit");
+			//$this->redirect();
+			$this->redirect(SITE_URL . "/?page=coord&action=admit");
 		}
 		
 	

@@ -2,6 +2,8 @@
 {jQueryReady}
 
 	var elective = 0;
+	var flagReadmit = '';
+	var flagPrompt = '';
 	$("#org-field").hide();
 	$("#physician-field").hide();
 	$("#case-manager-field").hide();
@@ -51,11 +53,15 @@
 			if (json.length > 0) {
 				suggest_html += "<h2>Are any of these the person you\'re looking for?</h2><br /><br />";
 				$.each (json, function(i, val) {
-					suggest_html += '<br /><div class="patient-search-results"><strong>' + val.label + '</strong><br />Birthdate: ' + val.birthday + '<br />Gender: ' + val.sex + '<br />Social Security #: ' + val.ssn + '<br />Previous Admission Date: ' + val.admit_date + '<br />Previous Discharge Date: ' + val.discharge_date + '<br /><br />';
+					if (val.flag_readmission == true) {
+						flagReadmit = '<a class="tooltip"><img src=' + SITE_URL + '/images/icons/flag_red.png /><span>' + val.flag_reason + '</span></a>';
+						flagPrompt = 'prompt-warning';
+					} 
+					suggest_html += '<br /><div class="patient-search-results"><strong>' + val.label + '</strong>&nbsp;&nbsp;' + flagReadmit + '<br />Birthdate: ' + val.birthday + '<br />Gender: ' + val.sex + '<br />Social Security #: ' + val.ssn + '<br />Previous Admission Date: ' + val.admit_date + '<br />Previous Discharge Date: ' + val.discharge_date + '<br /><br />';
 					if (val.is_complete == false) {
 						suggest_html += '<a class="hospital-visit" href="' + SITE_URL + '/?page=coord&amp;action=trackHospitalVisits"><button>Hospital Visit</button></a><br /></div>';
 					} else {
-						suggest_html += '<a class="admit-request-submit-existing" href="' + SITE_URL + '/?page=patient&amp;action=submitAdmitRequestExistingPatient&amp;person_id=' + val.person_id + '"><button>Re-Admit this Patient</button></a><br /></div>';
+						suggest_html += '<a class="admit-request-submit-existing ' + flagPrompt + '" href="' + SITE_URL + '/?page=patient&amp;action=submitAdmitRequestExistingPatient&amp;person_id=' + val.person_id + '"><button>Re-Admit this Patient</button></a><br /></div>';
 					}				
 				});
 				if (json.length > 0) {
@@ -113,16 +119,45 @@
 			
 	});
 	
+	
+		
 	$(".admit-request-submit-existing").live("click", function(e) {
 		e.preventDefault();
+		var url = $(this).attr("href");
 		if ($("#admit-request-date-admit").val() == '') {
-			jAlert('You must select a admit date.');
+			jAlert('You must select an admit date.');
 			return false;
+		} else if ($(this).hasClass('prompt-warning')) {
+			$("#confirm-review").dialog({
+				dialogClass: "no-close",
+				resizable: false,
+				height: 140,
+				modal: true,
+				title: "Review Required",
+				height: 170,
+				buttons: {
+					Cancel: {
+						text: 'Cancel',
+						'class': 'left',
+						click: function () {
+							$(this).dialog("close");
+						}
+					},
+					Submit: {
+						text: "Submit",
+						'class': 'right',
+						click: function () {
+							location.href = url + '&datetime_admit=' + $("#admit-request-date-admit").val() + "&facility=" + $("#admit-request-facility option:selected").val() + "&admit_from=" + $("#admit-from").val() + "&readmit_type=" + $("#readmit-type :checked").val() + "&elective=" + elective + "&home_health=" + $("#home-health").val() + "&hospital_id=" + $("#hospital").val() + "&physician_id=" + $("#physician").val() + "&case_manager_id=" + $("#case-manager").val() + "&other_name=" + $("#other-name").val() + "&other_phone=" + $("#other-phone").val();
+						}
+					}
+ 				}
+			});
+		
 		} else {
-			location.href = $(this).attr("href") + '&datetime_admit=' + $("#admit-request-date-admit").val() + "&facility=" + $("#admit-request-facility option:selected").val() + "&admit_from=" + $("#admit-from").val() + "&readmit_type=" + $("#readmit-type :checked").val() + "&elective=" + elective + "&home_health=" + $("#home-health").val() + "&hospital_id=" + $("#hospital").val() + "&physician_id=" + $("#physician").val() + "&case_manager_id=" + $("#case-manager").val() + "&other_name=" + $("#other-name").val() + "&other_phone=" + $("#other-phone").val();
+			location.href = url + '&datetime_admit=' + $("#admit-request-date-admit").val() + "&facility=" + $("#admit-request-facility option:selected").val() + "&admit_from=" + $("#admit-from").val() + "&readmit_type=" + $("#readmit-type :checked").val() + "&elective=" + elective + "&home_health=" + $("#home-health").val() + "&hospital_id=" + $("#hospital").val() + "&physician_id=" + $("#physician").val() + "&case_manager_id=" + $("#case-manager").val() + "&other_name=" + $("#other-name").val() + "&other_phone=" + $("#other-phone").val();
 		}
 	});
-	
+		
 	
 	$("#org-search").autocomplete({
 		minLength: 4,
@@ -259,7 +294,8 @@
 		stepMinute: 15,
 		hour: 13,	
 	});	
-
+	
+	
 {/jQueryReady}
 {$facilities = $auth->getRecord()->getFacilities()}
 <h1 class="text-center">New Admit Request</h1>
@@ -372,3 +408,4 @@
 		</tr>
 </table>
 <div id="admit-request-suggestions"></div>	
+<div id="confirm-review"><p>This patient has been flagged for re-admission.  You can read this reasons for the flag by hovering over the flag icon next to the patient name; please review this request with the facility administrator prior to re-admitting this patient.</p></div>
