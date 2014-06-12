@@ -69,8 +69,13 @@
 		<strong>Show:</strong>
 		<select id="type">
 			<option value="all"{if $type == 'all'} selected{/if}>All Rooms</option>
-			<option value="short_term"{if $type == 'short_term'} selected{/if}>Short-term patients</option>
-			<option value="long_term"{if $type == 'long_term'} selected{/if}>Long-term patients&nbsp;&nbsp;</option>
+			{if $facility->short_term}
+				<option value="scheduled"{if $type == 'scheduled'} selected{/if}>Scheduled Rooms</option>
+				<option value="empty"{if $type == 'empty'} selected{/if}>Empty Rooms&nbsp;&nbsp;</option>
+			{else}
+				<option value="short_term"{if $type == 'short_term'} selected{/if}>Short-term patients</option>
+				<option value="long_term"{if $type == 'long_term'} selected{/if}>Long-term patients&nbsp;&nbsp;</option>
+			{/if}
 		</select>
 	</div>
 </div>
