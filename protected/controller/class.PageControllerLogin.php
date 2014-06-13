@@ -51,6 +51,16 @@ class PageControllerLogin extends PageController {
 		$this->redirect(SITE_URL . "/?page=home");
 
 	}
+	
+	public function timeout() {
+		auth()->logout();
+	}
+	
+	public function keepalive() {
+		if (isset ($_SESSION['id'])) {
+			$_SESSION['id'] = $_SESSION['id'];
+		}	
+	}
 
 
 }

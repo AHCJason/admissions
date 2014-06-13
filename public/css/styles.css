@@ -245,6 +245,11 @@ div.button, a.button, a.button:hover {
   display: none;
 }
 
+.ui-dialog .ui-dialog-title {
+  text-align: center;
+  width: 100%;
+}
+
 
 
 /* Main Template */
@@ -1685,3 +1690,29 @@ a.tooltip span
 	float: right;
 	margin: 0 50px 30px 0;
 }
+
+#timeout-warning {
+	display: none;
+}
+
+#timeout {
+	border: 2px solid #333;
+	border-radius: 5px;
+	margin: 50px auto;
+	width: 400px;
+	padding: 10px;
+	box-shadow: 25px 25px 25px 5px rgba(0,0,0,0.5);
+}
+
+#timeout a.button {
+	text-align: center;
+	float: none;
+	margin: 20px auto;
+	width: 50px;
+}
+
+#timeout a.button:hover {
+	background: #185687;
+	color: #f1f1f1;
+}
+

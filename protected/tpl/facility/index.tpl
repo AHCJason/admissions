@@ -125,7 +125,7 @@ $(window).load(function() {
 						{$af = $admitFrom}
 					{/if}
 					{foreach $onsite as $o}
-						{if $o->id != ''}<img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" />{/if}
+						{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 					{/foreach}
 					{$admit->getRoomNumber()}
 					<strong>{$ptName}</strong><br />
@@ -136,9 +136,9 @@ $(window).load(function() {
 				{else}
 					Room {$admit->getRoomNumber()} <br />
 					{foreach $onsite as $o}
-						{if $o->id != ''}<img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" />{/if}
+						{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 					{/foreach}
-					{if $admit->confirmed == 1}<img src="{$PUBLIC_URL}/images/icons/star.png" style="height: 10px;" />{/if}
+					{if $admit->confirmed == 1}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
 					<strong>{$admit->getPatient()->fullName()}</strong><br />
 					{if $admit->transfer_facility != ''}{$transferFacility->name}{elseif $admit->admit_from != ''}{$admitFrom->name}{else}{$admit->getPatient()->referral_org_name}{/if}<br />
 					
@@ -212,7 +212,7 @@ $(window).load(function() {
 					<span class="sent-name">
 					{if $isTV == 1}
 						{foreach $onsite as $o}
-							{if $o->id != ''}<img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" />{/if}
+							{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 						{/foreach}
 						{$sent->getRoomNumber()}&nbsp;
 							{$ptName = substr($sent->getPatient()->fullName(),0,12)|cat:"..."}
@@ -227,7 +227,7 @@ $(window).load(function() {
 					{else}
 						Room {$sent->getRoomNumber()}<br />
 						{foreach $onsite as $o}
-							{if $o->id != ''}<img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" />{/if}
+							{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 						{/foreach}
 						<strong>{$sent->getPatient()->fullName()}</strong><br />Hospital: {$hospital->name|default:"Unknown"}<br />Physician: {if $sent->getPatient()->physician_id != ''}Dr. {$sPhysician->last_name}{else}{$sent->getPatient()->physician_name}{/if}{scheduleMenu schedule=$sent weekSeed=$weekStart}</a>
 					{/if}
