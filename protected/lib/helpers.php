@@ -139,7 +139,7 @@ function scheduleMenu($params, &$smarty) {
 		$options .= "\n<li id=\"cancel-bedhold\"><a  href='{$SITE_URL}/?page=facility&amp;action=cancelBedHold&amp;schedule={$schedule->pubid}'>Cancel the Bed Hold</a></li>";
 	}
 	
-	if ($schedule->room == '') {
+	if ($schedule->status != 'Approved') {
 		$options .= "\n<li><a class='cancel-admit-link' href='{$SITE_URL}/?page=coord&amp;action=cancelSchedule&amp;id={$schedule->pubid}'>Cancel this inquiry</a></li>";
 	}
 		
