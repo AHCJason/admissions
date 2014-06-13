@@ -4,16 +4,18 @@
 {include file="$cms_template_dir/_head.tpl"}
 {include file="$cms_template_dir/_javascript_auto.tpl"}
 
- <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery.hoverintent.r5.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-validate/additional-methods.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery.alerts-1.1/jquery.alerts.js"></script>
 <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery.maskedinput-011748c/src/jquery.maskedinput.js"></script>
 <script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/js/jquery-ui-1.8.12.custom.min.js"></script>
- <script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/development-bundle/external/jquery.cookie.js"></script>
+<script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/development-bundle/external/jquery.cookie.js"></script>
 <script type="text/javascript" src="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/js/jquery.qtip.min.js"></script>
 <link rel="stylesheet" href="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/css/jquery.qtip.min.css" type="text/css" />
- <script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="{$ENGINE_URL}/js/jquery/jquery-ui-timepicker-addon.js"></script>
+
+<script type="text/javascript" src="{$SITE_URL}/js/timeout.js"></script>
 <link rel="stylesheet" type="text/css" href="{$SITE_URL}/js/jquery-ui-1.8.12.advancedhc/css/custom-theme/jquery-ui-1.8.12.custom.css" />
 <link rel="stylesheet" type="text/css" href="{$ENGINE_URL}/js/jquery/jquery.alerts-1.1/jquery.alerts.css" />
 <script type="text/javascript" src="{$SITE_URL}/js/shadowbox-3.0.3/shadowbox.js"></script>
@@ -43,6 +45,11 @@
 	var SITE_EMAIL = '{$SITE_EMAIL}';
 {/javascript}
 
+{if $page != "login"}
+{jQueryReady}
+	startTimer();
+{/jQueryReady}
+{/if}
 
 {if ($page == "patient" && $action == "printInquiry") || ($page == "patient" && $action == "printNursing")}
 </head>
@@ -57,14 +64,13 @@
 {if $siteCss}<link rel="stylesheet" href="{$SITE_URL}/css/site_css/{$siteCss}" type="text/css" media="all" />{/if}
 {if $isPrint == 1}<link rel="stylesheet" href="{$SITE_URL}/css/print.css" type="text/css" media="all" />{/if}
 
-<body>
+<body {if $page != "login"}onmousemove="resetTimer(){/if}">
 {if $isMicro == 1}
 	{include file="_feedback.tpl"}
 	<br />
 	{include file="$content_tpl"}
 {else}
 	<div id="header-container">
-	
 		{if $auth->valid()}
 		{$defaultFacility = $auth->getRecord()->getDefaultFacility()}
 		<div id="header">
@@ -76,8 +82,7 @@
 			</div>
 			
 			<img src="{$SITE_URL}/images/{$logo}" alt="AptitudeCare Logo" class="logo" />
-			
-			
+						
 			<div id="nav">
 			
 				<ul>
@@ -149,7 +154,7 @@
 		
 	</div>
 	{/if}
-		
+
 	<div id="content">
 	
 		<div class="right" style="margin-top: -12px;">{if $isTV == 1}<a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{/if}</div>
@@ -165,6 +170,11 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="timeout-warning">
+	    <p>Your session is about to timeout.  You will be automatically logged out in 1 minute. To remain logged in click the button below.</p>
+	</div>
+
 
 {/if}
 <JAVASCRIPT_BOTTOM>
