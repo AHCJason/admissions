@@ -1374,7 +1374,7 @@ elseif(input()->affirm == 'discharged_home') {
 				}
 				
 				
-				if (input()->service_disposition == '') {
+				if (input()->service_disposition == '' && input()->discharge_disposition != 'Hospice') {
 					feedback()->error("You must select a service disposition.");
 					$this->redirect(SITE_URL . "/?page=facility&action=discharge_details&schedule={$schedule->pubid}");
 				}
