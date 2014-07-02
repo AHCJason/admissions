@@ -2,12 +2,13 @@
 
 require_once "env.php";
 define(TEST_EMAIL, "");
+define(APP_NAME, "AptitudeCare");
 define(APP_EMAIL, "");
 define(DEV_EMAIL, "test@localhost");
 
 
 if (DEVELOPMENT == true) {
-	ini_set('html_errors', 'on');
+	ini_set('html_errors', 'off');
 	ini_set('display_errors', 'off');
 } else {
 	ini_set('html_errors', 'off');
