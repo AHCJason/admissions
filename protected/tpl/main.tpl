@@ -45,7 +45,7 @@
 	var SITE_EMAIL = '{$SITE_EMAIL}';
 {/javascript}
 
-{if $page != "login"}
+{if $auth->getRecord()->timeout && $isTV == 0}
 {jQueryReady}
 	startTimer();
 {/jQueryReady}
@@ -64,7 +64,7 @@
 {if $siteCss}<link rel="stylesheet" href="{$SITE_URL}/css/site_css/{$siteCss}" type="text/css" media="all" />{/if}
 {if $isPrint == 1}<link rel="stylesheet" href="{$SITE_URL}/css/print.css" type="text/css" media="all" />{/if}
 
-<body {if $page != "login"}onmousemove="resetTimer(){/if}">
+<body {if $auth->getRecord()->timeout && $isTV == 0}onmousemove="resetTimer(){/if}">
 {if $isMicro == 1}
 	{include file="_feedback.tpl"}
 	<br />
