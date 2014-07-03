@@ -45,7 +45,7 @@
 	var SITE_EMAIL = '{$SITE_EMAIL}';
 {/javascript}
 
-{if $auth->getRecord()->timeout && $isTV == 0}
+{if $auth->getRecord()->timeout}
 {jQueryReady}
 	startTimer();
 {/jQueryReady}
