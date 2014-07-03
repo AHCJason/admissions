@@ -8,13 +8,17 @@ class PageControllerHospital extends PageController {
 	
 	public function searchHospital() {
 		$user = auth()->getRecord();
-		$facility = new CMS_Facility($user->default_facility);
-				
+		$facility = new CMS_Facility(input()->facility);
+		$as = new CMS_Facility_Link_States();
+		$additional_states = $as->getAdditionalStates($facility->id);
+
 		$term = input()->term;
 		if ($term != '') {
 			$tokens = explode(" ", $term);
 			$params = array();
 			$params[":facilitystate"] = $facility->state;
+			
+			
 			$sql = "select * from hospital where ";
 			foreach ($tokens as $idx => $token) {
 				$token = trim($token);
@@ -22,13 +26,21 @@ class PageControllerHospital extends PageController {
 				$params[":term{$idx}"] = "%{$token}%";
 			}
 			$sql = rtrim($sql, " AND");
-			$sql .= " AND hospital.state = :facilitystate OR hospital.state = ''";
+			$sql .= " AND (hospital.state = :facilitystate";
+			
+			foreach ($additional_states as $k => $s) {
+				$params[":additional_states{$k}"] = $s->state;
+				$sql .= " OR hospital.state = :additional_states{$k}";
+			}
+				
+			$sql .= ") OR hospital.state = ''";
+			
 						
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
 			$results = array();
 		}
-
+				
 		json_return($results);
 
 	}

@@ -228,7 +228,7 @@
 	$("#hospital-search").autocomplete({
 		minLength: 4,
 		source: function(req, add) {
-			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, facility: $("#admit-request-facility option:selected").val()}, function (json) {
 				var suggestions = [];
 				$.each (json, function(i, val) {
 					var obj = new Object;

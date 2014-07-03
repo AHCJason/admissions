@@ -1,5 +1,5 @@
-var timeoutWarning = 300000;
-var timeoutNow = 360000;
+var timeoutWarning = 300000; // 5 minutes
+var timeoutNow = 360000; // 6 minutes
 var logoutUrl = SITE_URL + '/?page=login&action=timeout';
 
 var warningTimer;
