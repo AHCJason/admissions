@@ -22,11 +22,11 @@
 			minLength: 0,
 			source: states,
 			focus: function( event, ui ) {
-				$( "#state" ).val( ui.item.label );
+				$( "#state_name" ).val( ui.item.label );
 				return false;
 			},
 			select: function( event, ui ) {
-				$( "#state" ).val( ui.item.label );
+				$( "#state_name" ).val( ui.item.label );
 				$( "#state_id" ).val( ui.item.value );
 				return false;
 			}
@@ -45,6 +45,7 @@
 	<h1>Add a new Pharmacy Location</h1>
 	<form name="location" method="post" action="{$SITE_URL}" id="addItem">
 		<input type="hidden" name="page" value="pharmacy" />
+		<input type="hidden" name="state" value="{$state}" />
 		{if $isMicro}
 			<input type="hidden" name="action" value="addShadowboxLocation" />
 		{else}
@@ -70,8 +71,8 @@
 			</tr>
 			<tr>
 				<td><input type="text" name="city" name="city" size="20" /></td>
-				<td><input type="text" id="state_name" name="state_name" size="8" /></td>
-				<input type="hidden" name="state" id="state" />
+				<td><input type="text" id="state_name" name="state_name" size="15" /></td>
+				<input type="hidden" name="state_id" id="state_id" />
 				<td><input type="text" name="zip" id="zip" size="8" /></td>
 			</tr>
 			<tr>

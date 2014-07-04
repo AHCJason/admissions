@@ -39,6 +39,14 @@ class PageControllerCaseManager extends PageController {
 	public function add() {
 		$schedule = input()->schedule;
 		
+		if (input()->state == "") {
+			$this->redirect(SITE_URL . "/?page=caseManager&action=manage");
+		} else {
+			$state = input()->state;
+		}
+		
+		
+		
 		if (input()->isMicro == 1) {
 			$isMicro = true;
 		} else {
@@ -47,6 +55,7 @@ class PageControllerCaseManager extends PageController {
 
 		smarty()->assign("isMicro", $isMicro);
 		smarty()->assign("schedule", $schedule);
+		smarty()->assign("state", $state);
 		
 	}
 	
@@ -156,6 +165,10 @@ class PageControllerCaseManager extends PageController {
 			redirect(auth()->getRecord()->homeURL());
 		}
 		
+		$facilities = auth()->getRecord()->getFacilities();
+		$states = CMS_Facility::getStates($facilities);
+		$user = auth()->getRecord();
+		
 		// Get list of all case managers
 		$getter = CMS_Case_Manager::generate();
 		$getter->paginationOn();
@@ -167,12 +180,23 @@ class PageControllerCaseManager extends PageController {
 		}	
 		$getter->paginationSetSlice($slice);
 		
-		$case_managers = $getter->findCaseManagers();
+		if (input()->state != "") {
+			$state = input()->state;
+		} else {
+			$facility = new CMS_Facility($user->default_facility);
+			$state = $facility->state;
+		}
+		
+		// CURRENTLY WORKING ON: Need to re-factor the function below to get case managers by state
+		$case_managers = $getter->findCaseManagers($state);
+		
 		
 		
 				
 		smarty()->assign('caseManagers', $case_managers);
 		smarty()->assignByRef('getter', $getter);
+		smarty()->assign('state', $state);
+		smarty()->assign('states', $states);
 	}
 	
 	

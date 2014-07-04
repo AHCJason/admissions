@@ -79,7 +79,7 @@ $("#search-states").autocomplete(
 			</tr>
 			<tr>
 				<td><input type="text" name="city" size="20" /></td>
-				<td><input type="text" id="search-states" name="state_name" size="8" /></td>
+				<td><input type="text" id="search-states" name="state_name" size="15" /></td>
 				<input type="hidden" name="state" id="state" />
 				<td><input type="text" name="zip" id="zip" size="8" /></td>
 			</tr>

@@ -6,9 +6,10 @@
 	$("#hospital_name").autocomplete({
 		minLength: 4,
 		source: function(req, add) {
-			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, state: $("#state").val()}, function (json) {
 				var suggestions = [];
 				$.each (json, function(i, val) {
+					console.log($("#state").val());
 					var obj = new Object;
 					obj.value = val.id;
 					obj.label = val.name + " (" + val.state + ")";
@@ -54,6 +55,7 @@
 			</tr>
 			<tr>
 				<td><input type="text" id="hospital_name" name="location_name" style="width: 232px;" size="30" /></td>
+				<input type="hidden" name="state" id="state" value="{$state}" />
 				<input type="hidden" name="hospital" id="hospital" />
 			</tr>
 			<tr>

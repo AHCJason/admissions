@@ -128,8 +128,9 @@ table#room-table tr > td {
 .text-red { color: #E33232; }
 .text-grey { color: #666; }
 .text-light-grey { color: #ccc; }
-.left { float: left; }
+.left { float: left; margin-left: 25px; }
 .right { float: right; }
+.right-top { position: absolute; top: 20px; right: 24px }
 .center { display: block; margin: 0 auto; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }

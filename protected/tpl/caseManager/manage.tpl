@@ -25,14 +25,34 @@ $("#cm-search").autocomplete({
 	
 });
 
+$("#state").change(function() {
+	window.location = SITE_URL + '/?page=caseManager&action=manage&state=' + $(this).val();
+});
+
+
 
 {/jQueryReady}
 
 <h1 class="text-center">Manage Case Managers</h1>
 
-<div class="left">
-	<a href="{$SITE_URL}/?page=caseManager&action=add" class="button">New Case Manager</a>
+<div class="right-top">
+	<a href="{$SITE_URL}/?page=caseManager&action=add&state={$state}" class="button">New Case Manager</a>
 </div>
+
+<br />
+<br />
+
+<div class="left">
+	<select name="state" id="state">
+		<option value="">Select a state...</option>
+		{foreach $states as $s}
+			<option value="{$s->state}" {if $state == $s->state} selected{/if}>{$s->state}</option>
+			{if $s->add_state != ""}<option value="{$s->add_state}" {if $state == $s->add_state} selected{/if}>{$s->add_state}</option>{/if}
+		{/foreach}
+	</select>	
+</div>
+
+
 <div class="right">
 	Search: <input type="text" name="cm_search" id="cm-search" size="30" />
 </div>

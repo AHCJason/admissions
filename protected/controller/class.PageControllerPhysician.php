@@ -9,12 +9,18 @@ class PageControllerPhysician extends PageController {
 	public function searchPhysicians() {
 		$user = auth()->getRecord();
 		$facility = new CMS_Facility($user->default_facility);
+		if (input()->state != "") {
+			$state = input()->state;
+		} else {
+			$state = $facility->state;
+		}
+		
 		
 		$term = input()->term;
 		if ($term != '') {
 			$tokens = explode(" ", $term);
 			$params = array();
-			$params[":facilitystate"] = $facility->state;
+			$params[":state"] = $state;
 			$sql = "select * from physician where ";
 			$sql .= " (CONCAT_WS(' ', physician.first_name, physician.last_name) LIKE '%" . $term . "%'";
 			$sql .= " OR CONCAT_WS(', ', physician.last_name, physician.first_name) LIKE '%" . $term . "%')";
@@ -28,7 +34,7 @@ class PageControllerPhysician extends PageController {
 			}
 */
 			$sql = rtrim($sql, " AND");
-			$sql .= " AND physician.state = :facilitystate";
+			$sql .= " AND physician.state = :state";
 			
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
@@ -184,11 +190,13 @@ class PageControllerPhysician extends PageController {
 			redirect(auth()->getRecord()->homeURL());
 		}
 		
+		$facilities = auth()->getRecord()->getFacilities();
+		$states = CMS_Facility::getStates($facilities);
+		
 		$user = auth()->getRecord();
 		
-		$facility = new CMS_Facility($user->default_facility);
 		
-		// Get list of all the physicians
+		
 		$getter = CMS_Physician::generate();
 		$getter->paginationOn();
 		$getter->paginationSetSliceSize(25);
@@ -198,11 +206,21 @@ class PageControllerPhysician extends PageController {
   			$slice = 1;
 		}	
 		$getter->paginationSetSlice($slice);
+			
+		if (input()->state != "") {
+			// Get list of all the physicians
+			$state = input()->state;
+			$physicians = $getter->findPhysicians($state);
+		} else {
+			$facility = new CMS_Facility($user->default_facility);
+			$state = $facility->state;
+			$physicians = $getter->findPhysicians($facility->state);
+		}
 		
-		$physicians = $getter->findPhysicians($facility->state);
-						
 		smarty()->assign('physicians', $physicians);
 		smarty()->assignByRef('getter', $getter);
+		smarty()->assign('state', $state);
+		smarty()->assign('states', $states);
 
 	}
 	
