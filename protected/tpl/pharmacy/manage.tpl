@@ -25,19 +25,36 @@ $("#pharmacy-search").autocomplete({
 	}
 });
 
+$("#state").change(function() {
+	window.location = SITE_URL + '/?page=pharmacy&action=manage&state=' + $(this).val();
+});
+
 
 {/jQueryReady}
 
 <h1 class="text-center">Manage Pharmacies</h1>
 
-<div class="left">
+<div class="right-top">
 	<a href="{$SITE_URL}/?page=pharmacy&action=add" class="button">New Pharmacy</a>
 </div>
+
+<br />
+<br />
+
+<div class="left">
+	<select name="state" id="state">
+		<option value="">Select a state...</option>
+		{foreach $states as $s}
+			<option value="{$s->state}" {if $state == $s->state} selected{/if}>{$s->state}</option>
+			{if $s->add_state != ""}<option value="{$s->add_state}" {if $state == $s->add_state} selected{/if}>{$s->add_state}</option>{/if}
+		{/foreach}
+	</select>	
+</div>
+
 <div class="right">
 	Search: <input type="text" name="pharmacy_search" id="pharmacy-search" size="30" />
 </div>
 
-<br />
 <br />
 <br />
 <br />

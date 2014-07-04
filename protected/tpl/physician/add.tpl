@@ -21,11 +21,11 @@
 			minLength: 0,
 			source: states,
 			focus: function( event, ui ) {
-				$( "#state" ).val( ui.item.label );
+				$( "#state_name" ).val( ui.item.label );
 				return false;
 			},
 			select: function( event, ui ) {
-				$( "#state" ).val( ui.item.label );
+				$( "#state_name" ).val( ui.item.label );
 				$( "#state_id" ).val( ui.item.value );
 				return false;
 			}

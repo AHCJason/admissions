@@ -11,13 +11,11 @@ class PageControllerHospital extends PageController {
 		$facility = new CMS_Facility(input()->facility);
 		$as = new CMS_Facility_Link_States();
 		$additional_states = $as->getAdditionalStates($facility->id);
-
+		
 		$term = input()->term;
 		if ($term != '') {
 			$tokens = explode(" ", $term);
 			$params = array();
-			$params[":facilitystate"] = $facility->state;
-			
 			
 			$sql = "select * from hospital where ";
 			foreach ($tokens as $idx => $token) {
@@ -26,21 +24,28 @@ class PageControllerHospital extends PageController {
 				$params[":term{$idx}"] = "%{$token}%";
 			}
 			$sql = rtrim($sql, " AND");
-			$sql .= " AND (hospital.state = :facilitystate";
 			
-			foreach ($additional_states as $k => $s) {
-				$params[":additional_states{$k}"] = $s->state;
-				$sql .= " OR hospital.state = :additional_states{$k}";
-			}
+			if (input()->state == "") {
+				$params[":facilitystate"] = $facility->state;
+				$sql .= " AND (hospital.state = :facilitystate";
 				
-			$sql .= ") OR hospital.state = ''";
+				foreach ($additional_states as $k => $s) {
+					$params[":additional_states{$k}"] = $s->state;
+					$sql .= " OR hospital.state = :additional_states{$k}";
+				}
+					
+				$sql .= ") OR hospital.state = ''";
+			} else {
+				$params[":state"] = input()->state;
+				$sql .= " AND hospital.state = :state";
+			}
 			
 						
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
 			$results = array();
 		}
-				
+						
 		json_return($results);
 
 	}
@@ -204,7 +209,11 @@ class PageControllerHospital extends PageController {
 	 */
 	 
 	public function manage() {
+		$facilities = auth()->getRecord()->getFacilities();
+		$states = CMS_Facility::getStates($facilities);
 		
+		$user = auth()->getRecord();
+
 		// Get list of all case managers
 		$getter = CMS_Hospital::generate();
 		$getter->paginationOn();
@@ -216,12 +225,20 @@ class PageControllerHospital extends PageController {
 		}	
 		$getter->paginationSetSlice($slice);
 		
-		$hospitals = $getter->findHospitals();
+		if (input()->state != "") {
+			$state = input()->state;
+		} else {
+			$facility = new CMS_Facility($user->default_facility);
+			$state = $facility->state;
+		}
+		$hospitals = $getter->findHospitals($state);
 		
 		
 				
 		smarty()->assign('hospitals', $hospitals);
 		smarty()->assignByRef('getter', $getter);
+		smarty()->assign('state', $state);
+		smarty()->assign('states', $states);
 
 	}
 	

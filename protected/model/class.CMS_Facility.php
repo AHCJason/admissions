@@ -96,4 +96,17 @@ class CMS_Facility extends CMS_Table {
 
 	}
 	
+	public static function getStates($facilities) {
+		$ids = array();
+		foreach ($facilities as $k => $f) {
+			$ids[$k] = $f->id;			
+		}
+		$i = implode(",", $ids);
+		
+		$sql = "SELECT facility.state, facility_link_states.state as add_state FROM facility LEFT JOIN facility_link_states ON facility_link_states.facility_id = facility.id WHERE id in({$i}) group by facility.state, add_state";
+		
+		$obj = static::generate();
+		return $obj->fetchCustom($sql, $params);
+	}
+	
 }

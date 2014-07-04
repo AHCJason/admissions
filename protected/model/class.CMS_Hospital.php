@@ -18,9 +18,10 @@ class CMS_Hospital extends CMS_Table {
 		return static::fetchCustom($sql, $params);
 	}
 	
-	public function findHospitals() {
-		$sql = "select * from hospital";
-		return $this->fetchCustom($sql);
+	public function findHospitals($state) {
+		$params[":state"] = $state;
+		$sql = "select * from hospital WHERE state = :state";
+		return $this->fetchCustom($sql, $params);
 	}
 		
 	public function deleteHospital($id) {

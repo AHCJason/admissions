@@ -14,7 +14,7 @@
 		
 		if ($state != '') {
 			$params[":state"] = $state;
-			$sql .= "  where state = {:state}";
+			$sql .= "  where state = :state";
 		}
 		return $this->fetchCustom($sql, $params);
 	}

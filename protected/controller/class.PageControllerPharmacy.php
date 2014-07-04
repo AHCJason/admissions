@@ -43,6 +43,11 @@ class PageControllerPharmacy extends PageController {
 			redirect(auth()->getRecord()->homeURL());
 		}
 		
+		$facilities = auth()->getRecord()->getFacilities();
+		$states = CMS_Facility::getStates($facilities);
+		
+		$user = auth()->getRecord();
+		
 		// Get list of all case managers
 		$getter = CMS_Pharmacy::generate();
 		$getter->paginationOn();
@@ -54,10 +59,19 @@ class PageControllerPharmacy extends PageController {
 		}	
 		$getter->paginationSetSlice($slice);
 		
-		$pharmacies = $getter->findPharmacies();
+		if (input()->state != "") {
+			$state = input()->state;
+		} else {
+			$facility = new CMS_Facility($user->default_facility);
+			$state = $facility->state;
+		}
+		
+		$pharmacies = $getter->findPharmacies($state);
 						
 		smarty()->assign('pharmacies', $pharmacies);
 		smarty()->assignByRef('getter', $getter);
+		smarty()->assign('state', $state);
+		smarty()->assign('states', $states);
 
 	}
 	
@@ -90,12 +104,13 @@ class PageControllerPharmacy extends PageController {
 	
 	public function addLocation() {
 		$loc = new CMS_Pharmacy();
+		$state = input()->state;
 		
-		if (input()->name == "") {
+		if (input()->location_name == "") {
 			feedback()->error("Enter the pharmacy name and try again.");
-			$this->redirect(SITE_URL . "?page=coord&action=admit");
+			$this->redirect(SITE_URL . "?page=pharmacy&action=add");
 		} else {
-			$loc->name = input()->name;
+			$loc->name = input()->location_name;
 		}
 		
 		
@@ -107,15 +122,15 @@ class PageControllerPharmacy extends PageController {
 			$loc->city = input()->city;
 		}
 		
-		if (input()->state == "") {
+		if (input()->state_id == "") {
 			feedback()->error("Please enter the state in which the facility is located.");
-			$this->redirect(SITE_URL . "?page=coord&action=admit");
+			$this->redirect(SITE_URL . "?page=pharmacy&action=add");
 		} else {
 			$validate = Validate::is_USAState(input()->state);
 			if ($validate->success() == false) {
 				feedback()->error("Please enter a valid state");
 			} else {
-				$loc->state = input()->state;
+				$loc->state = input()->state_id;
 			}
 
 		} 
@@ -147,7 +162,7 @@ class PageControllerPharmacy extends PageController {
 			if ($schedule != '') {
 				$this->redirect(SITE_URL . "/?page=patient&action=inquiry&schedule={$schedule}&weekSeed=&mode=edit");
 			} else {
-				$this->redirect(SITE_URL . "/?page=pharmacy&action=manage");
+				$this->redirect(SITE_URL . "/?page=pharmacy&action=manage&state={$state}");
 			}			
 		}
 		

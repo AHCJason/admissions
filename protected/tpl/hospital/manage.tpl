@@ -25,19 +25,38 @@ $("#hospital-search").autocomplete({
 	}
 });
 
+$("#state").change(function() {
+	window.location = SITE_URL + '/?page=hospital&action=manage&state=' + $(this).val();
+});
+
+
 
 {/jQueryReady}
 
 <h1 class="text-center">Manage Healthcare Facilities</h1>
 
-<div class="left">
+<div class="right-top">
 	<a href="{$SITE_URL}/?page=hospital&action=add" class="button">New Facility</a>
 </div>
+<br />
+<br />
+
+<div class="left">
+	<select name="state" id="state">
+		<option value="">Select a state...</option>
+		{foreach $states as $s}
+			<option value="{$s->state}" {if $state == $s->state} selected{/if}>{$s->state}</option>
+			{if $s->add_state != ""}<option value="{$s->add_state}" {if $state == $s->add_state} selected{/if}>{$s->add_state}</option>{/if}
+		{/foreach}
+	</select>	
+</div>
+
+
 <div class="right">
 	Search: <input type="text" name="hospital_search" id="hospital-search" size="30" />
 </div>
 
-<br />
+
 <br />
 <br />
 <br />
