@@ -368,7 +368,7 @@ $("#return-to-dashboard").click(function(e) {
 	<input type="hidden" name="action" value="submitInquiry" />
 	<input type="hidden" name="id" value="{$patient->pubid}" />
 	<input type="hidden" name="schedule" value="{$schedule->pubid}" />
-	<input type="hidden" name="facility" value="{$facility->pubid}" />
+	<input type="hidden" id="facility" name="facility" value="{$facility->pubid}" />
 	<input type="hidden" name="_path" value="{urlencode(currentURL())}" />
 	<input type="hidden" name="state" value="{$facility->state}" />
 	<input type="hidden" name="weekSeed" value="{$weekSeed}" />
