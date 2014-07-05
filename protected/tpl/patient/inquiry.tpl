@@ -154,7 +154,7 @@ $("#icd9-code-search").autocomplete({
 $("#admit-from-search").autocomplete({
 	minLength: 4,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, facility: $("#facility").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -175,7 +175,7 @@ $("#admit-from-search").autocomplete({
 $("#hospital-search").autocomplete({
 	minLength: 4,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, facility: $("#facility").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -196,7 +196,7 @@ $("#hospital-search").autocomplete({
 $("#case-manager-search").autocomplete({
 	minLength: 3,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'caseManager', action: 'searchCaseManagers', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'caseManager', action: 'searchCaseManagers', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -220,7 +220,7 @@ $("#case-manager-search").autocomplete({
 $("#homehealth-search").autocomplete({
 	minLength: 4,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHomeHealth', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHomeHealth', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -242,7 +242,7 @@ $("#homehealth-search").autocomplete({
 $("#physician-search").autocomplete({
 	minLength: 3,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -263,7 +263,7 @@ $("#physician-search").autocomplete({
 $("#ortho-search").autocomplete({
 	minLength: 3,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -284,7 +284,7 @@ $("#ortho-search").autocomplete({
 $("#doctor-search").autocomplete({
 	minLength: 3,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -311,7 +311,7 @@ $("#doctor-search").autocomplete({
 $("#pharmacy-search").autocomplete({
 	minLength: 3,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'pharmacy', action: 'searchPharmacies', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'pharmacy', action: 'searchPharmacies', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -368,7 +368,9 @@ $("#return-to-dashboard").click(function(e) {
 	<input type="hidden" name="action" value="submitInquiry" />
 	<input type="hidden" name="id" value="{$patient->pubid}" />
 	<input type="hidden" name="schedule" value="{$schedule->pubid}" />
+	<input type="hidden" name="facility" value="{$facility->pubid}" />
 	<input type="hidden" name="_path" value="{urlencode(currentURL())}" />
+	<input type="hidden" name="state" value="{$facility->state}" />
 	<input type="hidden" name="weekSeed" value="{$weekSeed}" />
 	<table cellpadding="0" border="0" id="inquiry-form"> 
 	

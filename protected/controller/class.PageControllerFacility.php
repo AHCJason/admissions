@@ -761,6 +761,8 @@ class PageControllerFacility extends PageController {
 	public function sendToHospital() {
 		if (input()->schedule != '') {
 			$schedule = new CMS_Schedule(input()->schedule);
+			$facility = new CMS_Facility($schedule->facility);
+			smarty()->assign("facility", $facility);
 			smarty()->assignByRef("schedule", $schedule);
 			smarty()->assign("path", input()->path);
 			

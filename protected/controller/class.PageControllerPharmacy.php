@@ -8,7 +8,12 @@ class PageControllerPharmacy extends PageController {
 	
 	public function searchPharmacies() {
 		$user = auth()->getRecord();
-		$facility = new CMS_Facility($user->default_facility);
+		if (input()->facility != "") {
+			$facility = new CMS_Facility(input()->facility);
+		} else {
+			$facility = new CMS_Facility($user->default_facility);
+		}
+		
 		
 		$term = input()->term;
 		if ($term != '') {
