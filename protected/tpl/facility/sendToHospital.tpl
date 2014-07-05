@@ -10,7 +10,7 @@
 $("#hospital-search").autocomplete({
 	minLength: 4,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, facility: $("#facility").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -108,6 +108,7 @@ $(".phone").mask("(999) 999-9999");
 	<input type="hidden" name="page" value="facility" />
 	<input type="hidden" name="action" value="submitSendtoHospital" />
 	<input type="hidden" name="schedule" value="{$schedule->pubid}" />	
+	<input type="hidden" id="facility" name="facility" value="{$facility->pubid}" />
 	<input type="hidden" name="_path" value="{$path|default:urlencode(currentURL())}" />
 	{if $atHospitalRecord != false}
 	<input type="hidden" name="id" value="{$atHospitalRecord->pubid}" />

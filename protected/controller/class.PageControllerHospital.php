@@ -8,10 +8,7 @@ class PageControllerHospital extends PageController {
 	
 	public function searchHospital() {
 		$user = auth()->getRecord();
-		$facility = new CMS_Facility(input()->facility);
-		$as = new CMS_Facility_Link_States();
-		$additional_states = $as->getAdditionalStates($facility->id);
-		
+				
 		$term = input()->term;
 		if ($term != '') {
 			$tokens = explode(" ", $term);
@@ -25,7 +22,11 @@ class PageControllerHospital extends PageController {
 			}
 			$sql = rtrim($sql, " AND");
 			
-			if (input()->state == "") {
+			if (input()->facility != "") {
+				$facility = new CMS_Facility(input()->facility);
+				$as = new CMS_Facility_Link_States();
+				$additional_states = $as->getAdditionalStates($facility->id);
+				
 				$params[":facilitystate"] = $facility->state;
 				$sql .= " AND (hospital.state = :facilitystate";
 				
@@ -35,17 +36,15 @@ class PageControllerHospital extends PageController {
 				}
 					
 				$sql .= ") OR hospital.state = ''";
-			} else {
+			} elseif (input()->state != "") {
 				$params[":state"] = input()->state;
 				$sql .= " AND hospital.state = :state";
 			}
-			
 						
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
 			$results = array();
 		}
-						
 		json_return($results);
 
 	}

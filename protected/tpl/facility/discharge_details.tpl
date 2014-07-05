@@ -126,7 +126,7 @@ $(".phone").mask("(999)-999-9999");
 $("#facility-search").autocomplete({
 	minLength: 4,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -147,7 +147,7 @@ $("#facility-search").autocomplete({
 $("#home-health-search").autocomplete({
 	minLength: 4,
 	source: function(req, add) {
-		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+		$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, state: $("#state").val()}, function (json) {
 			var suggestions = [];
 			$.each (json, function(i, val) {
 				var obj = new Object;
@@ -217,6 +217,7 @@ $("#home-health-search").autocomplete({
 	<input type="hidden" name="action" value="submitDischargeRequest" />
 	<input type="hidden" name="schedule" value="{$schedule->pubid}" />
 	<input type="hidden" name="facility" value="{$schedule->facility}" />
+	<input type="hidden" id="state" name="state" value="{$facility->state}" />
 	<input type="hidden" name="_path" value="{urlencode(currentURL())}" />
 	
 	<table id="discharge" cellpadding="5px" style="width: 60%">

@@ -723,6 +723,7 @@ class PageControllerPatient extends PageController {
 		
 		if (input()->schedule != '') {
 			$schedule = new CMS_Schedule(input()->schedule);
+			$facility = new CMS_Facility($schedule->facility);
 			smarty()->assignByRef("schedule", $schedule);
 			if ($schedule->valid()) {
 				$patient_admit = $schedule->patient_admit;
@@ -741,6 +742,7 @@ class PageControllerPatient extends PageController {
 			$physicians = new CMS_Physician();
 			$pNames = $physicians->getPhysicians();
 			
+			smarty()->assign("facility", $facility);
 			smarty()->assign("pNames", $pNames);
 			smarty()->assignByRef("schedule", $schedule);
 			smarty()->assignByRef("patient", $patient);
