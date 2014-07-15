@@ -1370,6 +1370,11 @@ table#info-form th {
 	margin: 30px 0 5px 0;
 }
 
+#facility-search-box-left {
+	position: absolute;
+	margin-top: 8px;
+}
+
 #report-search-box {
 	position: absolute;
 	right: 20px;
