@@ -20,6 +20,12 @@ setInterval(function() {
 
 {/if}
 
+	$("#submit-button").click(function(e) {
+		e.preventDefault();
+		window.location = SITE_URL + "/?page=patient&action=search_results&patient_name=" + $("#patient-search").val();
+	});
+
+
 {/jQueryReady}
 {if $isTV != 1}
 <script language="javascript">
