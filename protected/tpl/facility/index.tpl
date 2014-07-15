@@ -20,6 +20,12 @@ setInterval(function() {
 
 {/if}
 
+	$("#submit-button").click(function(e) {
+		e.preventDefault();
+		window.location = SITE_URL + "/?page=patient&action=search_results&patient_name=" + $("#patient-search").val();
+	});
+
+
 {/jQueryReady}
 {if $isTV != 1}
 <script language="javascript">
@@ -49,6 +55,12 @@ $(window).load(function() {
 <h2 class="text-center" style="margin-bottom: 20px">{$week[0]|date_format:"%a, %B %d, %Y"} to {$week[6]|date_format:"%a, %B %d, %Y"}<input type="hidden" id="alt-week" /></h2>
 
 <div id="facility-tools">
+	<form name="patient-search" accept="post">
+		<div id="facility-search-box-left">
+			<input type="text" name="search_patient" id="patient-search" placeholder="Enter the patients' name" size="30" /> <input type="submit" value="Search" id="submit-button" />
+		</div>
+	</form>
+
 
 	<div id="week-nav"><a href="{$SITE_URL}/?page=facility&amp;id={$facility->pubid}&amp;weekSeed={$retreatWeekSeed}"><img src="{$SITE_URL}/images/icons/prev-icon.png" /> Previous Week</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="{$SITE_URL}/?page=facility&amp;id={$facility->pubid}&amp;weekSeed={$advanceWeekSeed}">Next Week <img src="{$SITE_URL}/images/icons/next-icon.png" /></a></div>
 	<div id="facility-census-button">
