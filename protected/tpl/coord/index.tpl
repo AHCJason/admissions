@@ -11,7 +11,7 @@
 		onSelect: function(dateText, inst) { 
 			var tab = $(this).attr("rel");
 			var href = '{setURLVar($CURRENT_URL, 'weekSeed', '')}&weekSeed=' + dateText + tab;
-			location.href = SITE_URL;
+			location.href = href;
 		}
 		
 	});
