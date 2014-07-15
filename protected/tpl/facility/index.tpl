@@ -6,7 +6,7 @@ $("#alt-week").datepicker({
 	buttonImage: "{$ENGINE_URL}/images/icons/calendar.png",
 	buttonImageOnly: true,
 	onSelect: function(dateText, inst) { 
-		var href = '{setURLVar($CURRENT_URL, 'weekSeed', '')}&weekSeed=' + dateText;
+		var href = SITE_URL + '/?page=facility&id=' + $("#facility-id").val() + '&weekSeed=' + dateText;
 		location.href = href;
 	}
 	
@@ -87,6 +87,7 @@ $(window).load(function() {
 <!-- !Admissions -->
 
 <div class="facility-admits">
+	<input type="hidden" name="facility" id="facility-id" value="{$facility->pubid}" />
 	{foreach $week as $day}
 	<div class="facility-day-box facility-day-box-admit {if $day@last}facility-day-box-last{/if} {cycle name="admitDayColumn" values="facility-day-box-blue, "}">
 		
