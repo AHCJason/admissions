@@ -16,7 +16,7 @@ class PageControllerPatient extends PageController {
 	
 	public function searchPatientByName() {
 		$records = CMS_Patient_Admit::searchByName(input()->last_name, input()->first_name, input()->middle_name);
-
+		
 		$results = array();
 		
 		// cycle through the records and format them for the JSON handler
@@ -54,23 +54,11 @@ class PageControllerPatient extends PageController {
 				} else {
 					$date_discharge = $empty;
 				}
-				
-				if ($patient->flag_readmission == true) {
-					$flag_readmit = true;
-				} else {
-					$flag_readmit = false;
-				}
-				
-				if ($patient->flag_reason != '') {
-					$flag_reason = "<strong>Flag Reason:</strong>&nbsp;&nbsp;" . $patient->flag_reason;
-				} else {
-					$flag_reason = "This person has been flagged for re-admission; however, no reasons have been provided.";
-				}
+								
 
 				$results[] = array(
 					"label" => "{$patient->fullName()}",
-					"flag_readmission" => $flag_readmit,
-					"flag_reason" => $flag_reason,
+					"flag_readmission" => $patient->flag_readmission,
 					"person_id" => $patient->person_id,
 					"birthday" => $birthday,
 					"sex" => $gender,

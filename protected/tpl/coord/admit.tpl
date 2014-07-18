@@ -3,6 +3,7 @@
 
 	var elective = 0;
 	var flagReadmit = '';
+	var flagValue = '';
 	var flagPrompt = '';
 	$("#org-field").hide();
 	$("#physician-field").hide();
@@ -53,18 +54,24 @@
 			if (json.length > 0) {
 				suggest_html += "<h2>Are any of these the person you\'re looking for?</h2><br /><br />";
 				$.each (json, function(i, val) {
-					if (val.flag_readmission == true) {
-						flagReadmit = '<a class="tooltip"><img src=' + SITE_URL + '/images/icons/flag_red.png /><span>' + val.flag_reason + '</span></a>';
+					if (val.flag_readmission == 2) {
+						flagValue = val.flag_readmission;
+					}
+					if (val.flag_readmission == 1) {
+						flagReadmit = '<a class="tooltip"><img src=' + SITE_URL + '/images/icons/flag_yellow.png /><span>This patient has been flagged for re-admission.  Please discuss this admission<br />with the administrator prior to admission.</span></a>';
 						flagPrompt = 'prompt-warning';
-					} 
+					} else if (val.flag_readmission == 2) {
+						flagReadmit = '<a class="tooltip"><img src=' + SITE_URL + '/images/icons/flag_red.png /><span>This patient has been denied re-admission</span></a>';
+						flagPrompt = 'prompt-warning';
+					}
 					suggest_html += '<br /><div class="patient-search-results"><strong>' + val.label + '</strong>&nbsp;&nbsp;' + flagReadmit + '<br />Birthdate: ' + val.birthday + '<br />Gender: ' + val.sex + '<br />Social Security #: ' + val.ssn + '<br />Previous Admission Date: ' + val.admit_date + '<br />Previous Discharge Date: ' + val.discharge_date + '<br /><br />';
 					if (val.is_complete == false) {
 						suggest_html += '<a class="hospital-visit" href="' + SITE_URL + '/?page=coord&amp;action=trackHospitalVisits"><button>Hospital Visit</button></a><br /></div>';
-					} else {
+					} else if (val.flag_readmission != 2) {
 						suggest_html += '<a class="admit-request-submit-existing ' + flagPrompt + '" href="' + SITE_URL + '/?page=patient&amp;action=submitAdmitRequestExistingPatient&amp;person_id=' + val.person_id + '"><button>Re-Admit this Patient</button></a><br /></div>';
 					}				
 				});
-				if (json.length > 0) {
+				if (json.length > 0 && flagValue != 2) {
 					suggest_html += '<br /><br /><input type="button" id="admit-request-submit-as-new" value="This is a new patient." /><br /><br />';
 				}
 				$("#admit-request-suggestions").html(suggest_html);
