@@ -357,13 +357,18 @@ $("#home-health-search").autocomplete({
 						<td  colspan="2"><textarea name="discharge_comment" cols="60" rows="5">{$schedule->discharge_comment}</textarea></td>
 					</tr>
 					<tr>
-						<td class="text-right" id="flag"><input type="checkbox" value="1" {if $schedule->flag_readmission} checked{/if} name="flag_readmission" /></td>
+						<td class="text-right" id="flag"><input type="radio" value="1" {if $schedule->flag_readmission == 1} checked{/if} name="flag_readmission" /></td>
 						<td>Flag this patient for re-admission <a class="tooltip"><img src="{$SITE_URL}/images/icons/information.png" /><span>When selected this patient will be flagged<br /> for review prior to re-admission.</span></a></td>
 					</tr>
-					<tr class="flag-reason">
-						<td style="vertical-align: top; text-align: right;"><strong>Flag Reason:</strong></td>
-						<td><textarea name="flag_reason" cols="60" rows="5">{$schedule->flag_reason}</textarea></td>
+					
+					{foreach $userRoles as $role}
+					{if $role->name == "facility_administrator"}
+					<tr class="deny-admit">
+						<td class="text-right" id="flag"><input id="deny" type="radio" name="flag_readmission" value="2" {if $schedule->flag_readmission == 2} checked{/if}></td>
+						<td>Deny re-admission for this patient<a class="tooltip"><img src="{$SITE_URL}/images/icons/information.png" /><span>If this flag is set this patient will not be able to be re-admitted.</span></a></td>
 					</tr>
+					{/if}
+					{/foreach}
 					<tr>
 						<td>&nbsp;</td>
 					</tr>

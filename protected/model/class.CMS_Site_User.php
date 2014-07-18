@@ -107,6 +107,18 @@ class CMS_Site_User extends CMS_Table {
 		}
 	}
 	
+	public function isFacilityAdmin() {
+		if ($this->has_role == 'facility_administrator') {
+			return true;
+		}
+	}
+	
+	public function getRoles($user_id) {
+		$sql = "SELECT `role`.`id`, `role`.`name`, `facility`.`id` as facility_id, `facility`.`name` as facility_name FROM `site_user_role` INNER JOIN `role` on `role`.`id` = `site_user_role`.`role` INNER JOIN `facility` on `facility`.`id` = `site_user_role`.`facility`  WHERE `site_user` = :user_id";
+		$params[":user_id"] = $user_id;
+		return $this->fetchCustom($sql, $params);
+	}
+	
 	public function canCreateAdmit(CMS_Facility $facility) {
 		// admissions coordinators can do this regardless of facility
 		if ($this->isAdmissionsCoordinator()) {

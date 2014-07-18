@@ -1542,14 +1542,11 @@ elseif(input()->affirm == 'discharged_home') {
 				}
 			}
 		}
-		
+				
 		if (input()->flag_readmission) {
-			$schedule->flag_readmission = 1;
+			$schedule->flag_readmission = input()->flag_readmission;
 		}
 		
-		if (input()->flag_reason != '') {
-			$schedule->flag_reason = input()->flag_reason;
-		}
 		
 		
 		// breakpoint
@@ -1754,7 +1751,7 @@ elseif(input()->affirm == 'discharged_home') {
 			$facility = new CMS_Facility($schedule->facility);
 	
 		}
-		
+				
 	
 		// if there is an existing hospital stay then redirect to the manage hospital visit page
 		$hospitalStay = $schedule->atHospitalRecord();
@@ -1767,6 +1764,11 @@ elseif(input()->affirm == 'discharged_home') {
 		// get list of facilities for drop-down
 		$_facilities = auth()->getRecord()->getFacilities();
 		smarty()->assign('facilities', $_facilities);
+		
+		$obj = new CMS_Site_User;
+		$user = auth()->getRecord();
+		$userRoles = $obj->getRoles($user->id);		
+		smarty()->assign('userRoles', $userRoles);
 		
 		// get list of all facilities for transfer
 		$transfer = new CMS_Facility();
