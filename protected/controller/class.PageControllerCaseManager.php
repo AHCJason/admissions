@@ -8,7 +8,6 @@ class PageControllerCaseManager extends PageController {
 	
 	public function searchCaseManagers() {
 		$user = auth()->getRecord();
-		$facility = new CMS_Facility($user->default_facility);
 
 		$term = input()->term;
 		if ($term != '') {
@@ -28,7 +27,25 @@ class PageControllerCaseManager extends PageController {
 			}
 */
 			$sql = rtrim($sql, " AND");
-			$sql .= " AND hospital.state = :facilitystate";
+			if (input()->facility != "") {
+				$facility = new CMS_Facility(input()->facility);
+				$as = new CMS_Facility_Link_States();
+				$additional_states = $as->getAdditionalStates($facility->id);
+				
+				$params[":facilitystate"] = $facility->state;
+				$sql .= " AND (hospital.state = :facilitystate";
+				
+				foreach ($additional_states as $k => $s) {
+					$params[":additional_states{$k}"] = $s->state;
+					$sql .= " OR hospital.state = :additional_states{$k}";
+				}
+					
+				$sql .= ") OR hospital.state = ''";
+			} elseif (input()->state != "") {
+				$params[":state"] = input()->state;
+				$sql .= " AND hospital.state = :state";
+			}
+									
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
 			$results = array();
@@ -37,14 +54,7 @@ class PageControllerCaseManager extends PageController {
 	}
 	
 	public function add() {
-		$schedule = input()->schedule;
-		
-		if (input()->state == "") {
-			$this->redirect(SITE_URL . "/?page=caseManager&action=manage");
-		} else {
-			$state = input()->state;
-		}
-		
+		$schedule = input()->schedule;		
 		
 		
 		if (input()->isMicro == 1) {
