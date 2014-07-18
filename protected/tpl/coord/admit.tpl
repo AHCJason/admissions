@@ -169,7 +169,7 @@
 	$("#org-search").autocomplete({
 		minLength: 4,
 		source: function(req, add) {
-			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term}, function (json) {
+			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHospital', term: req.term, facility: $("#admit-request-facility option:selected").val()}, function (json) {
 				var suggestions = [];
 				$.each (json, function(i, val) {
 					var obj = new Object;
@@ -190,7 +190,7 @@
 	$("#case-manager-search").autocomplete({
 		minLength: 3,
 		source: function(req, add) {
-			$.getJSON(SITE_URL, { page: 'caseManager', action: 'searchCaseManagers', term: req.term}, function (json) {
+			$.getJSON(SITE_URL, { page: 'caseManager', action: 'searchCaseManagers', term: req.term, facility: $("#admit-request-facility option:selected").val()}, function (json) {
 				var suggestions = [];
 				$.each (json, function(i, val) {
 					var obj = new Object;
@@ -213,7 +213,7 @@
 	$("#physician-search").autocomplete({
 		minLength: 3,
 		source: function(req, add) {
-			$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term}, function (json) {
+			$.getJSON(SITE_URL, { page: 'physician', action: 'searchPhysicians', term: req.term, facility: $("#admit-request-facility option:selected").val()}, function (json) {
 				var suggestions = [];
 				$.each (json, function(i, val) {
 					var obj = new Object;
@@ -256,7 +256,7 @@
 	$("#homehealth-search").autocomplete({
 		minLength: 4,
 		source: function(req, add) {
-			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHomeHealth', term: req.term}, function (json) {
+			$.getJSON(SITE_URL, { page: 'hospital', action: 'searchHomeHealth', term: req.term, facility: $("#admit-request-facility option:selected").val()}, function (json) {
 				var suggestions = [];
 				$.each (json, function(i, val) {
 					var obj = new Object;

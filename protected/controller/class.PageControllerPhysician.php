@@ -8,7 +8,7 @@ class PageControllerPhysician extends PageController {
 	
 	public function searchPhysicians() {
 		$user = auth()->getRecord();
-		$facility = new CMS_Facility($user->default_facility);
+		
 		if (input()->state != "") {
 			$state = input()->state;
 		} else {
@@ -20,7 +20,6 @@ class PageControllerPhysician extends PageController {
 		if ($term != '') {
 			$tokens = explode(" ", $term);
 			$params = array();
-			$params[":state"] = $state;
 			$sql = "select * from physician where ";
 			$sql .= " (CONCAT_WS(' ', physician.first_name, physician.last_name) LIKE '%" . $term . "%'";
 			$sql .= " OR CONCAT_WS(', ', physician.last_name, physician.first_name) LIKE '%" . $term . "%')";
@@ -34,12 +33,31 @@ class PageControllerPhysician extends PageController {
 			}
 */
 			$sql = rtrim($sql, " AND");
-			$sql .= " AND physician.state = :state";
 			
+			if (input()->facility != "") {
+				$facility = new CMS_Facility(input()->facility);
+				$as = new CMS_Facility_Link_States();
+				$additional_states = $as->getAdditionalStates($facility->id);
+								
+				$params[":facilitystate"] = $facility->state;
+				$sql .= " AND (physician.state = :facilitystate";
+				
+				foreach ($additional_states as $k => $s) {
+					$params[":additional_states{$k}"] = $s->state;
+					$sql .= " OR physician.state = :additional_states{$k}";
+				}
+					
+				$sql .= ") OR physician.state = ''";
+			} elseif (input()->state != "") {
+				$params[":state"] = input()->state;
+				$sql .= " AND physician.state = :state";
+			}
+						
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
 			$results = array();
 		}
+		
 		json_return($results);
 	}
 	
