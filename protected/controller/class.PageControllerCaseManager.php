@@ -8,12 +8,11 @@ class PageControllerCaseManager extends PageController {
 	
 	public function searchCaseManagers() {
 		$user = auth()->getRecord();
-
+		
 		$term = input()->term;
 		if ($term != '') {
 			$tokens = explode(" ", $term);
 			$params = array();
-			$params[":facilitystate"] = $facility->state;
 			$sql = "select case_manager.id, case_manager.first_name, case_manager.last_name, case_manager.phone from case_manager inner join hospital on hospital.id = case_manager.hospital_id where ";
 			$sql .= " (CONCAT_WS(' ', case_manager.first_name, case_manager.last_name) LIKE '%" . $term . "%'";
 			$sql .= " OR CONCAT_WS(', ', case_manager.last_name, case_manager.first_name) LIKE '%" . $term . "%')";
@@ -45,11 +44,14 @@ class PageControllerCaseManager extends PageController {
 				$params[":state"] = input()->state;
 				$sql .= " AND hospital.state = :state";
 			}
-									
+			
+						
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
 			$results = array();
 		}
+		
+		
 		json_return($results);
 	}
 	
