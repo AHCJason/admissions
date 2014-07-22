@@ -657,7 +657,7 @@ class PageControllerCoord extends PageController {
 		// Need to save the admission order for each schedule id
 		
 	}
-	
+		
 	
 /*
 	public function discharged_patient_info() {
