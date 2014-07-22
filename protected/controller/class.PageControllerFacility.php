@@ -1857,6 +1857,7 @@ elseif(input()->affirm == 'discharged_home') {
 		$schedule->datetime_discharge_bedhold_end = NULL;
 		$schedule->discharge_comment = NULL;
 		$schedule->discharge_transfer_schedule = NULL;
+		$schedule->status = 'Approved';
 		$schedule->save();
 		
 		feedback()->conf("Discharge for {$schedule->getPatient()->fullName()} has been cancelled.");
