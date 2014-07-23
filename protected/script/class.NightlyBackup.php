@@ -1,7 +1,7 @@
 <?php
 
 class NightlyBackup extends CLIScript {
-	protected static $firstRun = '2014-07-18 22:30:00';
+	protected static $firstRun = '2014-07-24 06:30:00';
 	protected static $intervalDays = 1;
 	protected static $intervalHours = 0;
 	protected static $intervalMinutes = 0;
