@@ -27,7 +27,7 @@ function conflictAlert($params, &$smarty) {
 	}
 	$msg = implode("\n", $msg);
 	$msg .= "\nResolve conflicts by changing room assignment, by changing admit or discharge dates, by reverting one patient to Pending status, or by Cancelling an admit or discharge.";
-	
+
 	if (count($conflicts) > 0) {
 		echo "<a class='admit-error-details' title='{$msg}'><img src='{$ENGINE_URL}/images/icons/error.png' /></a> <strong><i>Scheduling Conflict</i></strong><br />";
 	}
@@ -60,13 +60,13 @@ function scheduleMenu($params, &$smarty) {
 	$options .= "\n<li><a href='{$SITE_URL}/?page=patient&amp;action=nursing&amp;patient={$schedule->getPatient()->pubid}&amp;mode=edit'>Nursing Report/Notes</a></li>";
 
 	if (auth()->getRecord()->isAdmissionsCoordinator() == 1) {
-
 		if ($schedule->status == 'Approved' && date('Y-m-d', strtotime($schedule->datetime_admit)) >= date('Y-m-d', strtotime('now'))) {
 			$options .= "\n<li><a href='{$SITE_URL}/?page=coord&amp;action=setSchedulePending&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Revert to Pending Status</a></li>";
 		}
 		if ($schedule->datetime_discharge_bedhold_end != '') {
 			$options .= "\n<li><a href='{$SITE_URL}/?page=coord&amp;action=readmit&amp;facility={$facility->pubid}&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Re-Admit this patient</a></li>";
 		}
+
 		if ($schedule->getPatient()->readyForApproval($msg, $schedule->getFacility()->id) && $schedule->status != 'Approved' && $schedule->room == "") {
 			$options .= "\n<li><a class='approve-admit-link' href='{$SITE_URL}/?page=coord&action=room&amp;schedule={$schedule->pubid}&amp;goToApprove=1'>Approve this inquiry</a></li>";
 		} elseif ($schedule->room == "") {
@@ -142,6 +142,12 @@ function scheduleMenu($params, &$smarty) {
 	if ($schedule->status == 'Under Consideration' || ($schedule->status == 'Approved' && strtotime(date('Y-m-d', strtotime($schedule->datetime_admit))) >= strtotime(date('Y-m-d', strtotime('now'))))) {
 		$options .= "\n<li><a class='cancel-admit-link' href='{$SITE_URL}/?page=coord&amp;action=cancelSchedule&amp;id={$schedule->pubid}'>Cancel this inquiry</a></li>";
 	}
+
+	if ($schedule->getPatient()->readyForApproval($msg, $schedule->getFacility()->id)) {
+
+	}
+
+	//pr ($schedule->getPatient())->readyForApproval();
 		
 	
 	echo <<<END
@@ -171,6 +177,5 @@ END;
 				<div class="clear"></div>
 END;
 		}
-						
-	
+
 }
