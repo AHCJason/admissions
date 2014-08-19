@@ -909,6 +909,10 @@ class PageControllerFacility extends PageController {
 				} else {
 					$atHospitalRecord->bedhold_offered = 0;
 				}
+
+				if (input()->flag_readmission) {
+					$schedule->flag_readmission = input()->flag_readmission;
+				}
 				 
 				
 				/*

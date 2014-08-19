@@ -242,7 +242,9 @@
 					obj.value = val.id;
 					obj.label = val.name + " (" + val.state + ")";
 					suggestions.push(obj);
+
 				});
+
 				add(suggestions);
 			});
 		}
