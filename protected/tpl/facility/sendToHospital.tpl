@@ -157,6 +157,19 @@ $(".phone").mask("(999) 999-9999");
 		<tr>
 			<td>&nbsp;</td>
 		</tr>
+		<tr>
+			<td id="flag"><input type="radio" value="1" {if $schedule->flag_readmission == 1} checked{/if} name="flag_readmission" />
+			Flag this patient for re-admission <a class="tooltip"><img src="{$SITE_URL}/images/icons/information.png" /><span>When selected this patient will be flagged<br /> for review prior to re-admission.</span></a></td>
+		</tr>
+		
+		{foreach $userRoles as $role}
+		{if $role->name == "facility_administrator"}
+		<tr class="deny-admit">
+			<td id="flag"><input id="deny" type="radio" name="flag_readmission" value="2" {if $schedule->flag_readmission == 2} checked{/if}>
+			Deny re-admission for this patient<a class="tooltip"><img src="{$SITE_URL}/images/icons/information.png" /><span>If this flag is set this patient will not be able to be re-admitted.</span></a></td>
+		</tr>
+		{/if}
+		{/foreach}
 		{if $atHospitalRecord == ''}
 			<tr>
 				<td valign="top"><input type="checkbox" name="direct_admit" value="1" /> <strong>Direct Admit Patient to hospital</strong><br /></td>
