@@ -52,7 +52,16 @@ class PageControllerHospital extends PageController {
 	
 	public function searchHomeHealth() {
 		$user = auth()->getRecord();
-		$facility = new CMS_Facility($user->default_facility);
+
+		if (input()->facility != "") {
+			$facility = new CMS_Facility(input()->facility);
+		} else {
+			$facility = new CMS_Facility($user->default_facility);
+		}
+
+		$as = new CMS_Facility_Link_States();
+		$additional_states = $as->getAdditionalStates($facility->id);
+		
 				
 		$term = input()->term;
 		if ($term != '') {
@@ -67,6 +76,10 @@ class PageControllerHospital extends PageController {
 			}
 			$sql = rtrim($sql, " AND");
 			$sql .= " AND hospital.state = :facilitystate";
+			foreach ($additional_states as $k => $s) {
+				$params[":additional_states{$k}"] = $s->state;
+				$sql .= " OR hospital.state = :additional_states{$k}";
+			}
 			$sql .= " AND hospital.type = 'Home Health'";
 						
 			$results = db()->getRowsCustom($sql, $params);
