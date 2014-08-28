@@ -14,8 +14,7 @@ class PageControllerPhysician extends PageController {
 		} else {
 			$state = $facility->state;
 		}
-		
-		
+				
 		$term = input()->term;
 		if ($term != '') {
 			$tokens = explode(" ", $term);
