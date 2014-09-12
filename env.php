@@ -31,7 +31,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		
 		// set urls
 		$ENGINE_URL = "https://local.aptitudecare.com/cms2-public";
-		$SITE_URL = "https://local.aptitudecare.com";
+		$SITE_URL = "https://local.aptitudecare.com/admission";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
 	} 
