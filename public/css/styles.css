@@ -1212,6 +1212,13 @@ tr.census {
 	margin-bottom: 50px;
 }
 
+#change-module {
+	position: relative;
+	left: 0;
+	top: 20px;
+
+}
+
 #two-week-view {
 	position: absolute;
 	right: 20px;
@@ -1720,5 +1727,15 @@ a.tooltip span
 #timeout a.button:hover {
 	background: #185687;
 	color: #f1f1f1;
+}
+
+
+#tmp-message {
+	margin: auto;
+	width: 75%;
+	background: green;
+	color: #f1f1f1;
+	padding: 5px;
+	text-align: center;
 }
 

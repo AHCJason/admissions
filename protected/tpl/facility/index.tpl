@@ -12,6 +12,19 @@ $("#alt-week").datepicker({
 	
 });
 
+
+	$("#module").change(function(e) {
+		e.preventDefault();
+		var pathArray = window.location.href.split('/');
+		var protocol = pathArray[0];
+		var host = pathArray[2];
+		var redirectUrl = protocol + '//' + host;
+
+		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val();
+
+	});
+
+
 {if $isTV == 1}
 
 setInterval(function() {
@@ -47,7 +60,24 @@ $(window).load(function() {
 	$(".facility-day-box-discharge").height(dischargeHeight);
 	});
 </script>
-<div id="two-week-view"><a href="{$SITE_URL}/?page=facility&amp;action=two_week_view&amp;id={$facility->pubid}&amp;weekSeed={$weekSeed}&type=excel"><img src="{$PUBLIC_URL}/images/icons/file_xls.png" style="height: 42px;" /></a> <a href="{$SITE_URL}/?page=facility&amp;action=two_week_view&amp;id={$facility->pubid}&amp;weekSeed={$weekSeed}&type=pdf" target="_blank"><img src="{$PUBLIC_URL}/images/icons/file_pdf.png" style="height: 42px;" /></a></div>
+
+{if $isTV != 1}
+<div id="tmp-message"><strong>Reminder:</strong> The Admission Dashboard will be down this evening starting at 9:00pm Mountain Daylight Time and all user passwords will be reset.  You will receive an email with a new temporary password.</div>
+
+{/if}
+{if $auth->getRecord()->module_access}
+<div id="change-module">
+	Module:
+	<select name="module" id="module">
+		<option value="admission">Admission</option>
+		<option value="home_health">Home Health</option>
+	</select>
+	<input type="hidden" id="username" value="{$auth->getRecord()->email}" />
+	<input type="hidden" id="user-id" value="{$auth->getRecord()->pubid}" />
+</div>
+{/if}
+
+<div id="two-week-view"><a href="{$SITE_URL}/?page=facility&amp;action=two_week_view&amp;id={$facility->pubid}&amp;weekSeed={$weekSeed}&type=excel"><img src="{$SITE_URL}/images/icons/file_xls.png" style="height: 42px;" /></a> <a href="{$SITE_URL}/?page=facility&amp;action=two_week_view&amp;id={$facility->pubid}&amp;weekSeed={$weekSeed}&type=pdf" target="_blank"><img src="{$SITE_URL}/images/icons/file_pdf.png" style="height: 42px;" /></a></div>
 <br />
 
 {/if}
@@ -138,7 +168,7 @@ $(window).load(function() {
 						{$af = $admitFrom}
 					{/if}
 					{foreach $onsite as $o}
-						{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
+						{if $o->id != ''}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 					{/foreach}
 					{$admit->getRoomNumber()}
 					<strong>{$ptName}</strong><br />
@@ -149,9 +179,9 @@ $(window).load(function() {
 				{else}
 					Room {$admit->getRoomNumber()} <br />
 					{foreach $onsite as $o}
-						{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
+						{if $o->id != ''}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 					{/foreach}
-					{if $admit->confirmed == 1}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
+					{if $admit->confirmed == 1}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
 					<strong>{$admit->getPatient()->fullName()}</strong><br />
 					{if $admit->transfer_facility != ''}{$transferFacility->name}{elseif $admit->admit_from != ''}{$admitFrom->name}{else}{$admit->getPatient()->referral_org_name}{/if}<br />
 					
@@ -225,7 +255,7 @@ $(window).load(function() {
 					<span class="sent-name">
 					{if $isTV == 1}
 						{foreach $onsite as $o}
-							{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
+							{if $o->id != ''}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 						{/foreach}
 						{$sent->getRoomNumber()}&nbsp;
 							{$ptName = substr($sent->getPatient()->fullName(),0,12)|cat:"..."}
@@ -240,7 +270,7 @@ $(window).load(function() {
 					{else}
 						Room {$sent->getRoomNumber()}<br />
 						{foreach $onsite as $o}
-							{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
+							{if $o->id != ''}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 						{/foreach}
 						<strong>{$sent->getPatient()->fullName()}</strong><br />Hospital: {$hospital->name|default:"Unknown"}<br />Physician: {if $sent->getPatient()->physician_id != ''}Dr. {$sPhysician->last_name}{else}{$sent->getPatient()->physician_name}{/if}{scheduleMenu schedule=$sent weekSeed=$weekStart}</a>
 					{/if}
