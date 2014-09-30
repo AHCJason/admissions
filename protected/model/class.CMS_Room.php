@@ -71,8 +71,7 @@ class CMS_Room extends CMS_Table {
 		
 		$sql .= " GROUP BY `id`
 				ORDER BY `number`
-				";
-								
+				";							
 		return $obj->fetchCustom($sql, $params);
 
 	}

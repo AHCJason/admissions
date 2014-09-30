@@ -37,20 +37,52 @@ class PageControllerLogin extends PageController {
 				$this->redirect(urldecode(input()->path));
 			}
 		} else {
+			$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
 			feedback()->error("You provided an invalid username or password.");
 			if (input()->path == '') {
-				$this->redirect(SITE_URL . "/?page=login");
+				$this->redirect($redirect_url . "/?page=login");
+				// $this->redirect(SITE_URL . "/?page=login");
 			} else {
-				$this->redirect(SITE_URL . "/?page=login&path=" . input()->path);
+				$this->redirect($redirect_url . "/?page=login&path=" . input()->path);
 			}
 		}
 	}
 
 	public function logout() {
 		auth()->logout();
-		$this->redirect(SITE_URL . "/?page=home");
+		//$this->redirect(SITE_URL . "/?page=home");
+		$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
+		$this->redirect($redirect_url);
 
 	}
+
+	public function single_sign_on() {
+		if (input()->user != "") {
+			$user = new CMS_Site_User(input()->user);
+		}
+
+		if (!empty ($user)) {
+			auth()->login($user->email, $user->password, true);
+		}
+
+		if (auth()->valid()) {
+			if (input()->path == '') {
+				$this->redirect(auth()->getRecord()->homeURL());
+			} else {
+				$this->redirect(urldecode(input()->path));
+			}
+		} else {
+			$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
+			if (input()->path == '') {
+				$this->redirect($redirect_url . "/?page=login");
+			} else {
+				$this->redirect($redirect_url . "/?page=login&path=" . input()->path);
+			}
+		}
+
+
+	}
+
 	
 	public function timeout() {
 		auth()->logout();

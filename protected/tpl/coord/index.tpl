@@ -29,6 +29,19 @@
 		
 	});
 
+
+	$("#module").change(function(e) {
+		e.preventDefault();
+		var pathArray = window.location.href.split('/');
+		var protocol = pathArray[0];
+		var host = pathArray[2];
+		var redirectUrl = protocol + '//' + host;
+
+		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val();
+
+	});
+
+
 	$("#coordinator-dashboard-tabs").tabs({
 		cookie: { expires: 30 }
 	});
@@ -45,6 +58,20 @@
 	});
 
 {/jQueryReady}
+
+<div id="tmp-message"><strong>Reminder:</strong> The Admission Dashboard will be down this evening starting at 9:00pm Mountain Daylight Time and all user passwords will be reset.  You will receive an email with a new temporary password.</div>
+
+{if $auth->getRecord()->module_access}
+<div id="change-module">
+	Module:
+	<select name="module" id="module">
+		<option value="admission">Admission</option>
+		<option value="home_health">Home Health</option>
+	</select>
+	<input type="hidden" id="username" value="{$auth->getRecord()->email}" />
+	<input type="hidden" id="user-id" value="{$auth->getRecord()->pubid}" />
+</div>
+{/if}
 
 <div id="facility-admit-section">
 	<h1 class="text-center">{$week[0]|date_format:"%B %d, %Y"} <span class="text-16">to</span> {$week[6]|date_format:"%B %d, %Y"}

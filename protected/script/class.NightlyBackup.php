@@ -5,7 +5,7 @@ class NightlyBackup extends CLIScript {
 	protected static $intervalDays = 1;
 	protected static $intervalHours = 0;
 	protected static $intervalMinutes = 0;
-	protected static $enabled = true;
+	protected static $enabled = false;
 	
 	public static function exec() {
 		// Set the current time
