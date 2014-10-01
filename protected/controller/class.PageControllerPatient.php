@@ -135,7 +135,7 @@ class PageControllerPatient extends PageController {
 */
 	
 	public function submitAdmitRequestNewPatient() {	
-				
+
 		// validate facility
 		if (input()->facility == '') {
 			feedback()->error("You did not select a facility.");
