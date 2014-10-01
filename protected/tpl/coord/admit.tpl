@@ -88,12 +88,11 @@
 
 	$("#admit-request-submit-as-new").live("click", function(e) {
 		e.preventDefault();
-
 		if ($("#admit-request-date-admit").val() == '') {
 			jAlert('You must select an admission date/time.');
 			return false;
 		}
-		$.post(SITE_URL, { 
+		$.post(SITE_URL + "/", { 
 			page: 'patient', 
 			action: 'submitAdmitRequestNewPatient', 
 			datetime_admit: $("#admit-request-date-admit").val(),
