@@ -3,6 +3,12 @@
 class PageControllerLogin extends PageController {
 
 	public function index() {
+
+		//	Moved the login to the new framework
+		$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
+		$this->redirect($redirect_url);
+		exit;
+
 	
 		// Get site email address from database
 		$site_email = CMS_Company::getEmailExt();
@@ -15,8 +21,8 @@ class PageControllerLogin extends PageController {
 	}
 
 	public function login() {
-	
-		// Get site email address from database
+
+		//	Get site email address from database
 		$site_email = CMS_Company::getEmailExt();
 		
 		//Look for @ symbol in username
