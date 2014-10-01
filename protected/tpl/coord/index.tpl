@@ -59,7 +59,6 @@
 
 {/jQueryReady}
 
-<div id="tmp-message"><strong>Reminder:</strong> The Admission Dashboard will be down this evening starting at 9:00pm Mountain Daylight Time and all user passwords will be reset.  You will receive an email with a new temporary password.</div>
 
 {if $auth->getRecord()->module_access}
 <div id="change-module">
