@@ -87,14 +87,14 @@ class CMS_Site_User extends CMS_Table {
 	
 	public function homeURL() {
 		if ($this->isAdmissionsCoordinator() == 1) {
-			return SITE_URL . "/?page=coord";
+			return SITE_URL . "?page=coord";
 		} else {
 			if ($this->default_facility != '') {
 				$facility = new CMS_Facility($this->default_facility);
-				return SITE_URL . "/?page=facility&id={$facility->pubid}";
+				return SITE_URL . "?page=facility&id={$facility->pubid}";
 				//return SITE_URL . "/?page=facility&id={$this->default_facility}";
 			} else {
-				return SITE_URL . "/?page=home";
+				return SITE_URL . "?page=home";
 			}
 		}
 	}
