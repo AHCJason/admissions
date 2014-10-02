@@ -57,7 +57,6 @@ class PageControllerLogin extends PageController {
 	public function logout() {
 		auth()->logout();
 		//$this->redirect(SITE_URL . "/?page=home");
-		$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
 		//$this->redirect($redirect_url);
 		$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
 		$this->redirect($redirect_url . "/?page=login&action=logout");
@@ -94,6 +93,8 @@ class PageControllerLogin extends PageController {
 	
 	public function timeout() {
 		auth()->logout();
+		$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
+		$this->redirect($redirect_url . "/?page=login&action=timeout");
 	}
 	
 	public function keepalive() {

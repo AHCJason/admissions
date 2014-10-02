@@ -195,9 +195,9 @@ class PageControllerPhysician extends PageController {
 		}
 				
 		if (feedback()->wasError()) {
-			$this->redirect(SITE_URL . "/?page=physician&action=add&type=$type");
+			$this->redirect(SITE_URL . "?page=physician&action=add&type=$type");
 		} else {
-			$this->redirect(SITE_URL . "/?page=patient&action=close_window");				
+			$this->redirect(SITE_URL . "?page=patient&action=close_window");				
 		}
 
 	}

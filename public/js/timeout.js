@@ -38,7 +38,7 @@ function idleWarning() {
 				text: 'Logout',
 				class: 'right',
 				click: function() {
-					window.location = SITE_URL + '/?page=login&action=logout';
+					window.location = SITE_URL + '?page=login&action=logout';
 				}
 			}
 		}
