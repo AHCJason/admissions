@@ -64,9 +64,10 @@ class PageControllerLogin extends PageController {
 	}
 
 	public function single_sign_on() {
-		if (input()->user != "") {
-			$user = new CMS_Site_User(input()->user);
-		}
+		$user = $_SESSION["AptitudeCare"]["authentication_record"];
+		if ($user != "") {
+			$user = new CMS_Site_User($user);
+		} 
 
 		if (!empty ($user)) {
 			auth()->login($user->email, $user->password, true);
@@ -81,9 +82,9 @@ class PageControllerLogin extends PageController {
 		} else {
 			$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
 			if (input()->path == '') {
-				$this->redirect($redirect_url . "/?page=login");
+				$this->redirect($redirect_url . "?page=login");
 			} else {
-				$this->redirect($redirect_url . "/?page=login&path=" . input()->path);
+				$this->redirect($redirect_url . "?page=login&path=" . input()->path);
 			}
 		}
 
