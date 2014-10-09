@@ -3,5 +3,6 @@ protected/cpl/
 public/js/.DS_Store
 nossl-redir/index.php
 protected/config/database.php
+protected/script/class.NightlyBackup.php
 protected/assets/*
 public/index.php
