@@ -69,23 +69,21 @@ class PageControllerLogin extends PageController {
 			$user = new CMS_Site_User($user);
 		} 
 
+
+
 		if (!empty ($user)) {
 			auth()->login($user->email, $user->password, true);
 		}
-
 		if (auth()->valid()) {
 			if (input()->path == '') {
 				$this->redirect(auth()->getRecord()->homeURL());
 			} else {
+				echo "goodbye"; die();
 				$this->redirect(urldecode(input()->path));
 			}
 		} else {
 			$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
-			if (input()->path == '') {
-				$this->redirect($redirect_url . "?page=login");
-			} else {
-				$this->redirect($redirect_url . "?page=login&path=" . input()->path);
-			}
+			$this->redirect($redirect_url . "?page=login&action=logout");
 		}
 
 
