@@ -122,7 +122,7 @@ class CMS_Schedule extends CMS_Table {
 	}
 
 	public static function getPatientsSentToHospital($dateStart = false, $dateEnd = false, $facility = false, $orderby = false) {
-		$sql = "SELECT `schedule_hospital`.*, `patient_admit`.`id` AS 'patient_admit', `patient_admit`.`last_name`, `patient_admit`.`first_name` FROM `schedule_hospital`,`schedule`,`patient_admit` WHERE `schedule_hospital`.`schedule`=`schedule`.`id` AND `schedule`.`patient_admit`=`patient_admit`.`id`";
+		$sql = "SELECT `schedule_hospital`.*, `patient_admit`.`id` AS 'patient_admit', `patient_admit`.`last_name`, `patient_admit`.`first_name`, `schedule`.`datetime_admit` FROM `schedule_hospital`,`schedule`,`patient_admit` WHERE `schedule_hospital`.`schedule`=`schedule`.`id` AND `schedule`.`patient_admit`=`patient_admit`.`id`";
 
 		if ($dateStart != false) {
 			$dateStart = date("Y-m-d", strtotime($dateStart)) . " 00:00:00";

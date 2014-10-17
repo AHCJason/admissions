@@ -25,6 +25,7 @@
 	<tr>
 		<th>Patient Name</th>
 		<th>Hospital</th>
+		<th>Admission Date</th>
 		<th>Sent</th>
 		<th>Comment</th>
 		<th>Attending Physician</th>
@@ -36,6 +37,7 @@
 	<tr bgcolor="{cycle values="#d0e2f0,#ffffff"}">
 		<td class="text-left">{$r->getPatient()->fullName()}</td>
 		<td>{$hospital->name}</td>
+		<td>{$r->datetime_admit|date_format:"%m/%d/%Y"}</td>
 		<td>{$r->datetime_sent|date_format:"%m/%d/%Y"}</td>
 		<td style="text-align:left">{$r->comment}</td>
 		{if $r->getPatient()->physician_id != ''}
