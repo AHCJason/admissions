@@ -94,7 +94,7 @@
 								<li><a href="{$SITE_URL}?page=pharmacy&amp;action=manage">Pharmacies</a></li>
 								<li><a href="{$SITE_URL}?page=physician&amp;action=manage">Physicians/Surgeons</a></li>
 								{if $auth->getRecord()->isAdmissionsCoordinator() == 1}
-									<!-- <li><a href="{$SITE_URL}?page=siteUser&amp;action=manage">Users</a></li> -->
+									<li><a href="{$HOMEHEALTH_URL}?page=users&amp;action=manage">Users</a></li>
 								{/if}
 								<li><a href="{$SITE_URL}?page=patient&amp;action=upload">Upload Patients</a></li>
 							</ul>
