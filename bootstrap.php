@@ -83,7 +83,7 @@ $availOptions = array(
 
 
 smarty()->assign("availOptions", $availOptions);
-
+smarty()->assign("HOMEHEALTH_URL", $HOMEHEALTH_URL);
 
 
 
