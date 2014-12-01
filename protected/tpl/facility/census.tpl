@@ -53,7 +53,7 @@
 	<br />
 	<br />
 {else}
-<div class="right clear"><a href="{$SITE_URL}/?page=facility&action=census&facility={$facility->pubid}&export=excel"><img src="{$PUBLIC_URL}/images/icons/file_xls.png" style="height: 42px;" /></a></a> <a href="{$SITE_URL}/?page=facility&action=census&facility={$facility->pubid}&export=pdf" type="_blank"><img src="{$PUBLIC_URL}/images/icons/file_pdf.png" style="height: 42px;" /></a></a></div>
+<div class="right clear"><a href="{$SITE_URL}/?page=facility&action=census&facility={$facility->pubid}&export=excel"><img src="{$SITE_URL}/images/icons/file_xls.png" style="height: 42px;" /></a></a> <a href="{$SITE_URL}/?page=facility&action=census&facility={$facility->pubid}&export=pdf" type="_blank"><img src="{$SITE_URL}/images/icons/file_pdf.png" style="height: 42px;" /></a></a></div>
 <h1 class="page-header">Census for {$facility->name}<br /><span class="text-16">on {datetimepickerformat($datetime)|date_format: "%a, %b %e, %Y at %l:%M %P"}</span> <input type="hidden" id="datetime" value="{datetimepickerformat($datetime)}" /></h1>
 
 {/if}
