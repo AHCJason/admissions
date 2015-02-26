@@ -8,8 +8,9 @@ class PageControllerHospital extends PageController {
 	
 	public function searchHospital() {
 		$user = auth()->getRecord();
-				
+
 		$term = input()->term;
+		
 		if ($term != '') {
 			$tokens = explode(" ", $term);
 			$params = array();
@@ -45,6 +46,7 @@ class PageControllerHospital extends PageController {
 		} else {
 			$results = array();
 		}
+
 		json_return($results);
 
 	}

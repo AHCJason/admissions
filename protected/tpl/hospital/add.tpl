@@ -39,7 +39,6 @@ $("#search-states").autocomplete(
 	};
 	
 	
-	
 {/jQueryReady}
 <div class="lightbox">
 	<h1>Add a new Location</h1>
