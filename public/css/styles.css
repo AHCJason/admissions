@@ -194,6 +194,17 @@ div.button, a.button, a.button:hover {
 	float: left;
 }
 
+.button-disabled {
+	display: block;
+	padding: 5px 8px;
+	color: #fff;
+	text-decoration: none;
+	background: #dedede;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	float: left;
+	cursor: pointer;
+}
 
 #normal-view a {
 	color: #f1f1f1;	

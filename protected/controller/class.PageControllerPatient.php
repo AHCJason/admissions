@@ -640,6 +640,149 @@ class PageControllerPatient extends PageController {
 		
 	}
 	
+	public function previewNotesFileImage() {
+		// get the page offset we'll start at, or default to 0
+		$offset = (input()->offset != '' && is_numeric(input()->offset) && input()->offset > 0) ? input()->offset : 0;
+		
+		// get the number of pages from the request, or default to 5
+		$numPages = (input()->numPages != '' && is_numeric(input()->numPages) && input()->numPages > 0) ? input()->numPages : 5;
+
+		// we should be told when invoked how many total pages there are
+		$totalPages = input()->totalPages;
+		
+		// the schedule record
+		$schedule = new CMS_Schedule(input()->schedule);
+
+		// schedule must be valid
+		if ($schedule->valid()) {
+			// the associated patient record
+			$patient = $schedule->getPatient();
+
+			// which notes file?
+			$idx = input()->idx;
+			if ($patient->{"notes_file{$idx}"} != '') {
+				// widget will dynamically return the path to the asset
+				$widget = $patient->getFieldWidget("notes_file{$idx}");
+				
+				// resolve the filename out of the DB record
+				$pdfname = $patient->{"notes_file{$idx}"};
+				$pdfPath = $widget->getAssetPath() . "/{$pdfname}";
+				// must exist on disk
+				if (file_exists($pdfPath)) {
+					$width = input()->width;
+					try {
+						// construct an Imagick instance
+						$image = new Imagick;
+						
+						// figure out how many pages actually exist in this chunk
+						if ($offset + $numPages + 1 > $totalPages) {
+							$numPages = $totalPages - $offset;
+						}
+						// cycle from the offset to the number of requested pages, adding a page to
+						// the stack as we go
+						for ($i=$offset; $i < ($offset + $numPages); $i++) {
+							$image_sub = new Imagick();
+							$image_sub->setResolution(200, 200);
+							$image_sub->readImage($pdfPath . "[{$i}]");
+							$image_sub->setImageCompression(Imagick::COMPRESSION_LOSSLESSJPEG); 
+							$image_sub->setImageCompressionQuality(100);
+							$image_sub->thumbnailImage($width, 0);
+							$image->addImage($image_sub);
+						}
+						$image->resetIterator();
+						// stack them horizontally
+						$image_multi = $image->appendImages(false);
+						// as a PNG
+						$image_multi->setImageFormat('jpg');
+			
+						// add in the  blob back to the item and output as a PNG
+						header("Content-type: image/jpg");
+						echo $image_multi->getImageBlob();
+					} catch (ImagickException $e) {
+						// TODO ouput a 'not available' image
+						
+					}
+				} else {
+					// TODO ouput a 'not available' image
+				}
+			}
+		}
+		exit;		
+	}
+	
+	public function previewNotesFile() {
+		
+		// get the page offset we'll start at, or default to 0
+		$offset = (input()->offset != '' && is_numeric(input()->offset) && input()->offset > 0) ? input()->offset : 0;
+		smarty()->assign("offset", $offset);
+
+		// number of pages in a "chunk"
+		$numPages = 5;
+		smarty()->assign("numPages", $numPages);
+		
+		// the page we came from
+		smarty()->assign("b", input()->b);
+		
+		if (input()->width == '') {
+			$width = 930;
+		} else {
+			$width = input()->width;
+		}
+		smarty()->assign("width", $width);
+
+		$schedule = new CMS_Schedule(input()->schedule);
+
+		if (! $schedule->valid()) {
+			feedback()->error("Invalid schedule ID.");
+			// TODO where to redirect?
+			$this->redirect(SITE_URL . "/?page=coord");
+		} else {
+			// figure out how many total pages there are:
+			
+			// the associated patient record
+			$patient = $schedule->getPatient();
+			
+			// which notes file?
+			$idx = input()->idx;
+			smarty()->assign("idx", $idx);
+			if ($patient->{"notes_file{$idx}"} != '') {
+				// widget will dynamically return the path to the asset
+				$widget = $patient->getFieldWidget("notes_file{$idx}");
+				
+				// resolve the filename out of the DB record
+				$pdfname = $patient->{"notes_file{$idx}"};
+				$pdfPath = $widget->getAssetPath() . "/{$pdfname}";
+
+				// must exist on disk
+				if (file_exists($pdfPath)) {
+					try {
+						// construct an Imagick instance
+						$image = new Imagick($pdfPath);
+						$totalPages = $image->getNumberImages();
+						smarty()->assign("totalPages", $totalPages);
+
+						// figure out how many pages actually exist in this chunk
+						if ($offset + $numPages + 1 > $totalPages) {
+							$thisChunkNumPages = $totalPages - $offset;
+						} else {
+							$thisChunkNumPages = $numPages;
+						}
+						smarty()->assign("thisChunkNumPages", $thisChunkNumPages);
+						
+					} catch (ImagickException $e) {
+						$this->redirect(urldecode(input()->b));
+					}
+				} else {
+					feedback()->error("File not found on disk.");
+					$this->redirect(urldecode(input()->b));
+				}
+			}
+		}
+		smarty()->assignByRef("schedule", $schedule);
+		
+	}
+	
+	/*
 	public function viewNotesFile() {
 		$schedule = new CMS_Schedule(input()->schedule);
 		if ($schedule->valid()) {
@@ -691,6 +834,7 @@ class PageControllerPatient extends PageController {
 		}
 		exit;
 	}
+	*/
 	
 	public function inquiry() {
 	

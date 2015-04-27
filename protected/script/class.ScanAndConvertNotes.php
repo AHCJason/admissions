@@ -7,7 +7,7 @@ class ScanAndConvertNotes extends CLIScript {
 	protected static $intervalHours = 0;
 	protected static $intervalMinutes = 2;
 
-	protected static $enabled = true;
+	protected static $enabled = false;
 	
 	protected static function processBucket($pdfPath, $bucketPath, &$record, $idx) {
 		echo "Convert {$pdfPath}:\n";
