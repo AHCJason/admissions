@@ -128,13 +128,8 @@
 	{foreach $notes['notes'] as $i => $file}
 		{$name = $notes['names'][$i]}
 		<tr bgcolor="{cycle values="#d0e2f0,#ffffff"}">
-			<td><a href="{$SITE_URL}/?page=patient&amp;action=viewNotesFile&amp;schedule={$schedule->pubid}&amp;idx={$i}" title="View {$name}">{$name}</a></td>
-			{if $patient->notesAreConverted($i)}
-			<td width="20"><a href="{$SITE_URL}/?page=patient&amp;action=viewNotesFile&amp;schedule={$schedule->pubid}&amp;idx={$i}" title="View File"><img src="{$ENGINE_URL}/images/icons/magnifier.png" alt="View File" /></a></td>
+			<td><a href="{$SITE_URL}/?page=patient&amp;action=previewNotesFile&amp;schedule={$schedule->pubid}&amp;idx={$i}&amp;b={urlencode(currentURL())}" title="View {$name}">{$name}</a></td>
 			<td width="20"><a href="{$SITE_URL}/?page=patient&amp;action=downloadNotesFile&amp;schedule={$schedule->pubid}&amp;idx={$i}" title="Print File"><img src="{$ENGINE_URL}/images/icons/printer.png" alt="Print File" /></a></td>
-			{else}
-			<td colspan=2"><i>Processing...</i></td>
-			{/if}
 			<td width="20"><a href="{$SITE_URL}/?page=patient&amp;action=removeNotes&amp;patient={$patient->pubid}&amp;idx={$i}&amp;_path={urlencode(currentURL())}" title="Delete this file"><img src="{$ENGINE_URL}/images/icons/delete.png" alt="Delete this file" /></a></td>
 		</tr>
 	{foreachelse}
