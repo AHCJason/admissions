@@ -2085,10 +2085,11 @@ elseif(input()->affirm == 'discharged_home') {
 			$objPHPExcel->getActiveSheet()->setCellValue("A1", "$facility->name Census");
 			$objPHPExcel->getActiveSheet()->setCellValue("A2", "Room");
 			$objPHPExcel->getActiveSheet()->setCellValue("B2", "Patient Name");
-			$objPHPExcel->getActiveSheet()->setCellValue("C2", "Admission Date");
-			$objPHPExcel->getActiveSheet()->setCellValue("D2", "Scheduled Discharge Date");
-			$objPHPExcel->getActiveSheet()->setCellValue("E2", "Attending Physician");
-			$objPHPExcel->getActiveSheet()->setCellValue("F2", "Surgeon/Specialist");
+			$objPHPExcel->getActiveSheet()->setCellValue("C2", "Date of Birth");
+			$objPHPExcel->getActiveSheet()->setCellValue("D2", "Admission Date");
+			$objPHPExcel->getActiveSheet()->setCellValue("E2", "Scheduled Discharge Date");
+			$objPHPExcel->getActiveSheet()->setCellValue("F2", "Attending Physician");
+			$objPHPExcel->getActiveSheet()->setCellValue("G2", "Surgeon/Specialist");
 			
 			// Set census info
 			$row = 3;
@@ -2109,22 +2110,26 @@ elseif(input()->affirm == 'discharged_home') {
 				if ($occupant) {
 					$objPHPExcel->getActiveSheet()->setCellValue("B" . $row, $occupant->fullName());
 				}
+				if ($occupant->birthday != '') {
+					$objPHPExcel->getActiveSheet()->setCellValue("C" . $row, date("m/d/Y", strtotime($occupant->birthday)));
+				}
+
 				if ($room->datetime_admit != '') {
-					$objPHPExcel->getActiveSheet()->setCellValue("C" . $row, date("m/d/Y", strtotime($room->datetime_admit)));
+					$objPHPExcel->getActiveSheet()->setCellValue("D" . $row, date("m/d/Y", strtotime($room->datetime_admit)));
 				}
 				if ($room->datetime_discharge != '') {
-					$objPHPExcel->getActiveSheet()->setCellValue("D" . $row, date("m/d/Y", strtotime($room->datetime_discharge)));
+					$objPHPExcel->getActiveSheet()->setCellValue("E" . $row, date("m/d/Y", strtotime($room->datetime_discharge)));
 				}
 				if ($occupant->physician_id != "") {
 					$physician = CMS_Physician::generate();
 					$physician->load($occupant->physician_id);
-					$objPHPExcel->getActiveSheet()->setCellValue("E" . $row, $physician->last_name . ', ' . $physician->first_name);
+					$objPHPExcel->getActiveSheet()->setCellValue("F" . $row, $physician->last_name . ', ' . $physician->first_name);
 				} 
 				
 				if ($occupant->ortho_id != "") {
 					$ortho = CMS_Physician::generate();
 					$ortho->load($occupant->ortho_id);
-					$objPHPExcel->getActiveSheet()->setCellValue("F" . $row, $ortho->last_name . ', ' . $ortho->first_name);
+					$objPHPExcel->getActiveSheet()->setCellValue("G" . $row, $ortho->last_name . ', ' . $ortho->first_name);
 				}
 				$row++;
 				
