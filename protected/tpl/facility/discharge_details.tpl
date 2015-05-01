@@ -28,12 +28,12 @@ $("#state-search").autocomplete(
 		source: states,
 		focus: function( event, ui ) {
 			$( "#state-search" ).val( ui.item.label );
-			$( "#state" ).val( ui.item.value );
+			$( "#discharge-state" ).val( ui.item.value );
 			return false;
 		},
 		select: function( event, ui ) {
 			$( "#state-search" ).val( ui.item.label );
-			$( "#state" ).val( ui.item.value );
+			$( "#discharge-state" ).val( ui.item.value );
 			return false;
 		}
 	}).data( "autocomplete" )._renderItem = function( ul, item ) {
@@ -334,7 +334,7 @@ $("#home-health-search").autocomplete({
 							<td></td>
 							<td>State<br />
 							<input type="text" id="state-search" value="{$data.state}" />
-							<input type="hidden" name="discharge_state" id="state" value="{$data.state}" />
+							<input type="hidden" name="discharge_state" id="discharge-state" value="{$data.state}" />
 							</td> 
 							<td> 
 								Zip<br /> 

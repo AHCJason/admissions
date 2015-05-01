@@ -125,6 +125,7 @@
 		<th>Room</th>
 		<th>Patient Name</th>
 		<th>&nbsp;</th>
+		<th>Date of Birth</th>
 		<th>Admission<br />Date</th>
 		<th>Scheduled<br />Discharge Date</th>
 		<th>&nbsp;</th>
@@ -148,6 +149,7 @@
 			<td class="text-center">{$room->number}</td>
 			<td style="text-align: left;">{$occupant->fullName()}</td>
 			<td style="text-align: left; width: 37px;">{scheduleMenu schedule=$occupantSchedule}</td>
+			<td>{$occupant->birthday|date_format: "%m/%d/%Y"}</td>
 			<td>{$room->datetime_admit|date_format: "%m/%d/%Y"}</td>
 			<td class="discharge-datetime">{if $room->datetime_discharge_bedhold_end != ''}
 				Hold until<br />{$room->datetime_discharge_bedhold_end|date_format: "%m/%d/%Y %I:%M %P"}
@@ -181,6 +183,7 @@
 			
 				<td>{$room->number}</td>
 				<td style="text-align: left;" colspan="2"></td>
+				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>

@@ -562,7 +562,7 @@ class PageControllerPatient extends PageController {
 				feedback()->error("Unable to add medical records file to this record -- please make sure the Inquiry Form has been completed for this patient.");
 				$this->redirect();
 			}
-			for ($i=1;$i<5;$i++) {
+			for ($i=1;$i<9;$i++) {
 				if ($_FILES["notes_file_upload{$i}"]['name'] != '') {
 					try {
 						$patient->attachNotes("notes_file_upload{$i}", input()->{"notes_name{$i}"});
