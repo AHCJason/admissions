@@ -641,6 +641,7 @@ class PageControllerPatient extends PageController {
 	}
 	
 	public function previewNotesFileImage() {
+		
 		// get the page offset we'll start at, or default to 0
 		$offset = (input()->offset != '' && is_numeric(input()->offset) && input()->offset > 0) ? input()->offset : 0;
 		
@@ -678,29 +679,26 @@ class PageControllerPatient extends PageController {
 						if ($offset + $numPages + 1 > $totalPages) {
 							$numPages = $totalPages - $offset;
 						}
+						
 						// cycle from the offset to the number of requested pages, adding a page to
 						// the stack as we go
 						for ($i=$offset; $i < ($offset + $numPages); $i++) {
 							$image_sub = new Imagick();
 							$image_sub->setResolution(200, 200);
 							$image_sub->readImage($pdfPath . "[{$i}]");
-							$image_sub->setImageCompression(Imagick::COMPRESSION_LOSSLESSJPEG); 
-							$image_sub->setImageCompressionQuality(100);
 							$image_sub->thumbnailImage($width, 0);
 							$image->addImage($image_sub);
 						}
 						$image->resetIterator();
 						// stack them horizontally
 						$image_multi = $image->appendImages(false);
-						// as a PNG
-						$image_multi->setImageFormat('jpg');
 			
 						// add in the  blob back to the item and output as a PNG
-						header("Content-type: image/jpg");
+						$image_multi->setImageFormat('png');
+						header("Content-type: image/png");
 						echo $image_multi->getImageBlob();
 					} catch (ImagickException $e) {
 						// TODO ouput a 'not available' image
-						
 					}
 				} else {
 					// TODO ouput a 'not available' image
@@ -837,7 +835,7 @@ class PageControllerPatient extends PageController {
 	*/
 	
 	public function inquiry() {
-	
+
 		// You must be a coordinator to do this.
 		//if (auth()->getRecord()->isAdmissionsCoordinator() == 0) {
 		//	feedback()->error("Permission denied.");
@@ -863,7 +861,7 @@ class PageControllerPatient extends PageController {
 		} elseif (input()->id != '') {
 			$patient_admit = input()->id;
 		}
-		
+
 		if ($patient_admit != '') {
 			$patient = new CMS_Patient_Admit($patient_admit) ;
 			if ($patient->valid() == false) {
@@ -871,11 +869,13 @@ class PageControllerPatient extends PageController {
 				$this->redirect(SITE_URL . "/?page=coord");
 			}
 			// Get list of physician names
-			$physicians = new CMS_Physician();
-			$pNames = $physicians->getPhysicians();
-			
+			// commented out on 2015-08-11 by kwh appeared to be breaking the page
+			// and did not seem to be used.
+			// $physicians = new CMS_Physician();
+			// $pNames = $physicians->getPhysicians();
+
 			smarty()->assign("facility", $facility);
-			smarty()->assign("pNames", $pNames);
+			// smarty()->assign("pNames", $pNames);
 			smarty()->assignByRef("schedule", $schedule);
 			smarty()->assignByRef("patient", $patient);
 			smarty()->assign("mode", input()->mode);

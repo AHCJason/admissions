@@ -1934,7 +1934,7 @@ elseif(input()->affirm == 'discharged_home') {
 		foreach ($totalRooms as $roomCount) {
 			$numOfRooms = $roomCount->roomCount;
 		}
-		
+
 		// get total number of patients on census per physician
 		$physicians = array();
 		foreach ($rooms as $room) {
@@ -1958,7 +1958,6 @@ elseif(input()->affirm == 'discharged_home') {
 		
 		
 		$census = CMS_Census_Data_Month::fetchCurrentCensus($facility->id);
-		
 		
 		$adc = $census[0]->adc;
 		$adcGoal = $census[0]->goal;

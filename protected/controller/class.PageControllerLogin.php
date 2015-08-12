@@ -59,7 +59,7 @@ class PageControllerLogin extends PageController {
 		//$this->redirect(SITE_URL . "/?page=home");
 		//$this->redirect($redirect_url);
 		$redirect_url = preg_replace('/\W\w+\s*(\W*)$/', '$1', SITE_URL);
-		$this->redirect($redirect_url . "/?page=login&action=logout");
+		$this->redirect($redirect_url . "?page=login&action=admission_logout");
 
 	}
 
