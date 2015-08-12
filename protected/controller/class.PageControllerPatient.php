@@ -835,7 +835,7 @@ class PageControllerPatient extends PageController {
 	*/
 	
 	public function inquiry() {
-	
+
 		// You must be a coordinator to do this.
 		//if (auth()->getRecord()->isAdmissionsCoordinator() == 0) {
 		//	feedback()->error("Permission denied.");
@@ -861,7 +861,7 @@ class PageControllerPatient extends PageController {
 		} elseif (input()->id != '') {
 			$patient_admit = input()->id;
 		}
-		
+
 		if ($patient_admit != '') {
 			$patient = new CMS_Patient_Admit($patient_admit) ;
 			if ($patient->valid() == false) {
@@ -869,11 +869,13 @@ class PageControllerPatient extends PageController {
 				$this->redirect(SITE_URL . "/?page=coord");
 			}
 			// Get list of physician names
-			$physicians = new CMS_Physician();
-			$pNames = $physicians->getPhysicians();
-			
+			// commented out on 2015-08-11 by kwh appeared to be breaking the page
+			// and did not seem to be used.
+			// $physicians = new CMS_Physician();
+			// $pNames = $physicians->getPhysicians();
+
 			smarty()->assign("facility", $facility);
-			smarty()->assign("pNames", $pNames);
+			// smarty()->assign("pNames", $pNames);
 			smarty()->assignByRef("schedule", $schedule);
 			smarty()->assignByRef("patient", $patient);
 			smarty()->assign("mode", input()->mode);
