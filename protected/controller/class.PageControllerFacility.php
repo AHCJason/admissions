@@ -1419,8 +1419,12 @@ elseif(input()->affirm == 'discharged_home') {
 			} 
 			
 			if ($discharge_to == "In-Patient Hospice") {
-				feedback()->error("You must enter a discharge facility name.");
-				$this->redirect(SITE_URL . "/?page=facility&action=discharge_details&schedule={$schedule->pubid}");
+				if (input()->discharge_location_id == '') {
+					feedback()->error("You must enter a discharge facility name.");
+					$this->redirect(SITE_URL . "/?page=facility&action=discharge_details&schedule={$schedule->pubid}");
+				} else {
+					$schedule->discharge_location_id = input()->discharge_location_id;
+				}
 			}
 			
 		}
