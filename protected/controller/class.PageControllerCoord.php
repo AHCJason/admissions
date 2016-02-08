@@ -52,6 +52,7 @@ class PageControllerCoord extends PageController {
 			$completedAdmits = array();
 		}
 		
+		
 		// split them up by facility
 		$completedAdmitsByFacilityAndDate = array();
 		$pendingAdmitsByFacilityAndDate = array();
