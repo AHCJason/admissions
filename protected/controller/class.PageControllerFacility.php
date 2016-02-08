@@ -1897,7 +1897,6 @@ elseif(input()->affirm == 'discharged_home') {
 		} else {
 			$type = input()->type;
 		}
-
 		if ($facility->short_term) {  // if a facility only offers short term show empty and full rooms
 			if ($type == 'all') {	
 				$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);

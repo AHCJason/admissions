@@ -77,7 +77,7 @@
 		
 			<div id="user-info">
 			
-				Welcome, <a href="{$SITE_URL}?page=userInfo">{$auth->getRecord()->getFullName()}</a>{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>
+				Welcome, {$auth->getRecord()->getFullName()}{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>
 			
 			</div>
 			
@@ -97,6 +97,7 @@
 									<li><a href="{$HOMEHEALTH_URL}?page=users&amp;action=manage">Users</a></li>
 								{/if}
 								<li><a href="{$SITE_URL}?page=patient&amp;action=upload">Upload Patients</a></li>
+								<li><a href="{$HOMEHEALTH_URL}/?page=users&amp;action=my_info">My Account</a></li>
 							</ul>
 						</li>	
 					<li><a href="#">Facility Info</a>
@@ -156,7 +157,6 @@
 	{/if}
 
 	<div id="content">
-	
 		<div class="right" style="margin-top: -12px;">{if $isTV == 1}<a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{/if}</div>
 	
 		{include file="_feedback.tpl"}

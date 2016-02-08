@@ -32,7 +32,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set urls
 		$ENGINE_URL = "https://local.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://local.aptitudecare.com/admission/";
-		$HOMEHEALTH_URL = "https://local.aptitudecare.com/";
+		$HOMEHEALTH_URL = "https://local.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
 	} 
@@ -53,7 +53,7 @@ if ($directory == 'Sites') { // then this is a local directory
 	// set urls --- will use the site_name in the url
 	$ENGINE_URL = "https://{$site_name}-local.aptitudecare.com/cms2-public";
 	$SITE_URL = "https://{$site_name}-local.aptitudecare.com/admission/";
-	$HOMEHEALTH_URL = "https://{$site_name}-local.aptitudecare.com/";
+	$HOMEHEALTH_URL = "https://{$site_name}-local.aptitudecare.com";
 	$SECURE_CDN_URL = $SITE_URL;
 	define('DEVELOPMENT', true);
 
@@ -73,7 +73,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set urls
 		$ENGINE_URL = "https://dev.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://dev.aptitudecare.com/admission/";
-		$HOMEHEALTH_URL = "https://dev.aptitudecare.com/";
+		$HOMEHEALTH_URL = "https://dev.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
 	} else { // this is the remote demo site
@@ -90,7 +90,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set urls
 		$ENGINE_URL = "https://demo.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://demo.aptitudecare.com/admission/";
-		$HOMEHEALTH_URL = "https://demo.aptitudecare.com/";
+		$HOMEHEALTH_URL = "https://demo.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEMO', true);
 	}
@@ -114,7 +114,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set urls
 		$ENGINE_URL = "https://{$directory}-dev.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://{$directory}-dev.aptitudecare.com/admission/";
-		$HOMEHEALTH_URL = "https://{$directory}-dev.aptitudecare.com/";
+		$HOMEHEALTH_URL = "https://{$directory}-dev.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', true);
 	
@@ -133,7 +133,7 @@ if ($directory == 'Sites') { // then this is a local directory
 		// set urls
 		$ENGINE_URL = "https://{$directory}.aptitudecare.com/cms2-public";
 		$SITE_URL = "https://{$directory}.aptitudecare.com/admission/";
-		$HOMEHEALTH_URL = "https://{$directory}.aptitudecare.com/";
+		$HOMEHEALTH_URL = "https://{$directory}.aptitudecare.com";
 		$SECURE_CDN_URL = $SITE_URL;
 		define('DEVELOPMENT', false);
 		define('PRODUCTION', true);
