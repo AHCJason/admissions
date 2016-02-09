@@ -1419,8 +1419,12 @@ elseif(input()->affirm == 'discharged_home') {
 			} 
 			
 			if ($discharge_to == "In-Patient Hospice") {
-				feedback()->error("You must enter a discharge facility name.");
-				$this->redirect(SITE_URL . "/?page=facility&action=discharge_details&schedule={$schedule->pubid}");
+				if (input()->discharge_location_id == '') {
+					feedback()->error("You must enter a discharge facility name.");
+					$this->redirect(SITE_URL . "/?page=facility&action=discharge_details&schedule={$schedule->pubid}");
+				} else {
+					$schedule->discharge_location_id = input()->discharge_location_id;
+				}
 			}
 			
 		}
@@ -1893,7 +1897,6 @@ elseif(input()->affirm == 'discharged_home') {
 		} else {
 			$type = input()->type;
 		}
-
 		if ($facility->short_term) {  // if a facility only offers short term show empty and full rooms
 			if ($type == 'all') {	
 				$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
@@ -1918,15 +1921,12 @@ elseif(input()->affirm == 'discharged_home') {
 				// fetch only rooms that have long term patients
 				$patients = CMS_Room::fetchRooms($facility->id, $datetime, $type);
 			}
-			
 			$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
 			$rooms = CMS_Room::mergeFetchedRooms($empty, $patients);
 			$assignedRooms = count($patients);
 			$emptyRooms = count($empty);
 			smarty()->assignByRef("empty", $empty);
-
 		}
-		
 					
 		// get total number of rooms for the facility
 		$totalRooms = CMS_Room::fetchRoomCount($facility->id);
@@ -1934,7 +1934,7 @@ elseif(input()->affirm == 'discharged_home') {
 		foreach ($totalRooms as $roomCount) {
 			$numOfRooms = $roomCount->roomCount;
 		}
-		
+
 		// get total number of patients on census per physician
 		$physicians = array();
 		foreach ($rooms as $room) {
@@ -1958,7 +1958,6 @@ elseif(input()->affirm == 'discharged_home') {
 		
 		
 		$census = CMS_Census_Data_Month::fetchCurrentCensus($facility->id);
-		
 		
 		$adc = $census[0]->adc;
 		$adcGoal = $census[0]->goal;

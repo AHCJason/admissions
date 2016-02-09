@@ -184,7 +184,7 @@
 						{$physician->load($pending->getPatient()->physician_id)}
 					{/if}
 					
-					<div class="patient-box drag {if $pending->notes_file0}admit-pending{else}admit-pending-no-referral{/if}" draggable="true">
+					<div class="patient-box drag {if $pending->referral}admit-pending{else}admit-pending-no-referral{/if}" draggable="true">
 						{conflictAlert schedule=$pending}				
 						<span class="admit-name">Room {$pending->getRoomNumber()}<br />
 							{foreach $onsite as $o}
