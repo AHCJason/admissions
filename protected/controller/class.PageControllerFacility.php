@@ -1897,7 +1897,6 @@ elseif(input()->affirm == 'discharged_home') {
 		} else {
 			$type = input()->type;
 		}
-
 		if ($facility->short_term) {  // if a facility only offers short term show empty and full rooms
 			if ($type == 'all') {	
 				$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
@@ -1922,15 +1921,12 @@ elseif(input()->affirm == 'discharged_home') {
 				// fetch only rooms that have long term patients
 				$patients = CMS_Room::fetchRooms($facility->id, $datetime, $type);
 			}
-			
 			$empty = CMS_Room::fetchEmptyByFacility($facility->id, $datetime);
 			$rooms = CMS_Room::mergeFetchedRooms($empty, $patients);
 			$assignedRooms = count($patients);
 			$emptyRooms = count($empty);
 			smarty()->assignByRef("empty", $empty);
-
 		}
-		
 					
 		// get total number of rooms for the facility
 		$totalRooms = CMS_Room::fetchRoomCount($facility->id);

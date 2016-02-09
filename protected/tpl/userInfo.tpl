@@ -1,8 +1,5 @@
 {setTitle title="Account Information"}
-<h2>Account Information</h2>
-<br /><br />
-Update your user information below.<br />
-<br />
+<h2 class="text-center">Account Information</h2>
 
 <form method="post" action="{$SITE_URL}">
 <input type="hidden" name="page" value="userInfo" />
