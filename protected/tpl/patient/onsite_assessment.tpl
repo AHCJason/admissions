@@ -36,7 +36,8 @@ $("#disposition").change(function() {
 {$options = [
 	"admitting" => "Agreeable to admission",
 	"other_location" => "Discharging to another facility",
-	"home" => "Discharging home"
+	"home" => "Discharging home",
+	"other" => "Other"
 ]}
 
 <div class="on-site">
