@@ -538,7 +538,7 @@ class CMS_Schedule extends CMS_Table {
 		}
 
 		
-		$sql = "SELECT patient_admit.id, patient_admit.last_name, patient_admit.first_name, room.number, hospital.name AS hospital_name, physician.last_name AS physician_last, physician.first_name AS physician_first, surgeon.last_name AS surgeon_last, surgeon.first_name AS surgeon_first, schedule.datetime_admit, case_manager.last_name AS cm_last, case_manager.first_name AS cm_first FROM patient_admit LEFT JOIN hospital ON patient_admit.hospital_id=hospital.id LEFT JOIN physician ON patient_admit.physician_id=physician.id LEFT JOIN physician AS surgeon ON patient_admit.ortho_id = surgeon.id INNER JOIN schedule ON patient_admit.id = schedule.patient_admit INNER JOIN room ON schedule.room=room.id LEFT JOIN case_manager on case_manager.id = patient_admit.case_manager_id WHERE schedule.datetime_admit >= :date_start AND schedule.datetime_admit <= :date_end AND schedule.facility = :facility_id AND (schedule.status = 'Approved' OR schedule.status = 'Discharged')";
+		$sql = "SELECT patient_admit.id, patient_admit.last_name, patient_admit.first_name, pcp.last_name AS pcp_last, pcp.first_name AS pcp_first, room.number, hospital.name AS hospital_name, physician.last_name AS physician_last, physician.first_name AS physician_first, surgeon.last_name AS surgeon_last, surgeon.first_name AS surgeon_first, schedule.datetime_admit, case_manager.last_name AS cm_last, case_manager.first_name AS cm_first FROM patient_admit LEFT JOIN hospital ON patient_admit.hospital_id=hospital.id LEFT JOIN physician AS pcp ON patient_admit.doctor_id = pcp.id LEFT JOIN physician ON patient_admit.physician_id=physician.id LEFT JOIN physician AS surgeon ON patient_admit.ortho_id = surgeon.id INNER JOIN schedule ON patient_admit.id = schedule.patient_admit INNER JOIN room ON schedule.room=room.id LEFT JOIN case_manager on case_manager.id = patient_admit.case_manager_id WHERE schedule.datetime_admit >= :date_start AND schedule.datetime_admit <= :date_end AND schedule.facility = :facility_id AND (schedule.status = 'Approved' OR schedule.status = 'Discharged')";
 		
 		if ($filterby) {
 			if ($viewby) {
@@ -548,6 +548,8 @@ class CMS_Schedule extends CMS_Table {
 					$sql .= " AND surgeon.id = :viewby";
 				} elseif ($filterby == "case_manager") {
 					$sql .= " AND case_manager.id = :viewby";
+				} elseif ($filterby == "pcp") {
+					$sql .= " AND pcp.id = :viewby";
 				} elseif ($filterby == "physician") {
 					$sql .= " AND physician.id = :viewby";
 				} elseif ($filterby == "zip_code") {
@@ -562,6 +564,10 @@ class CMS_Schedule extends CMS_Table {
 				
 				if ($filterby == "physician") {
 					$sql .= " ORDER BY physician.last_name ASC";
+				}
+
+				if ($filterby == "pcp") {
+					$sql .= " ORDER BY pcp.last_name ASC";
 				}
 				
 				if ($filterby == "case_manager") {
@@ -589,7 +595,7 @@ class CMS_Schedule extends CMS_Table {
 		} elseif ($orderby == 'case_manager') {
 			$sql.= " order by case_manager.last_name asc";
 		}
-				
+		
 		$obj = static::generate();
 		return $obj->fetchCustom($sql, $params);		
 	}
@@ -679,6 +685,8 @@ class CMS_Schedule extends CMS_Table {
 		} else {
 			if ($filterby == "surgeon") {
 				$filterby = "ortho";
+			} elseif ($filterby == "pcp") {
+				$filterby = "doctor";
 			}
 			$sql .= " LEFT JOIN physician ON patient_admit.{$filterby}_id = physician.id";
 		} 

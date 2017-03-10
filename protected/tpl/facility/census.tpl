@@ -127,8 +127,9 @@
 		<th>&nbsp;</th>
 		<th>Date of Birth</th>
 		<th>Admission<br />Date</th>
-		<th>Scheduled<br />Discharge Date</th>
-		<th>&nbsp;</th>
+		{* <th>Scheduled<br />Discharge Date</th> *}
+{* 		<th>&nbsp;</th>
+ *}		<th>PCP</th>
 		<th>Attending<br />Physician</th>
 		<th>Surgeon/Specialist</th>
 	</tr>
@@ -151,7 +152,7 @@
 			<td style="text-align: left; width: 37px;">{scheduleMenu schedule=$occupantSchedule}</td>
 			<td>{$occupant->birthday|date_format: "%m/%d/%Y"}</td>
 			<td>{$room->datetime_admit|date_format: "%m/%d/%Y"}</td>
-			<td class="discharge-datetime">{if $room->datetime_discharge_bedhold_end != ''}
+{* 			<td class="discharge-datetime">{if $room->datetime_discharge_bedhold_end != ''}
 				Hold until<br />{$room->datetime_discharge_bedhold_end|date_format: "%m/%d/%Y %I:%M %P"}
 				{elseif $room->datetime_sent != '' && $room->is_complete == 0 && $room->datetime_discharge == ''}
 				Sent on:<br />
@@ -161,7 +162,15 @@
 				{/if}
 			</td>
 			<td><input type="hidden" name="schedule" class="schedule-datetime" rel="{$occupantSchedule->pubid}" value="{datetimepickerformat($occupantSchedule->datetime_discharge)}" /></td>
-			{if $occupant->physician_id != ''}
+
+ *}			{if $occupant->doctor_id != ''}
+ 			{$pcp = CMS_Physician::generate()}
+ 			{$pcp->load($occupant->doctor_id)}
+			<td>{$pcp->last_name}, {$pcp->first_name}</td>
+			{else}
+			<td>&nbsp;</td>
+			{/if}
+ 			{if $occupant->physician_id != ''}
 			{$physician = CMS_Physician::generate()}
 			{$physician->load($occupant->physician_id)}
 			<td>{$physician->last_name}, {$physician->first_name}</td>
@@ -182,7 +191,7 @@
 			{foreach $emptyDate as $d}	
 			
 				<td>{$room->number}</td>
-				<td style="text-align: left;" colspan="2"></td>
+				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>

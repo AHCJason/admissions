@@ -36,6 +36,7 @@
 		<th>Patient Name</th>
 		<th>Admit Date</th>
 		<th width="150px">Hospital</th>
+		<th>PCP</th>
 		<th>Attending Physician</th>
 		<th>Specialist/Surgeon</th>
 		<th>Case Manager</th>
@@ -47,6 +48,7 @@
 		<td>{$a->last_name}, {$a->first_name}</td>
 		<td>{$a->datetime_admit|date_format:"%m/%d/%Y"}</td>
 		<td>{$a->hospital_name}</td>
+		<td>{if $a->pcp_last != ''}{$a->pcp_last}, {$a->pcp_first} M.D.{else}&nbsp;{/if}</td>
 		<td>{if $a->physician_last != ''}{$a->physician_last}, {$a->physician_first} M.D.{else}</td>{/if}</td>
 		<td>{if $a->surgeon_last != ''}{$a->surgeon_last}, {$a->surgeon_first} M.D.{else}</td>{/if}</td>
 
