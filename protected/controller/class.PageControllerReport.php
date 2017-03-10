@@ -147,6 +147,7 @@ class PageControllerReport extends PageController {
 		
 		$filterByOpts = array(
 			'hospital' => 'Hospital',
+			'pcp' => 'Primary Care Physician',
 			'physician' => 'Attending Physician',
 			'surgeon' => 'Orthopedic Surgeon/Specialist',
 			'case_manager' => 'Case Manager',
@@ -192,14 +193,12 @@ class PageControllerReport extends PageController {
 		} else {
 			$_viewby = '';
 		}
+
 		$obj = CMS_Schedule::generate();
-			
-																			
-				
+							
 		// get admissions for selected time period
 		$admits = $obj->fetchAdmitsByFacility($_dateStart, $_dateEnd, $_facility, $_filterby, $_viewby);
 		
-						
 		$totalAdmitsByView = count($admits);	
 			
 		$totalAdmits = $obj->fetchAdmitsByFacility($_dateStart, $_dateEnd, $_facility);
@@ -229,7 +228,6 @@ class PageControllerReport extends PageController {
 				$c = 0;				
 				$summaryReport = array();
 								
-				
 				while ($c < count($filterData)) {
 					foreach ($filterData as $data) {
 						$_data_id = $data->id;
@@ -237,7 +235,7 @@ class PageControllerReport extends PageController {
 						$obj = CMS_Patient_Admit::generate();
 						
 						$numberOfAdmits = $obj->summaryReport($_dateStart, $_dateEnd, $_facility, $_data_id, $_filterby);
-																			
+
 						foreach ($numberOfAdmits as $n) {
 							$summaryReport[$c]['numberOfAdmits'] = $n->num_admits;
 							if ($_filterby == "hospital") {
@@ -256,7 +254,9 @@ class PageControllerReport extends PageController {
 					}
 					
 				}	
+
 				rsort($summaryReport);
+
 							
 				if ($_filterby == 'hospital') {
 					$this->setView('report/admission', 'hospital');
@@ -264,6 +264,8 @@ class PageControllerReport extends PageController {
 					$this->setView('report/admission/', 'surgeon');
 				} elseif ($_filterby == 'physician') {
 					$this->setView('report/admission/', 'physician');
+				} elseif ($_filterby == 'pcp') {
+					$this->setView('report/admission/', 'pcp');
 				} elseif ($_filterby == 'case_manager') {
 					$this->setView('report/admission/', 'case_manager');
 				}

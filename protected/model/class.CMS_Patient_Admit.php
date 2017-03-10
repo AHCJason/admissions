@@ -515,6 +515,9 @@ class CMS_Patient_Admit extends CMS_Table {
 		if ($filterby == "surgeon") {
 			$filterby = "ortho";
 		}
+		if ($filterby == "pcp") {
+			$filterby = "doctor";
+		}
 								
 		$sql = "SELECT count(patient_admit.id) AS num_admits,";
 		
