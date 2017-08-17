@@ -39,11 +39,11 @@ $("#facility").change(function(e) {
 
 <div id="week-nav">
 
-	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;facility={$facility->public_id}&amp;weekSeed={$prevWeekSeed}"><img src="{$SITE_URL}/images/icons/prev-icon.png" /> Previous Week</a>
+	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;facility={$facility->pubid}&amp;weekSeed={$prevWeekSeed}"><img src="{$SITE_URL}/images/icons/prev-icon.png" /> Previous Week</a>
 
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;facility={$facility->public_id}&amp;weekSeed={$nextWeekSeed}">Next Week <img src="{$SITE_URL}/images/icons/next-icon.png" /></a>
+	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;facility={$facility->pubid}&amp;weekSeed={$nextWeekSeed}">Next Week <img src="{$SITE_URL}/images/icons/next-icon.png" /></a>
 
 </div>
 
