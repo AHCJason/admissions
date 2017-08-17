@@ -30,7 +30,7 @@ $("#facility").change(function(e) {
 			{if $c@iteration is div by 5}
 			</tr>
 			<tr>
-			{/if}				
+			{/if}
 		{/if}
 	{/foreach}
 		</tr>
@@ -39,12 +39,12 @@ $("#facility").change(function(e) {
 
 <div id="week-nav">
 
-	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;weekSeed={$prevWeekSeed}"><img src="{$SITE_URL}/images/icons/prev-icon.png" /> Previous Week</a> 
-	
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-	
-	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;weekSeed={$nextWeekSeed}">Next Week <img src="{$SITE_URL}/images/icons/next-icon.png" /></a>
-	
+	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;facility={$facility->public_id}&amp;weekSeed={$prevWeekSeed}"><img src="{$SITE_URL}/images/icons/prev-icon.png" /> Previous Week</a>
+
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+	<a href="{$SITE_URL}/?page=facility&amp;action=schedule_discharges&amp;facility={$facility->public_id}&amp;weekSeed={$nextWeekSeed}">Next Week <img src="{$SITE_URL}/images/icons/next-icon.png" /></a>
+
 </div>
 
 <div id="discharge-calendar">
@@ -64,5 +64,5 @@ $("#facility").change(function(e) {
 			<div class="clear"></div>
 		</div>
 	{/foreach}
-			
+
 </div>
