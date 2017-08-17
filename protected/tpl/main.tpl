@@ -74,19 +74,17 @@
 		{if $auth->valid()}
 		{$defaultFacility = $auth->getRecord()->getDefaultFacility()}
 		<div id="header">
-		
+
 			<div id="user-info">
-			
-				Welcome, {$auth->getRecord()->getFullName()}{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>
-			
+				Welcome, <a href="{$HOMEHEALTH_URL}?page=users&amp;action=user&amp;type=edit&amp;id={$auth->getRecord()->pubid}">{$auth->getRecord()->getFullName()}</a>{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>			
 			</div>
-			
+
 			<img src="{$SITE_URL}images/{$logo}" alt="AptitudeCare Logo" class="logo" />
-						
+
 			<div id="nav">
-			
+
 				<ul>
-					
+
 						<li><a href="#">Data</a>
 							<ul>
 								<li><a href="{$SITE_URL}?page=caseManager&amp;action=manage">Case Managers</a></li>
@@ -99,7 +97,7 @@
 								<li><a href="{$SITE_URL}?page=patient&amp;action=upload">Upload Patients</a></li>
 								<li><a href="{$HOMEHEALTH_URL}/?page=users&amp;action=my_info">My Account</a></li>
 							</ul>
-						</li>	
+						</li>
 					<li><a href="#">Facility Info</a>
 						<ul>
 							<li><a href="{$SITE_URL}?page=facility&amp;action=census&amp;facility={$facility->pubid}">Census</a></li>
@@ -112,7 +110,7 @@
 							<li><a href="{$SITE_URL}?page=facility&amp;action=manage_discharges">Manage Discharges</a></li>
 							<li><a href="{$SITE_URL}?page=coord&amp;action=trackHospitalVisits&amp;facility={$facility->pubid}">Return to Hospital</a></li>
 						</ul>
-					</li>		
+					</li>
 					<li><a href="#">Admissions</a>
 						<ul>
 							<li><a href="{$SITE_URL}?page=coord&amp;action=admit">New Admit Request</a></li>
@@ -120,9 +118,9 @@
 							{if $auth->getRecord()->id == 8 || $auth->getRecord()->id == 9}
 								<li><a href="{$SITE_URL}?page=coord&amp;action=pending_transfers">Pending Transfers</a></li>
 							{/if}
-				
+
 						</ul>
-					</li>	
+					</li>
 					<li id="facility-dashboard"><a href="{$SITE_URL}?page=facility&amp;id={$defaultFacility->pubid}">{$defaultFacility->name} Dashboard</a>
 						{if !empty ($myFacilities)}
 						<ul id="facility-dashboard-dropdown">
@@ -135,32 +133,32 @@
 
 					{if $auth->getRecord()->isAdmissionsCoordinator() == 1}<li><a href="{$SITE_URL}?page=coord">Home</a></li>{/if}
 				</ul>
-			
+
 			</div>
-		
+
 		</div>
-		
+
 	</div>
 	{else}
 		<div id="header">
-		
+
 			<div id="user-info">
-			
-				<a href="{$SITE_URL}?page=login">Login</a>			
+
+				<a href="{$SITE_URL}?page=login">Login</a>
 			</div>
-	
+
 			<img src="{$SITE_URL}images/{$logo}" alt="AptitudeCare Logo" class="logo" />
-					
+
 		</div>
-		
+
 	</div>
 	{/if}
 
 	<div id="content">
 		<div class="right" style="margin-top: -12px;">{if $isTV == 1}<a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{/if}</div>
-	
+
 		{include file="_feedback.tpl"}
-		
+
 		{include file="$content_tpl"}
 
 		<div style="display:  none;">
@@ -170,7 +168,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="timeout-warning">
 	    <p>Your session is about to timeout.  You will be automatically logged out in 1 minute. To remain logged in click the button below.</p>
 	</div>
