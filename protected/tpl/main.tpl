@@ -76,8 +76,8 @@
 		<div id="header">
 		
 			<div id="user-info">
-			
-				Welcome, <a href="{$SITE_URL}?page=userInfo">{$auth->getRecord()->getFullName()}</a>{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>
+				
+				Welcome, <a href="{$HOMEHEALTH_URL}?page=users&amp;action=user&amp;type=edit&amp;id={$auth->getRecord()->pubid}">{$auth->getRecord()->getFullName()}</a>{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>
 			
 			</div>
 			

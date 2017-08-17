@@ -116,7 +116,7 @@ $("#discharge-disposition").change(function(e) {
 
 <!-- Service Disposition -->
 $("#service-disposition").change(function() {
-	if ($("#service option:selected").val() == "Home Health") {
+	if ($("#service option:selected").val() == "Other Home Health") {
 		$("#home-health-org").show();
 	} else {
 		$("#home-health-org").hide();

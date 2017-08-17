@@ -2014,9 +2014,9 @@ elseif(input()->affirm == 'discharged_home') {
 		$date_start = date('Y-m-d 00:00:01', strtotime('first day of this month'));	 
 	 	$date_end = date('Y-m-d 23:59:59', strtotime('now'));
 				 
-		 
-		 $obj = new CMS_Schedule();
-		 $discharges = $obj->fetchLosDischarges($date_start, $date_end, $facility->id, "Medicare");		 
+		$obj = new CMS_Schedule();
+		$discharges = $obj->fetchLosDischarges($date_start, $date_end, $facility->id, "Medicare");		 
+		
 		 
 		$lengthByPatient = array();
 		foreach ($discharges as $k => $d) {
