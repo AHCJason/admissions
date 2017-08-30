@@ -184,7 +184,7 @@ $(window).load(function() {
 					
 					
 					<!-- !ABQ specific functionality -->
-					{if $facility->id == 4}
+					{if $facility->id == 4 || $facility->id == 23}
 						{if ($admit->datetime_pickup != '')}
 							Pickup: {$admit->datetime_pickup}<br />
 						{/if}
