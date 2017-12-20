@@ -19,8 +19,8 @@ $("#alt-week").datepicker({
 		var protocol = pathArray[0];
 		var host = pathArray[2];
 		var redirectUrl = protocol + '//' + host;
-
-		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val();
+		var selMod = $('#module option:selected').val();
+		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val() + "&module=" + selMod;
 
 	});
 
@@ -66,8 +66,10 @@ $(window).load(function() {
 <div id="change-module">
 	Module:
 	<select name="module" id="module">
-		<option value="admission">Admission</option>
-		<option value="home_health">Home Health</option>
+		<option value="Admission">Admission</option>
+		<option value="HomeHealth">Home Health</option>
+		<option value="Dietary">Dietary</option>
+		<option value="Activities">Activities</option>
 	</select>
 	<input type="hidden" id="username" value="{$auth->getRecord()->email}" />
 	<input type="hidden" id="user-id" value="{$auth->getRecord()->pubid}" />
