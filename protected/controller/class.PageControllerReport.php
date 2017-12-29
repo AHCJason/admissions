@@ -271,7 +271,7 @@ class PageControllerReport extends PageController {
 				}
 			}
 
-		}
+		} 
 						
 		smarty()->assign("summaryReport", $summaryReport);
 		smarty()->assign("orderby", $_orderby);
@@ -315,18 +315,18 @@ class PageControllerReport extends PageController {
 				
 			} else {
 				foreach ($admits as $a) {
-					$dataSet[0] = array('Room #', 'Patient Name', 'Admit Date', 'Hospital', 'Attending Physician', 'Specialist/Surgeon');
+					$dataSet[0] = array('Room #', 'Patient Name', 'Admit Date', 'Hospital', 'Attending Physician', 'Specialist/Surgeon', 'Case Manager');
 					$dataSet[] = array(
 						$a->number,
 						$a->last_name . ', ' . $a->first_name,
 						date ('m/d/Y', strtotime($a->datetime_admit)),
 						$a->hospital_name,
 						$a->physician_first . ' ' . $a->physician_last,
-						$a->surgeon_first . ' ' . $a->surgeon_last
+						$a->surgeon_first . ' ' . $a->surgeon_last,
+						$a->cm_first . ' ' . $a->cm_last
 					);
 				}
 			}
-																		
 			$this->export($facility, 'Admission Report', $dataSet);
 		}
 		
