@@ -27,17 +27,12 @@ require_once ENGINE_PROTECTED_PATH . "/engine_load.php";
 require_once APP_PROTECTED_PATH . "/lib/common.php";
 
 
-
-
 /*
  * Establish a database connection
  *
  */
  
 require_once APP_PROTECTED_PATH . "/config/database.php";
-
-
-
 
 
 

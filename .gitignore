@@ -5,3 +5,4 @@ nossl-redir/index.php
 protected/config/database.php
 protected/script/class.NightlyBackup.php
 protected/assets/*
+cms2
