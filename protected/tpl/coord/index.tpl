@@ -36,7 +36,6 @@
 		var protocol = pathArray[0];
 		var host = pathArray[2];
 		var redirectUrl = protocol + '//' + host;
-
 		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val();
 
 	});

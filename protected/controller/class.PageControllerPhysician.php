@@ -51,7 +51,6 @@ class PageControllerPhysician extends PageController {
 				$params[":state"] = input()->state;
 				$sql .= " AND physician.state = :state";
 			}
-						
 			$results = db()->getRowsCustom($sql, $params);
 		} else {
 			$results = array();
