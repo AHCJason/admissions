@@ -353,6 +353,9 @@ class CMS_Patient_Admit extends CMS_Table {
 			if ($this->final_orders == 0) { 
 				$msg[] = " Final orders have not been received";
 			}
+			if ($this->three_night_verification == 0) {
+				$msg[] = "The patient has not had a 3 night qualifing stay verified";
+			}
 		}
 		
 		if (count($msg) > 0) {
