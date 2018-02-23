@@ -868,11 +868,15 @@ class PageControllerPatient extends PageController {
 				feedback()->error("Invalid patient/admit record requested.");
 				$this->redirect(SITE_URL . "/?page=coord");
 			}
-			// Get list of physician names
-			// commented out on 2015-08-11 by kwh appeared to be breaking the page
-			// and did not seem to be used.
-			// $physicians = new CMS_Physician();
-			// $pNames = $physicians->getPhysicians();
+
+			// if the 3 day stay has been verified get the name of the user who did the verification
+			if ($patient->three_night_verification) {
+				$verified_by = new CMS_Site_User($patient->three_night_verified_by);
+			} else {
+				$verified_by = '';
+			}
+
+			smarty()->assign('verified_by', $verified_by);
 
 			smarty()->assign("facility", $facility);
 			// smarty()->assign("pNames", $pNames);
@@ -1249,6 +1253,16 @@ class PageControllerPatient extends PageController {
 		
 		// Three night hospital stay
 		$obj->three_night = (input()->three_night == 1) ? 1 : 0;
+
+		if (input()->three_night == 0) {
+			$obj->three_night = 0;
+			feedback()->error("The patient has not had a qualifing 3 night stay.");
+		} elseif (input()->three_night == 1) {
+			$obj->three_night = 1;
+		} else {
+			$obj->three_night = 0;
+			feedback()->error("The patient has not had a qualifing 3 night stay.");
+		}
 		
 		
 
@@ -1262,6 +1276,7 @@ class PageControllerPatient extends PageController {
 		// X-Rays received (these are not required in states other than AZ - KWH)
 		if ($schedule->getFacility()->state == 'AZ') {
 			if (input()->x_rays_received == '0') {
+				$obj->x_rays_received = 0;
 				feedback()->error("Chest X-Rays have not been received.");
 			} else {
 				$obj->x_rays_received = input()->x_rays_received;
@@ -1333,6 +1348,14 @@ class PageControllerPatient extends PageController {
 		$schedule->confirmed = input()->confirmed;
 		$schedule->datetime_confirmed = date('Y-m-d H:i', strtotime("now"));
 		$schedule->site_user_confirmed = auth()->getRecord()->id;
+
+		if (input()->three_night_verification == 1) {
+			$obj->three_night_verification = 1;
+			$obj->three_night_verified_by = auth()->getRecord()->pubid;
+		} else {
+			$obj->three_night_verification = 0;
+			$obj->three_night_verified_by = null;
+		}
 		
 		// Final Orders (moved by KWH per request)
 		if (input()->final_orders == 1) {
