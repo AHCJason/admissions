@@ -337,6 +337,10 @@ class CMS_Patient_Admit extends CMS_Table {
 		if ($this->paymethod == 'Medicare' && $this->three_night == 0) {
 			$msg[] = " Medicare patients must complete a 3-night minimum hospital stay"; 
 		}
+
+		if ($this->paymethod == 'Medicare' && $this->three_night_verification == 0) {
+			$msg[] = "The patient has not had a 3 night qualifing stay verified";
+		}
 				
 		// We need chest x-rays from AZ facilities
 		// $schedule = CMS_Schedule::
@@ -352,9 +356,6 @@ class CMS_Patient_Admit extends CMS_Table {
 		if ($facility != 4) { // Remove this requirement for Albuquerque. 2013-03-06 by kwh
 			if ($this->final_orders == 0) { 
 				$msg[] = " Final orders have not been received";
-			}
-			if ($this->three_night_verification == 0) {
-				$msg[] = "The patient has not had a 3 night qualifing stay verified";
 			}
 		}
 		
