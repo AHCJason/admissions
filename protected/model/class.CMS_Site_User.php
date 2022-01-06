@@ -60,10 +60,32 @@ class CMS_Site_User extends CMS_Table {
 		}
 	}
 	
-	public function getFacilities() {
-		if (! isset($this->_facilities) ) {
-			$this->_facilities = $this->related("facility");
+	public function getFacilities($sortAlfa = true) {
+		if (! isset($this->_facilities)) {
+			//DB adds introduce duplicates
+			//$this->_facilities = $this->related("facility");
+			
+			//let's go remove the duplicates from the DB.
+			$this->_facilities = array();
+			$toParse = $this->related("facility");
+			$alreadyInc = [""];
+			
+			foreach($toParse as &$val)
+			{
+				if(!in_array($val->pubid, $alreadyInc))
+				{
+					array_push($this->_facilities, $val);
+					$alreadyInc[] = $val->pubid;
+				}
+			}
+			//It's cached in the session so one alpha sort sticks so make it default.
+			if($sortAlfa) {
+				usort($this->_facilities, function($a, $b) {
+					return strcmp($a->getTitle(), $b->getTitle());
+				});
+			}
 		}
+
 		return $this->_facilities;
 	}
 	

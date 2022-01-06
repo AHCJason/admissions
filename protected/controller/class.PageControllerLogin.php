@@ -64,20 +64,21 @@ class PageControllerLogin extends PageController {
 	}
 
 	public function single_sign_on() {
-		// $user = $_SESSION["AptitudeCare"]["authentication_record"];
-		$user = input()->user;
-		
+		$user = $_SESSION["AptitudeCare"]["authentication_record"];
 		if ($user != "") {
 			$user = new CMS_Site_User($user);
 		} 
+
+
+
 		if (!empty ($user)) {
 			auth()->login($user->email, $user->password, true);
 		}
-
 		if (auth()->valid()) {
 			if (input()->path == '') {
 				$this->redirect(auth()->getRecord()->homeURL());
 			} else {
+				echo "goodbye"; die();
 				$this->redirect(urldecode(input()->path));
 			}
 		} else {

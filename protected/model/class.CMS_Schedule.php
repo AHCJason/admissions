@@ -10,7 +10,7 @@ class CMS_Schedule extends CMS_Table {
 	protected $_physician = false;
 	protected $_surgeon = false;
 	
-	public function save() {
+	public function save($validate = false) {
 		// make a copy of the pre-save state straight from the db
 		$schedule_before = new CMS_Schedule($this->id);
 		
@@ -283,7 +283,7 @@ class CMS_Schedule extends CMS_Table {
 	
 	public static function fetchAdmits($dateStart = false, $dateEnd = false, $status = false, $facilities = false, $orderby = false) {
 		
-		
+		$sql = '';
 		if ($facilities != false) {
 			$sql .= "select `schedule`.*, `patient_admit`.`hospital_id`, `patient_admit`.`admit_from`, `patient_admit`.`case_manager_id`, `patient_admit`.`datetime_pickup`, `patient_admit`.`other_diagnosis`, `patient_admit`.`paymethod`, `facility`.`name` as `facility_name`, `patient_admit`.`referral`,  `patient_admit`.`notes_file0` from `schedule` inner join `facility` on `schedule`.`facility`=`facility`.`id` inner join `patient_admit` on `patient_admit`.`id`=`schedule`.`patient_admit`";
 		} else {
@@ -389,7 +389,7 @@ class CMS_Schedule extends CMS_Table {
 			$sql .= " and (";
 			foreach ($facilities as $idx => $f) {
 				$sql .= " `schedule`.facility=:facility{$idx} OR";
-				$params[":facility{$idx}"] = $f->id;
+				$params[":facility{$idx}"] = @$f->id;
 			}
 			$sql = rtrim($sql, " OR");
 			$sql .= ")";

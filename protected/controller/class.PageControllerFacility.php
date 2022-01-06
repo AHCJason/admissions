@@ -8,6 +8,39 @@ class PageControllerFacility extends PageController {
 	public function index() {
 		// make sure the signed-in user is either a coordinator or has access to this facility
 		$facility = new CMS_Facility(input()->id);
+		
+		// my facilities
+		$_facilities = auth()->getRecord()->getFacilities();
+		
+		//GetNextFacility
+		$nextFacility = null;
+		foreach($_facilities as $key => $facil)
+		{
+			if($facil->pubid == $facility->pubid)
+			{
+				if(isset($_facilities[$key+1]))
+				{
+					$nextFacility = $_facilities[$key+1]->pubid;
+				}
+			}
+		}
+		smarty()->assignByRef("nextFacility", $nextFacility);
+		
+		//GetPrevFacility
+		$prevFacility = null;
+		foreach($_facilities as $key => $facil)
+		{
+			if($facil->pubid == $facility->pubid)
+			{
+				if(isset($_facilities[$key-1]))
+				{
+					$prevFacility = $_facilities[$key-1]->pubid;
+				}
+			}
+		}
+		smarty()->assignByRef("prevFacility", $prevFacility);
+		
+		
 		if ($facility->valid() == false) {
 			// invalid facility specified
 			feedback()->error("Cannot access facility record.");
@@ -401,8 +434,8 @@ class PageControllerFacility extends PageController {
 		
 				
 		foreach ($week as $day) {
-			$admits = $admitsByDate[$day];
-			$discharges = $dischargesByDate[$day];
+			@$admits = $admitsByDate[$day];
+			@$discharges = $dischargesByDate[$day];
 						
 			// Compile week 1 admit data into an array			
 			if (!empty ($admits)) {
@@ -442,8 +475,8 @@ class PageControllerFacility extends PageController {
 		}
 				
 		foreach ($nextWeek as $day) {
-			$admits = $nextAdmitsByDate[$day];
-			$nextDischarges = $nextDischargesByDate[$day];
+			@$admits = $nextAdmitsByDate[$day];
+			@$nextDischarges = $nextDischargesByDate[$day];
 				
 			if (!empty ($admits)) {
 				foreach ($admits as $admit) {	
@@ -536,10 +569,10 @@ class PageControllerFacility extends PageController {
 							->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 					}
 					$row = $baseRow + $i;
-					if ($data['approved'] == true) {
+					if (@$data['approved'] == true) {
 						$objPHPExcel->getActiveSheet()->getStyle($c.$row)->applyFromArray($styleArray);
 					}
-					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, $data['room'] . " " . $data['name'])	
+					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])	
 						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 																									
 				}
@@ -591,7 +624,7 @@ class PageControllerFacility extends PageController {
 						$i = 0;
 					}
 					$row = $baseRow + $i;
-					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, $data['room'] . " " . $data['name'])
+					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])
 						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);																					
 				}
 				$i++;
@@ -652,10 +685,10 @@ class PageControllerFacility extends PageController {
 							->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 					}
 					$row = $dateRow + $i;
-					if ($data['approved'] == true) {
+					if (@$data['approved'] == true) {
 						$objPHPExcel->getActiveSheet()->getStyle($c.$row)->applyFromArray($styleArray);
 					}
-					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, $data['room'] . " " . $data['name'])
+					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])
 						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);	
 																									
 				}
@@ -704,7 +737,7 @@ class PageControllerFacility extends PageController {
 						$i = 1;
 					}
 					$row = $baseRow + $i;
-					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, $data['room'] . " " . $data['name'])
+					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])
 						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);																					
 				}
 				$i++;
@@ -1081,7 +1114,7 @@ elseif(input()->affirm == 'discharged_home') {
 					$this->redirect();
 				}
 			} catch (Exception $e) {
-				feedback()->error("An error occurred while trying to save this hospital visit.");
+				feedback()->error("$e An error occurred while trying to save this hospital visit.");
 				$this->redirect(SITE_URL . "/?page=facility&action=sendToHospital&schedule={$schedule->pubid}");
 			}
 
@@ -1874,18 +1907,21 @@ elseif(input()->affirm == 'discharged_home') {
 	}
 	
 	public function census() {
+
 		if (input()->facility != '') {
 			$facility = new CMS_Facility(input()->facility);
 		} else {
-		$defaultFacility = auth()->getRecord()->getDefaultFacility();
-		$facility = new CMS_Facility($defaultFacility->id);
+			$defaultFacility = auth()->getRecord()->getDefaultFacility();
+			$facility = new CMS_Facility($defaultFacility->id);
 		}
 
 		if ($facility->valid() == false) {
 			$facility = '';
-			// feedback()->error("Invalid facility selected.");
-			// $this->redirect(auth()->getRecord()->homeURL());
-		}
+			feedback()->error("Invalid facility selected.");
+			$this->redirect(auth()->getRecord()->homeURL());
+		} 
+
+
 		if (input()->datetime == '') {
 			$datetime = datetime();
 		} else {
@@ -1943,8 +1979,17 @@ elseif(input()->affirm == 'discharged_home') {
 		$physicians = array();
 		foreach ($rooms as $room) {
 			if ($room->physician_id != '') {
-				$physicians[$room->physician_id] += count($room->physician_id);
-				$physicianTotal += count($room->physician_id);
+				#$physicians[$room->physician_id] += count($room->physician_id);
+				if(isset($physicians[$room->physician_id]))
+					$physicians[$room->physician_id]+= 1;
+				else
+					$physicians[$room->physician_id] = 1;
+				#Not sure this is used, but counting the ID is an odd way to add.
+				#$physicianTotal += count($room->physician_id);
+				if(isset($physicianTotal[$room->physician_id]))
+					$physicianTotal[$room->physician_id]+= 1;
+				else
+					$physicianTotal[$room->physician_id] = 1;
 			}
 		}		
 				

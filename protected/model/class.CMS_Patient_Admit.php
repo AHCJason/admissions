@@ -337,6 +337,10 @@ class CMS_Patient_Admit extends CMS_Table {
 		if ($this->paymethod == 'Medicare' && $this->three_night == 0) {
 			$msg[] = " Medicare patients must complete a 3-night minimum hospital stay"; 
 		}
+
+		if ($this->paymethod == 'Medicare' && $this->three_night_verification == 0) {
+			$msg[] = "The patient has not had a 3 night qualifing stay verified";
+		}
 				
 		// We need chest x-rays from AZ facilities
 		// $schedule = CMS_Schedule::
@@ -642,7 +646,7 @@ class CMS_Patient_Admit extends CMS_Table {
 				left join physician on physician.id = patient_admit.physician_id
 				left join hospital on hospital.id = patient_admit.hospital_id
 				inner join facility on facility.id = schedule.facility where";
-			$sql .= " schedule.facility = :facilityid";
+			$sql .= " schedule.facility = :facilityid  AND ";
 			
 /*
 			foreach ($tokens as $idx => $token) {
@@ -653,11 +657,20 @@ class CMS_Patient_Admit extends CMS_Table {
 				$params[":term{$idx}"] = "%{$token}%";
 			}
 */
-
-			$sql .= " AND patient_admit.first_name LIKE '%" . $tokens[0] . "%' AND patient_admit.last_name LIKE '%" . $tokens[1] . "%' OR";
-			$sql .= " patient_admit.last_name LIKE '%" . $tokens[0] . "%' AND patient_admit.first_name LIKE '%" . $tokens[1] . "%' AND";
+			//only if we got a first and last name (silentyly discard more) do we search for it in either order.
+			if(count($tokens) >= 2)
+			{
+				$sql .= " ((patient_admit.first_name LIKE '%" . $tokens[0] . "%' AND patient_admit.last_name LIKE '%" . $tokens[1] . "%') OR";
+				$sql .= " (patient_admit.last_name LIKE '%" . $tokens[0] . "%' AND patient_admit.first_name LIKE '%" . $tokens[1] . "%')) AND";
 			
-			$sql = rtrim($sql, " AND");
+			//if we got just one search first and last for search querey.
+			} else if(count($tokens) == 1) {
+				$sql .= " (patient_admit.first_name LIKE '%" . $tokens[0] . "%' OR patient_admit.last_name LIKE '%" . $tokens[0] . "%')";
+			} else {
+				return false;
+			}
+			
+			$sql = rtrim($sql, " AND ");
 						
 			$sql .= " AND schedule.facility = :facilityid";
 			$sql .= " order by schedule.datetime_admit DESC";
