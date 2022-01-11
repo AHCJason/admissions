@@ -1,25 +1,9 @@
-{jQueryReady}
-	$('#selectFacility').change(function() {
-		window.location = SITE_URL + '/?page=report&action=discharge_history&facility=' + $('#selectFacility option:selected').val() + '&week_start={"last Sunday - 1 week"|date_format: "Y-m-d"}';
-	});
-{/jQueryReady}
-
+{setTitle title="AHC Reports: Discharge History"}
+{include file="patient/export_icons.tpl"}
 <h1 class="text-center">Discharge History</h1>
 <h2 class="text-center">for {$facility->name}</h2>
+{include file="report/index.tpl"}
 
-<div class="sort-left">
-	<select name="facility" id="selectFacility">
-		<option value="">Select facility...</option>
-		{foreach $facilities as $f}
-		<option value="{$f->pubid}" {if $facility->pubid == $f->pubid} selected {/if}>{$f->name}</option>
-		{/foreach}
-	</select>
-</div>
-
-<br />
-<br />
-<br />
-<br />
 
 <table id="info-data" cellpadding="5">
 	<tr>
