@@ -49,9 +49,11 @@ class PageControllerReport extends PageController {
 		$facility = new CMS_Facility(input()->facility);
 		if (! $facility->valid()) {
 			$facility = null;
-		} 
-
-		$_facility = $facility->id;
+			$_facility = null;
+		} else {
+			$_facility = $facility->id;
+		}
+		
 		smarty()->assign("facilityId", $_facility);
 		smarty()->assign("facility", $facility);
 
@@ -71,15 +73,17 @@ class PageControllerReport extends PageController {
 		
 		if (input()->summary != '') {
 			$summary = input()->summary;
+		} else {
+			$summary = null;
 		}
 		
-		$report_types = $this->reportTypes();
+		#$report_types = $this->reportTypes();
 				
 		smarty()->assign("summary", $summary);
 		smarty()->assignByRef("dateStart", $_dateStart);
 		smarty()->assignByRef("dateEnd", $_dateEnd);
 		smarty()->assign("type", input()->type);
-		smarty()->assign("reportTypes", $report_types);
+		#smarty()->assign("reportTypes", $report_types);
 		smarty()->assign("viewOpts", $this->viewOpts);
 		smarty()->assign("yearOpts", $this->yearOpts());
 	}
@@ -213,7 +217,8 @@ class PageControllerReport extends PageController {
 		
 		$startDate = date('Y-m-d', strtotime($_dateStart));
 		$endDate = date('Y-m-d', strtotime($_dateEnd));
-		
+
+
 		$urlString = SITE_URL . "/?page=report&action=admission&facility={$facility->pubid}&start_date={$startDate}&end_date={$endDate}&orderby={$_orderby}&filterby={$_filterby}&viewby={$_viewby}&summary={$summary}";
 		smarty()->assign('urlString', $urlString);
 		
@@ -346,7 +351,13 @@ class PageControllerReport extends PageController {
 		smarty()->assign("viewby", input()->viewby);
 		smarty()->assign("start_date", input()->start_date);
 		smarty()->assign("end_date", input()->end_date);
-				
+
+		if (input()->orderby != '') {
+			$orderby = input()->orderby;
+		} else {
+			$orderby = false;
+		}
+
 		$returnUrl = $SITE_URL . "/?page=report&action=admission&facility=" . $facility->pubid . "&start_date=" . input()->start_date . "&end_date=" . input()->end_date . "&orderby=" . input()->orderby . "&filterby=" . input()->filterby . "&viewby=" . input()->viewby;
 		smarty()->assign('returnUrl', $returnUrl);
 		
@@ -354,12 +365,6 @@ class PageControllerReport extends PageController {
 		$date_end = date('Y-m-d 23:59:59', strtotime(input()->end_date));
 		$filterby = input()->filterby;
 		$viewby = input()->viewby;
-		
-		if (input()->orderby != '') {
-			$orderby = input()->orderby;
-		} else {
-			$orderby = false;
-		}
 		
 		// Get admission source name
 		$obj = new CMS_Schedule();	
@@ -629,8 +634,8 @@ class PageControllerReport extends PageController {
 		 
 		if (input()->export != '') {
 			
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
-		 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+			#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		 	#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 			
 			$styleArray = array(
 				'font' => array(
@@ -640,8 +645,8 @@ class PageControllerReport extends PageController {
 			);
 			
 			if (input()->export == 'excel') {
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 				// Output to Excel file
 				header('Pragma: ');
 				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -650,7 +655,7 @@ class PageControllerReport extends PageController {
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			} else {
 				// Export to a PDF file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
 				$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
 				$rendererLibrary = 'mPDF5.3';
 				$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
@@ -660,14 +665,14 @@ class PageControllerReport extends PageController {
 					die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');	
 				}
 				
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'PDF');
 				// Output to PDF file
 				header('Pragma: ');
 				header("Content-type: application/pdf");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 			}
 			
-			PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+			#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 			$objPHPExcel->getProperties()->setTitle("$facility->name");
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader("&24" . $facility->name . ' ' . $reportType);
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter("&RPrinted: " . date("m/d/y g:i a", strtotime("now")));
@@ -679,7 +684,7 @@ class PageControllerReport extends PageController {
 			foreach ($dischargeData as $key => $data) {
 				$col = "A";
 				$objPHPExcel->getActiveSheet()->mergeCells("A1:D1");
-				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
+				#$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
 				$objPHPExcel->getActiveSheet()->setCellValue("A1", $facility->name . " Discharge Report");
 				$objPHPExcel->getActiveSheet()->getStyle("A1")->applyFromArray($styleArray);
 				
@@ -765,6 +770,7 @@ class PageControllerReport extends PageController {
 		smarty()->assign('dischargeHistory', $dischargeHistory);
 		smarty()->assign('facility', $facility);
 		smarty()->assign('facilities', $facilities);
+		#smarty()->assign("reportTypes", $this->reportTypes);
 		smarty()->assign('start_date', input()->week_start);
 	}
 	
@@ -998,8 +1004,8 @@ class PageControllerReport extends PageController {
 		
 		if (input()->export != '') {
 													
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
-		 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+			#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		 	#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 			
 			$styleArray = array(
 				'font' => array(
@@ -1009,8 +1015,8 @@ class PageControllerReport extends PageController {
 			);
 			
 			if (input()->export == 'excel') {
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 				// Output to Excel file
 				header('Pragma: ');
 				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -1019,7 +1025,7 @@ class PageControllerReport extends PageController {
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			} else {
 				// Export to a PDF file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
 				$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
 				$rendererLibrary = 'mPDF5.3';
 				$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
@@ -1029,14 +1035,14 @@ class PageControllerReport extends PageController {
 					die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');	
 				}
 				
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'PDF');
 				// Output to PDF file
 				header('Pragma: ');
 				header("Content-type: application/pdf");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 			}
 			
-			PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+			#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 			$objPHPExcel->getProperties()->setTitle("$facility->name");
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader("&24" . $facility->name . ' ' . $reportType);
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter("&RPrinted: " . date("m/d/y g:i a", strtotime("now")));
@@ -1048,7 +1054,7 @@ class PageControllerReport extends PageController {
 			foreach ($result as $key => $data) {
 				$col = "A";
 				$objPHPExcel->getActiveSheet()->mergeCells("A1:D1");
-				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
+				#$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
 				$objPHPExcel->getActiveSheet()->setCellValue("A1", $facility->name . " Discharge Service Disposition Report");
 				$objPHPExcel->getActiveSheet()->getStyle("A1")->applyFromArray($styleArray);
 				
@@ -1215,7 +1221,7 @@ class PageControllerReport extends PageController {
 			'paymethod_ASC' => 'Payment Method'
 		);
 		
-		smarty()->assign("reportTypes", $this->reportTypes);
+		#smarty()->assign("reportTypes", $this->reportTypes);
 		smarty()->assign("orderByOpts", $orderByOpts);
 		
 		
@@ -1400,7 +1406,7 @@ class PageControllerReport extends PageController {
 			'physician_ASC' => 'Attending Physician (A &rarr; Z)'
 		);
 		
-		smarty()->assign("reportTypes", $this->reportTypes);
+		#smarty()->assign("reportTypes", $this->reportTypes);
 		smarty()->assign("orderByOpts", $orderByOpts);
 		
 		
@@ -1866,7 +1872,8 @@ class PageControllerReport extends PageController {
 	 
 	 public function export($facility, $reportType, $dataSet) {
 	 	
-	 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		//already included because of composer
+	 	//require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
 			
 		$styleArray = array(
 			'font' => array(
@@ -1876,20 +1883,20 @@ class PageControllerReport extends PageController {
 			
 		 if (input()->export == 'excel') {
 			// Export to excel
-			$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+			$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
 		} else {
 			// Export to a PDF file
-			$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
-			$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
-			$rendererLibrary = 'mPDF5.3';
-			$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
+			$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+			//$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
+			//$rendererLibrary = 'mPDF5.3';
+			//$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
 			$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
 			
-			if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
-				die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');
-			}
+			//if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
+			//	die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');
+			//}
 		}
-		PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+		#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 		
 		$objPHPExcel->getProperties()->setTitle("$facility->name");
 		$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader("&24" . $facility->name . ' ' . $reportType);
@@ -1934,9 +1941,9 @@ class PageControllerReport extends PageController {
 				
 							
 		// Include required files
-		require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+		#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 		if (input()->export == "excel") {
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 			// Output to Excel file
 			header('Pragma: ');
 			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -1944,7 +1951,7 @@ class PageControllerReport extends PageController {
 			header("Content-Disposition: attachment; filename=" . $facility->name . " " . $reportType . ".xlsx");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 		} elseif (input()->export == "pdf") { // If you want to output e.g. a PDF file, simply do:			
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+			$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Mpdf');
 			// Output to PDF file
 			header('Pragma: ');
 			header("Content-type: application/pdf");
@@ -2053,8 +2060,8 @@ class PageControllerReport extends PageController {
 		
 		if (input()->export != '') {
 									
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
-		 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+			#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		 	#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 			
 			$styleArray = array(
 				'font' => array(
@@ -2064,8 +2071,8 @@ class PageControllerReport extends PageController {
 			);
 			
 			if (input()->export == 'excel') {
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 				// Output to Excel file
 				header('Pragma: ');
 				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -2074,7 +2081,7 @@ class PageControllerReport extends PageController {
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			} else {
 				// Export to a PDF file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
 				$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
 				$rendererLibrary = 'mPDF5.3';
 				$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
@@ -2084,14 +2091,14 @@ class PageControllerReport extends PageController {
 					die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');	
 				}
 				
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'PDF');
 				// Output to PDF file
 				header('Pragma: ');
 				header("Content-type: application/pdf");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 			}
 			
-			PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+			#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 			$objPHPExcel->getProperties()->setTitle("$facility->name");
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader("&24" . $facility->name . ' ' . $reportType);
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter("&RPrinted: " . date("m/d/y g:i a", strtotime("now")));
@@ -2103,7 +2110,7 @@ class PageControllerReport extends PageController {
 			foreach ($data as $k => $d) {
 				$col = "A";
 				$objPHPExcel->getActiveSheet()->mergeCells("A1:E1");
-				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
+				#$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
 				$objPHPExcel->getActiveSheet()->setCellValue("A1", $facility->name . " Discharge Service Disposition Report");
 				$objPHPExcel->getActiveSheet()->getStyle("A1")->applyFromArray($styleArray);
 				
@@ -2226,8 +2233,8 @@ class PageControllerReport extends PageController {
 		
 		if (input()->export != '') {
 															
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
-		 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+			#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		 	#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 			
 			$styleArray = array(
 				'font' => array(
@@ -2237,8 +2244,8 @@ class PageControllerReport extends PageController {
 			);
 			
 			if (input()->export == 'excel') {
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 				// Output to Excel file
 				header('Pragma: ');
 				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -2247,7 +2254,7 @@ class PageControllerReport extends PageController {
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			} else {
 				// Export to a PDF file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
 				$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
 				$rendererLibrary = 'mPDF5.3';
 				$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
@@ -2257,14 +2264,14 @@ class PageControllerReport extends PageController {
 					die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');	
 				}
 				
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'PDF');
 				// Output to PDF file
 				header('Pragma: ');
 				header("Content-type: application/pdf");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 			}
 			
-			PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+			#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 			$objPHPExcel->getProperties()->setTitle("$facility->name");
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader("&24" . $facility->name . ' ' . $reportType);
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter("&RPrinted: " . date("m/d/y g:i a", strtotime("now")));
@@ -2274,7 +2281,7 @@ class PageControllerReport extends PageController {
 			
 			$col = "A";
 			$objPHPExcel->getActiveSheet()->mergeCells("A1:E1");
-			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
+			#$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
 			$objPHPExcel->getActiveSheet()->setCellValue("A1", $facility->name . " Discharge Service Disposition Details Report");
 			$objPHPExcel->getActiveSheet()->getStyle("A1")->applyFromArray($styleArray);
 			
@@ -2360,8 +2367,8 @@ class PageControllerReport extends PageController {
 		
 		if (input()->export != '') {
 															
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
-		 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+			#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		 	#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 			
 			$styleArray = array(
 				'font' => array(
@@ -2371,8 +2378,8 @@ class PageControllerReport extends PageController {
 			);
 			
 			if (input()->export == 'excel') {
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 				// Output to Excel file
 				header('Pragma: ');
 				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -2381,7 +2388,7 @@ class PageControllerReport extends PageController {
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			} else {
 				// Export to a PDF file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
 				$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
 				$rendererLibrary = 'mPDF5.3';
 				$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
@@ -2391,14 +2398,14 @@ class PageControllerReport extends PageController {
 					die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');	
 				}
 				
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'PDF');
 				// Output to PDF file
 				header('Pragma: ');
 				header("Content-type: application/pdf");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 			}
 			
-			PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+			#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 			$objPHPExcel->getProperties()->setTitle("$facility->name");
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader("&24" . $facility->name . ' ' . $reportType);
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter("&RPrinted: " . date("m/d/y g:i a", strtotime("now")));
@@ -2410,7 +2417,7 @@ class PageControllerReport extends PageController {
 			$objPHPExcel->getActiveSheet()->mergeCells("A1:G1");
 			$objPHPExcel->getActiveSheet()->mergeCells("A2:G2");
 
-			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
+			#$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
 			$objPHPExcel->getActiveSheet()->setCellValue("A1", $facility->name . " Discharge Service Disposition Details Report");
 			$objPHPExcel->getActiveSheet()->getStyle("A1")->applyFromArray($styleArray);
 			
@@ -2474,8 +2481,8 @@ class PageControllerReport extends PageController {
 		
 		if (input()->export != '') {
 															
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
-		 	require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+			#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		 	#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 			
 			$styleArray = array(
 				'font' => array(
@@ -2519,8 +2526,8 @@ class PageControllerReport extends PageController {
 			);
 			
 			if (input()->export == 'excel') {
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 				// Output to Excel file
 				header('Pragma: ');
 				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -2529,7 +2536,7 @@ class PageControllerReport extends PageController {
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			} else {
 				// Export to a PDF file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/blank.xlsx");
 				$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
 				$rendererLibrary = 'mPDF5.3';
 				$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
@@ -2539,7 +2546,7 @@ class PageControllerReport extends PageController {
 					die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');	
 				}
 				
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'PDF');
 				// Output to PDF file
 				header('Pragma: ');
 				header("Content-type: application/pdf");
@@ -2553,7 +2560,7 @@ class PageControllerReport extends PageController {
 			$col = "A";
 			$objPHPExcel->getActiveSheet()->mergeCells("A1:I1");
 
-			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
+			#$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow();
 			$objPHPExcel->getActiveSheet()->setCellValue("A1", $facility->name . " 30 Day Call Back Report");
 			$objPHPExcel->getActiveSheet()->getStyle("A1")->applyFromArray($styleArray);
 			
@@ -2653,7 +2660,7 @@ class PageControllerReport extends PageController {
 			$objPHPExcel->getActiveSheet()->getStyle('A1:I'.$row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
 			
 			
-			PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+			#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 			$objPHPExcel->getProperties()->setTitle("$facility->name");
 			$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 			$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);

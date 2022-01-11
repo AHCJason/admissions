@@ -360,25 +360,26 @@ class PageControllerFacility extends PageController {
 		}
 		
 		// Export doc to either Excel or PDF
-		require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+		#use PhpOffice\PhpSpreadsheet\Spreadsheet;
+		#use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 		
 		if (input()->type == "excel") {
-			$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/template.xlsx");
+			$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/template.xlsx");
 		}
 		
 		
 		if (input()->type == "pdf") {
-			$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/two_weeks_pdf.xlsx");
+			$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/two_weeks_pdf.xlsx");
 			//$objPHPExcel = new PHPExcel();
 			//	Change these values to select the Rendering library that you wish to use
 			//		and its directory location on your server
 			//$rendererName = PHPExcel_Settings::PDF_RENDERER_TCPDF;
-			$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
+			//$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
 			//$rendererName = PHPExcel_Settings::PDF_RENDERER_DOMPDF;
 			//$rendererLibrary = 'tcPDF';
-			$rendererLibrary = 'mPDF5.3';
+			//$rendererLibrary = 'mPDF5.3';
 			//$rendererLibrary = "domPDF";
-			$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
+			//$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
 			
 			//$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 			//$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
@@ -389,7 +390,7 @@ class PageControllerFacility extends PageController {
 */
 
 
-			
+			/*
 			if (!PHPExcel_Settings::setPdfRenderer(
 				$rendererName,
 				$rendererLibraryPath
@@ -400,7 +401,7 @@ class PageControllerFacility extends PageController {
 					'at the top of this script as appropriate for your directory structure'
 				);
 			}
-			
+			*/
 
 		}
 		
@@ -420,14 +421,14 @@ class PageControllerFacility extends PageController {
 		
 		$admitsStyleArray = array(
 			'fill' => array(
-				'type' => PHPExcel_Style_Fill::FILL_SOLID,
+				'type' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
 				'color' => array('rgb' => '75dc6d')
 			)
 		);
 		
 		$dischargeStyleArray = array(
 			'fill' => array(
-				'type' => PHPExcel_Style_Fill::FILL_SOLID,
+				'type' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
 				'color' => array('rgb' => 'FF6A6A')
 			)
 		);
@@ -550,14 +551,14 @@ class PageControllerFacility extends PageController {
 				$objPHPExcel->getActiveSheet()
 					->setCellValue("A1", $weekOne)
 					->mergeCells("A1:G1");
-				$objPHPExcel->getActiveSheet()->getStyle("A1")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle("A1")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 				$objPHPExcel->getActiveSheet()->getStyle("A1")->getFont()->setSize(18);
 				
 				// Admit title info
 				$objPHPExcel->getActiveSheet()
 					->setCellValue("A2", "Admissions")
 					->mergeCells("A2:G2");
-				$objPHPExcel->getActiveSheet()->getStyle("A2")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle("A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 				$objPHPExcel->getActiveSheet()->getStyle("A2")->applyFromArray($admitsStyleArray)
 					->getFont()->setSize(14);
 								
@@ -566,14 +567,14 @@ class PageControllerFacility extends PageController {
 						$i = 0;
 						$objPHPExcel->getActiveSheet()->setCellValue($c."3", date("m/d/Y", strtotime($r)))
 							->getStyle($c."3")->applyFromArray($styleArray)
-							->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+							->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 					}
 					$row = $baseRow + $i;
 					if (@$data['approved'] == true) {
 						$objPHPExcel->getActiveSheet()->getStyle($c.$row)->applyFromArray($styleArray);
 					}
 					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])	
-						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+						->getStyle($c.$row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 																									
 				}
 				$i++;
@@ -615,7 +616,7 @@ class PageControllerFacility extends PageController {
 				$objPHPExcel->getActiveSheet()
 					->setCellValue("A".$titleRow, "Discharges")
 					->mergeCells("A".$titleRow.":G".$titleRow);
-				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->applyFromArray($dischargeStyleArray)
 					->getFont()->setSize(14);
 								
@@ -625,7 +626,7 @@ class PageControllerFacility extends PageController {
 					}
 					$row = $baseRow + $i;
 					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])
-						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);																					
+						->getStyle($c.$row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);																					
 				}
 				$i++;
 			}
@@ -667,13 +668,13 @@ class PageControllerFacility extends PageController {
 				$objPHPExcel->getActiveSheet()
 					->setCellValue("A".$titleRow, $weekTwo)
 					->mergeCells("A".$titleRow.":G".$titleRow);
-				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->getFont()->setSize(18);
 				
 				$objPHPExcel->getActiveSheet()
 					->setCellValue("A".$baseRow, "Admissions")
 					->mergeCells("A".$baseRow.":G".$baseRow);
-				$objPHPExcel->getActiveSheet()->getStyle("A".$baseRow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle("A".$baseRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 				$objPHPExcel->getActiveSheet()->getStyle("A".$baseRow)->applyFromArray($admitsStyleArray)
 					->getFont()->setSize(14);
 																
@@ -682,14 +683,14 @@ class PageControllerFacility extends PageController {
 						$i = 1;
 						$objPHPExcel->getActiveSheet()->setCellValue($c.$dateRow, date("m/d/Y", strtotime($r)))
 							->getStyle($c.$dateRow)->applyFromArray($styleArray)
-							->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+							->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 					}
 					$row = $dateRow + $i;
 					if (@$data['approved'] == true) {
 						$objPHPExcel->getActiveSheet()->getStyle($c.$row)->applyFromArray($styleArray);
 					}
 					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])
-						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);	
+						->getStyle($c.$row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);	
 																									
 				}
 				$i++;
@@ -728,7 +729,7 @@ class PageControllerFacility extends PageController {
 				$objPHPExcel->getActiveSheet()
 					->setCellValue("A".$titleRow, "Discharges")
 					->mergeCells("A".$titleRow.":G".$titleRow);
-				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 				$objPHPExcel->getActiveSheet()->getStyle("A".$titleRow)->applyFromArray($dischargeStyleArray)
 					->getFont()->setSize(14);
 								
@@ -738,7 +739,7 @@ class PageControllerFacility extends PageController {
 					}
 					$row = $baseRow + $i;
 					$objPHPExcel->getActiveSheet()->setCellValue($c.$row, @$data['room'] . " " . @$data['name'])
-						->getStyle($c.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);																					
+						->getStyle($c.$row)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);																					
 				}
 				$i++;
 			}
@@ -765,9 +766,9 @@ class PageControllerFacility extends PageController {
 
 		
 		// Include required files
-		require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
+		#require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 		if (input()->type == "excel") {
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 			// Output to Excel file
 			header('Pragma: ');
 			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -775,7 +776,7 @@ class PageControllerFacility extends PageController {
 			header("Content-Disposition: attachment; filename=" . $facility->name . "_" . $_dateStart . ".xlsx");
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 		} elseif (input()->type == "pdf") { // If you want to output e.g. a PDF file, simply do:			
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+			$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Mpdf');
 			// Output to PDF file
 			header('Pragma: ');
 			header("Content-type: application/pdf");
@@ -2024,6 +2025,8 @@ elseif(input()->affirm == 'discharged_home') {
 		for ($i = 0; $i < $query_date; $i++) {
 			if ($i == 0) {
 				$date = $date;
+				
+				
 			} else {
 				$date = date('Y-m-d', strtotime($date . " + 1 days"));
 			}
@@ -2108,19 +2111,19 @@ elseif(input()->affirm == 'discharged_home') {
 			
 			if (input()->export == "excel") {
 				// Export to excel file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/census.xlsx");
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/census.xlsx");
 				
 			} else {
 				// Export to a PDF file
-				$objPHPExcel = PHPExcel_IOFactory::load(APP_PATH . "/public/templates/census.xlsx");
-				$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
-				$rendererLibrary = 'mPDF5.3';
-				$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
+				$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load(APP_PATH . "/public/templates/census.xlsx");
+				//$rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
+				//$rendererLibrary = 'mPDF5.3';
+				//$rendererLibraryPath = APP_PROTECTED_PATH . "/lib/contrib/Libraries/" . $rendererLibrary;
 				$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
 				
-				if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
-					die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');
-				}
+				//if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
+				//	die('NOTICE: Please set the $rendererName and $rendererLibraryPath values' . EOL . 'at the top of this script as appropriate for your directory structure');
+				//}
 				
 			}
 			
@@ -2185,11 +2188,8 @@ elseif(input()->affirm == 'discharged_home') {
 			}
 			
 			
-			
-			// Include required files
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel/IOFactory.php";
 			if (input()->export == "excel") {
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xlsx');
 				// Output to Excel file
 				header('Pragma: ');
 				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -2197,7 +2197,8 @@ elseif(input()->affirm == 'discharged_home') {
 				header("Content-Disposition: attachment; filename=" . $facility->name . "_" . $_dateStart . ".xlsx");
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');		
 			} elseif (input()->export == "pdf") { // If you want to output e.g. a PDF file, simply do:			
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+				$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Mpdf');
+				
 				// Output to PDF file
 				header('Pragma: ');
 				header("Content-type: application/pdf");
