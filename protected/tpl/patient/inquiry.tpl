@@ -965,6 +965,12 @@ $("#return-to-dashboard").click(function(e) {
 	</tr>
 	<tr>
 		<td colspan="3" align="left">
+			<input type="checkbox" name="three_night_verification" value="1"{if $data.three_night_verification == 1} checked{/if} /> A three night qualified stay has been verified {if $data.three_night_verification == 1} by {$verified_by->first} {$verified_by->last} {/if}
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="3" align="left">
 			<input type="checkbox" name="final_orders" value="1"{if $data.final_orders == 1} checked{/if} /> Yes, final orders have been received 
 		</td>
 	</tr>

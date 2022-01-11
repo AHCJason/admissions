@@ -34,7 +34,7 @@ function conflictAlert($params, &$smarty) {
 }
 
 $smarty->registerPlugin("function", "scheduleMenu", "scheduleMenu");
-function scheduleMenu($params, &$smarty) {
+function scheduleMenu($params, $smarty) {
 	$schedule = $params['schedule'];
 	$weekSeed = $params['weekSeed'];
 	$facility = CMS_Facility::generate();

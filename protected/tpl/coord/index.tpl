@@ -36,7 +36,6 @@
 		var protocol = pathArray[0];
 		var host = pathArray[2];
 		var redirectUrl = protocol + '//' + host;
-
 		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val();
 
 	});
@@ -84,18 +83,17 @@
 </div>
 </form>
 
-{$facilities = $auth->getRecord()->related("facility")}
-{$allFacilities = CMS_Facility::generate()->fetch()}
+{*$facilities = $auth->getRecord()->related("facility")*}
+{* use the cached function removing dups *}
+{$facilities = $auth->getRecord()->getFacilities()}
+{*$allFacilities = CMS_Facility::generate()->fetch()*}
 
 <div id="action-menu">
 	<a href="{$SITE_URL}/?page=facility&amp;action=census&amp;facility={$facility->pubid}" class="button">Census</a>
 </div>
 
 <br />
-
-<!-- Look for duplicates button -->
-<!-- <a class="button" style="float: right; margin-right: 10px" href="{*$SITE_URL*}/?page=coord&action=duplicateEntries&facility={*$facility->pubid*}">Duplicate entries</a>
- -->
+{* <!-- Look for duplicates button --><!-- <a class="button" style="float: right; margin-right: 10px" href="{$SITE_URL}/?page=coord&action=duplicateEntries&facility={$facility->pubid}">Duplicate entries</a> -->  *}
 <br />
 <br />
 <br />
@@ -152,9 +150,9 @@
 						{conflictAlert schedule=$admit}
 						<span class="admit-name">Room {$admit->getRoomNumber()}<br />
 							{foreach $onsite as $o}
-								{if $o->id != ''}<a href="#" class="tooltip"<img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
+								{if $o->id != ''}<a href="#" class="tooltip"<img src="{$SITE_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 							{/foreach}
-							{if $admit->confirmed == 1}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
+							{if $admit->confirmed == 1}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
 							<strong>{$admit->getPatient()->fullName()}</strong><br />Admit From: {if $admit->transfer_facility != ''}{$transferFacility->name}{elseif $admit->getPatient()->admit_from != ''}{$admitFrom->name}{elseif $admit->getPatient()->hospitalName() != ''}{$admit->getPatient()->hospitalName()|default:"Unknown"}{else}{$admit->getPatient()->referral_org_name}{/if}{scheduleMenu schedule=$admit}
 						</span>
 						<!-- <input type="hidden" class="schedule-datetime" rel="{$admit->pubid}" /> -->
@@ -188,10 +186,10 @@
 						{conflictAlert schedule=$pending}				
 						<span class="admit-name">Room {$pending->getRoomNumber()}<br />
 							{foreach $onsite as $o}
-								{if $o->id != ''}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
+								{if $o->id != ''}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/check.png" style="height: 14px;" /><span>Patient has had an on-site visit</span></a>{/if}
 							{/foreach}
 							
-							{if $pending->confirmed == 1}<a href="#" class="tooltip"><img src="{$PUBLIC_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
+							{if $pending->confirmed == 1}<a href="#" class="tooltip"><img src="{$SITE_URL}/images/icons/star.png" style="height: 10px;" /><span>Elective admit has been confirmed.</span></a>{/if}
 							<strong>{$pending->getPatient()->fullName()}</strong><br />Admit From: {if $pending->transfer_facility != ''}{$pendingTransferFacility->name}{elseif $pending->getPatient()->admit_from != ''}{$pendingHospital->name}{else}{$pending->getPatient()->referral_org_name}{/if}
 	{if $pending->getPatient()->physician_id != ''}
 	<br />Physician: Dr. {$physician->last_name}

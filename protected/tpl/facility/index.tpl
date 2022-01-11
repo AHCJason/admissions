@@ -1,3 +1,28 @@
+<style>
+#facil-nav {
+	text-align: center;
+}
+
+#facil-nav a {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+#facil-nav img {
+	position: relative;
+	top: 7px;
+}
+
+@media print{
+	#facil-nav a {
+		display: none !important;
+	}
+	#facil-nav img {
+		display: none !important;
+	}
+}
+</style>
+
 {setTitle title="{$facility->name} Dashboard"}
 {jQueryReady}
 
@@ -80,7 +105,17 @@ $(window).load(function() {
 <br />
 
 {/if}
-<h1 class="text-center" style="margin-bottom: 10px">{$facility->name} Dashboard</h1> 
+	<div id="facil-nav">
+	{if !is_null($prevFacility)}
+		<a href="{$SITE_URL}/?page=facility&amp;id={$prevFacility}&amp;weekSeed={$weekSeed}"><img src="{$SITE_URL}/images/icons/prev-icon.png" /> Previous</a>
+	{/if}
+		<h1 class="text-center" style="display:inline;margin-bottom: 10px">{$facility->name} Dashboard</h1> 
+	{if !is_null($nextFacility)}
+		<a href="{$SITE_URL}/?page=facility&amp;id={$nextFacility}&amp;weekSeed={$weekSeed}">Next <img src="{$SITE_URL}/images/icons/next-icon.png" /></a>
+	{/if}
+	</div>
+{* <h1 class="text-center" style="margin-bottom: 10px">{$facility->name} Dashboard</h1> *}
+
 <h2 class="text-center" style="margin-bottom: 20px">{$week[0]|date_format:"%a, %B %d, %Y"} to {$week[6]|date_format:"%a, %B %d, %Y"}<input type="hidden" id="alt-week" /></h2>
 
 <div id="facility-tools">

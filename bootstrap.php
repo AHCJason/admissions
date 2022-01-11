@@ -1,10 +1,10 @@
 <?php
 
 require_once "env.php";
-define(TEST_EMAIL, "");
-define(APP_NAME, "AptitudeCare");
-define(APP_EMAIL, "");
-define(DEV_EMAIL, "test@localhost");
+define('TEST_EMAIL', "");
+//define('APP_NAME', "AptitudeCare");
+define('APP_EMAIL', "");
+define('DEV_EMAIL', "test@localhost");
 
 
 if (DEVELOPMENT == true) {
@@ -27,12 +27,17 @@ require_once ENGINE_PROTECTED_PATH . "/engine_load.php";
 require_once APP_PROTECTED_PATH . "/lib/common.php";
 
 
+
+
 /*
  * Establish a database connection
  *
  */
  
 require_once APP_PROTECTED_PATH . "/config/database.php";
+
+
+
 
 
 
@@ -80,6 +85,8 @@ $availOptions = array(
 smarty()->assign("availOptions", $availOptions);
 smarty()->assign("HOMEHEALTH_URL", $HOMEHEALTH_URL);
 
+#supress smarty notices of undefined
+smarty()->error_reporting = E_ALL & ~E_NOTICE;
 
 
 
