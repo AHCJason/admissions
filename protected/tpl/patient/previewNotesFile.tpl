@@ -1,110 +1,132 @@
 {setTitle title="Preview Notes"}
 {jQueryReady}
 
-	var animating = false;
-	
-	$("#preview-nav-next").click(function(e) {
-		e.preventDefault();
-		if (animating == false) {
-			var leftCurrent = $("#preview-img").position().left ;
-			var leftNew = leftCurrent - {$width};
-			if (! (leftNew <= -1 * {$width} * {$totalPages} )) {
-				//animating = true;
-				$("#preview-img").animate( {
-					"left": leftNew + "px"
-				}, "slow", function() {
-					animating = false;
-				});
-			}
-		}
-	});
-	$("#preview-nav-prev").click(function(e) {
-		e.preventDefault();
-		if (animating == false) {
-			var leftCurrent = $("#preview-img").position().left ;
-			var leftNew = leftCurrent + {$width};
-			if (leftCurrent < 0) {
-				//animating = true;
-				$("#preview-img").animate( {
-					"left": leftNew + "px"
-				}, "slow", function() {
-					animating = false;
-				});
-			}
-		}
-	});
-	
-	$(".preview-nav-bypage").click(function(e) {
-		e.preventDefault();
-		if ( animating == false) {
-			var page = $(this).attr("rel");
-			
-			var leftCurrent = $("#preview-img").position().left ;
-			var leftNew = -1 * page * {$width};
-			console.log(leftCurrent);
-			console.log(leftNew);
-			if (leftCurrent < 0 || !(leftNew <= -1 * {$width} * {$numPages} )) {
-				console.log(2);
-				//animating = true;
-				$("#preview-img").animate( {
-					"left": leftNew + "px"
-				}, "slow", function() {
-					console.log(3);
-					animating = false;
-				});
-			}
-		}
-	});
-	
-	// hide the "no JS" straight IMG element. its download will continue.
-	$("#preview-img-noscript").hide();
-	
-	// show the IMG element that currently contains our spinner graphic
-	$("#preview-img").show();
-	
-	// asynchronoiusly load the image into an Image object. the browser *should* make use of the
-	// resource already grabbed, or currently being grabbed, by the "NO JS" element
-	var img = $("<img />").attr("src", $("#preview-img-noscript").attr("src")).load(function() {
-		if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-			$("#preview-img").attr("src", "{$SITE_URL}/images/preview-not-available.png");
-		} else {
-			// show the navigation buttons
-			$("#preview-buttons").show();
-			
-			// show the navigation buttons for the chunks
-			$("#preview-chunks").show();
-	
-			// when the Image has finished downloading, replace the spinner with the image
-			$("#preview-img").attr("src", $(this).attr("src"));
-		}
-	});
-
 {/jQueryReady}
+<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+<style>
+#the-canvas {
+  border: 1px solid black;
+  direction: ltr;
+}
+</style>
+<h1 class="text-center">{$pdfdesc}</h1>
+<input type="button" value="Return to Previous Page" onclick="history.go(-1)" style="margin-left: 50px;">
+<pre>
+{*{$SITE_URL}?page=patient&action=notes&schedule={$schID}*}
+</pre>
 
-<div id="preview-chunks" style="display: none;">
-	{for $i=0 to $totalPages step $numPages}
-	<a href="{if $i == $offset}#{else}{$SITE_URL}/?page=patient&amp;action=previewNotesFile&amp;schedule={$schedule->pubid}&amp;idx={$idx}&amp;b={urlencode($b)}&amp;offset={$i}{/if}" class="{if $i == $offset}button-disabled{else}button{/if}" style="margin-right: 5px;">Pages {$i+1} to {if $i + $numPages < $totalPages}{$i+$numPages}{else}{$totalPages}{/if}</a>	
-	{/for}
-	<a class="button" href="{$SITE_URL}/?page=patient&amp;action=downloadNotesFile&amp;schedule={$schedule->pubid}&amp;idx={$idx}" title="Print File">Print File</a>
+<div>
+  <button id="prev">Previous</button>
+  <button id="next">Next</button>
+  &nbsp; &nbsp;
+  <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+</div>
 
-</div>
-<br />
-<br />
-<div id="preview-buttons" style="display: none;">
+<canvas id="the-canvas" width="920px"></canvas>
 
-	{$pageI = 0}
-	{for $page = $offset to ($offset + $thisChunkNumPages -1)}
-	<a href="#" class="button preview-nav-bypage" id="preview-page-{$page}" rel="{$pageI}" style="margin-right: 5px;">{$page + 1}</a>
-		{$pageI = $pageI + 1}
-	{/for}
-	
-</div>
-<br />
-<br />
-<input type="hidden" id="preview-pages" value="{$totalpages}" />
-<div id="image-viewport" style="position: relative; overflow: hidden; width: {$width + 2}px; border: 1px solid;">
-	<div id="image-inner">
-		<img id="preview-img-noscript" data-previewPage="0" src="{$SITE_URL}/?page=patient&amp;action=previewNotesFileImage&amp;schedule={$schedule->pubid}&amp;idx={$idx}&amp;offset={$offset}&amp;numPages={$numPages}&amp;totalPages={$totalPages}&amp;width={$width}" style="position: relative; left: 0;" />
-		<img id="preview-img" data-previewPage="0" src="{$SITE_URL}/images/ajax-loader.gif" style="position: relative; left: 0; display: none;" />
-	</div>
-</div>
+<script type="text/javascript">
+// If absolute URL from the remote server is provided, configure the CORS
+// header on that server.
+var url = '{$SITE_URL}/?page=patient&action=downloadNotesFile&schedule={$schedule->pubid}&idx={$idx}';
+{literal}
+// Loaded via <script> tag, create shortcut to access PDF.js exports.
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+// The workerSrc property shall be specified.
+pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+var pdfDoc = null,
+    pageNum = 1,
+    pageRendering = false,
+    pageNumPending = null,
+    scale = 10,
+    canvas = document.getElementById('the-canvas'),
+    ctx = canvas.getContext('2d');
+
+/**
+ * Get page info from document, resize canvas accordingly, and render page.
+ * @param num Page number.
+ */
+function renderPage(num) {
+  pageRendering = true;
+  // Using promise to fetch the page
+  pdfDoc.getPage(num).then(function(page) {
+    //var viewport = page.getViewport({scale: scale});
+
+var desiredWidth = 920;
+var viewport = page.getViewport({ scale: 1, });
+var scale = desiredWidth / viewport.width;
+var scaledViewport = page.getViewport({ scale: scale, });
+    canvas.height = scaledViewport.height;
+    canvas.width = scaledViewport.width;
+
+    // Render PDF page into canvas context
+    var renderContext = {
+      canvasContext: ctx,
+      viewport: scaledViewport
+    };
+    var renderTask = page.render(renderContext);
+
+    // Wait for rendering to finish
+    renderTask.promise.then(function() {
+      pageRendering = false;
+      if (pageNumPending !== null) {
+        // New page rendering is pending
+        renderPage(pageNumPending);
+        pageNumPending = null;
+      }
+    });
+  });
+
+  // Update page counters
+  document.getElementById('page_num').textContent = num;
+}
+
+/**
+ * If another page rendering in progress, waits until the rendering is
+ * finised. Otherwise, executes rendering immediately.
+ */
+function queueRenderPage(num) {
+  if (pageRendering) {
+    pageNumPending = num;
+  } else {
+    renderPage(num);
+  }
+}
+
+/**
+ * Displays previous page.
+ */
+function onPrevPage() {
+  if (pageNum <= 1) {
+    return;
+  }
+  pageNum--;
+  queueRenderPage(pageNum);
+}
+document.getElementById('prev').addEventListener('click', onPrevPage);
+
+/**
+ * Displays next page.
+ */
+function onNextPage() {
+  if (pageNum >= pdfDoc.numPages) {
+    return;
+  }
+  pageNum++;
+  queueRenderPage(pageNum);
+}
+document.getElementById('next').addEventListener('click', onNextPage);
+
+/**
+ * Asynchronously downloads PDF.
+ */
+pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+  pdfDoc = pdfDoc_;
+  document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+  // Initial/first page rendering
+  renderPage(pageNum);
+});
+</script>
+{/literal}
