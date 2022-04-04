@@ -17,6 +17,10 @@ $().ready(function() {
 	$(".datetime-picker").datetimepicker({
 		ampm: true
 	});
+	
+	//disable autocomplete on these boxes.
+	$(".datetime-picker").attr('autocomplete','off');
+	$(".time-picker").attr('autocomplete','off');
 
 	$(".dialog").dialog({
 		autoOpen: false,
