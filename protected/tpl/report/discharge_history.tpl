@@ -1,5 +1,4 @@
 {setTitle title="AHC Reports: Discharge History"}
-{include file="patient/export_icons.tpl"}
 <h1 class="text-center">Discharge History</h1>
 <h2 class="text-center">for {$facility->name}</h2>
 {include file="report/index.tpl"}

@@ -1,5 +1,5 @@
 {setTitle title="ADC Report"}
-{include file="patient/export_icons.tpl"}
+{*{include file="patient/export_icons.tpl"}*}
 
 {if $view != 'year'}
 	{jQueryReady}		
