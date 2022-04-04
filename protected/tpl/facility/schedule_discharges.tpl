@@ -53,13 +53,15 @@ $("#facility").change(function(e) {
 			<h3 class="select-day">{$day|date_format:"%a, %b %e, %Y"}</h3>
 			<input type="hidden" name="date" value="{$day}">
 			<div class="discharge-day {cycle name="admitDayColumn" values="facility-day-box-blue, "}">
-				{$discharges = $discharged[$day]}
-				{foreach $discharges as $d}
-					<div class="discharge-info">
-						{$d->number} {$d->last_name}, {$d->first_name}
-						<input type="hidden" name="pubid" value="{$d->schedule_pubid}">
-					</div>
-				{/foreach}
+				{if array_key_exists($day, $discharged) }
+					{$discharges = $discharged[$day]}
+					{foreach $discharges as $d}
+						<div class="discharge-info">
+							{$d->number} {$d->last_name}, {$d->first_name}
+							<input type="hidden" name="pubid" value="{$d->schedule_pubid}">
+						</div>
+					{/foreach}
+				{/if}
 			</div>
 			<div class="clear"></div>
 		</div>

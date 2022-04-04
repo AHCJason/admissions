@@ -2073,6 +2073,10 @@ elseif(input()->affirm == 'discharged_home') {
 				
 		$numOfDischarges = count ($lengthByPatient);
 		
+		//avoid divide by 0
+		if($numOfDischarges == 0)
+			$numOfDischarges = 1;
+		
 		$totalNumOfDays = array_sum($lengthByPatient);
 		
 		$avgLength = round ($totalNumOfDays/$numOfDischarges, 2);

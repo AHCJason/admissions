@@ -965,7 +965,9 @@ class PageControllerReport extends PageController {
 		}
 		
 		
-		$result = array_merge_recursive($returnData, $dates);
+		$result = array();
+		if(gettype($returnData) == "array" && gettype($dates) == "array")
+			$result = array_merge_recursive($returnData, $dates);
 				
 		
 		// Put total dischages and average LoS into each date section
@@ -1691,6 +1693,9 @@ class PageControllerReport extends PageController {
 		// Calculate Re-Admission Rate
 		$sentCount = count($obj->getPatientsSentToHospital($_dateStart, $_dateEnd, $_facility));
 		$admittedCount = count($obj->fetchAdmitsByFacility($_dateStart, $_dateEnd, $_facility));
+		
+		if($admittedCount == 0)
+			$admittedCount = 1;
 		
 		$readmitRate = number_format(($sentCount/$admittedCount) * 100, 1);
 
@@ -2491,16 +2496,16 @@ class PageControllerReport extends PageController {
 				),
 				'borders' => array(
 					'top' => array(
-						'style' => PHPExcel_Style_Border::BORDER_THIN,
+						'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 					),
 			        'left' => array(
-			          'style' => PHPExcel_Style_Border::BORDER_THIN,
+			          'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 			        ),
 			        'right' => array(
-			          'style' => PHPExcel_Style_Border::BORDER_THIN,
+			          'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 			        ),
 			        'bottom' => array(
-			          'style' => PHPExcel_Style_Border::BORDER_THIN,
+			          'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 			        )
 			      )
 			);
@@ -2511,16 +2516,16 @@ class PageControllerReport extends PageController {
 				),
 				'borders' => array(
 					'top' => array(
-						'style' => PHPExcel_Style_Border::BORDER_THIN,
+						'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 					),
 			        'left' => array(
-			          'style' => PHPExcel_Style_Border::BORDER_THIN,
+			          'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 			        ),
 			        'right' => array(
-			          'style' => PHPExcel_Style_Border::BORDER_THIN,
+			          'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 			        ),
 			        'bottom' => array(
-			          'style' => PHPExcel_Style_Border::BORDER_THIN,
+			          'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
 			        )
 			      )
 			);
@@ -2657,12 +2662,12 @@ class PageControllerReport extends PageController {
 						
 			
 			$objPHPExcel->getActiveSheet()->getStyle('E1:E'.$row)->getAlignment()->setWrapText(true); 
-			$objPHPExcel->getActiveSheet()->getStyle('A1:I'.$row)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+			$objPHPExcel->getActiveSheet()->getStyle('A1:I'.$row)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
 			
 			
 			#\PhpOffice\PhpSpreadsheet\Shared\Font::setAutoSizeMethod(\PhpOffice\PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
 			$objPHPExcel->getProperties()->setTitle("$facility->name");
-			$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+			#$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\PageSetup::ORIENTATION_LANDSCAPE);
 			$objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader("&24" . $facility->name . ' ' . $reportType);
 			$objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter("&RPrinted: " . date("m/d/y g:i a", strtotime("now")));

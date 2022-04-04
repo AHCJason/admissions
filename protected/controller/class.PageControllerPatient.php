@@ -743,22 +743,31 @@ class PageControllerPatient extends PageController {
 			// which notes file?
 			$idx = input()->idx;
 			smarty()->assign("idx", $idx);
+			
 			if ($patient->{"notes_file{$idx}"} != '') {
 				// widget will dynamically return the path to the asset
 				$widget = $patient->getFieldWidget("notes_file{$idx}");
 				
 				// resolve the filename out of the DB record
 				$pdfname = $patient->{"notes_file{$idx}"};
+				$pdfdesc = $patient->{"notes_name{$idx}"};
+				//push file desc to smarty
+				smarty()->assignByRef("pdfdesc", $pdfdesc);
+				
+				//path on disk
 				$pdfPath = $widget->getAssetPath() . "/{$pdfname}";
-
+				
 				// must exist on disk
 				if (file_exists($pdfPath)) {
+					//basically if the file exists render it and handle it client side with pdf.js
+					if(false)
+					{
 					try {
+						
 						// construct an Imagick instance
 						$image = new Imagick($pdfPath);
 						$totalPages = $image->getNumberImages();
 						smarty()->assign("totalPages", $totalPages);
-
 						// figure out how many pages actually exist in this chunk
 						if ($offset + $numPages + 1 > $totalPages) {
 							$thisChunkNumPages = $totalPages - $offset;
@@ -769,6 +778,7 @@ class PageControllerPatient extends PageController {
 						
 					} catch (ImagickException $e) {
 						$this->redirect(urldecode(input()->b));
+					}
 					}
 				} else {
 					feedback()->error("File not found on disk.");
