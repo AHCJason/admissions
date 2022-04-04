@@ -15,6 +15,7 @@ define('APP_PROTECTED_PATH', APP_PATH . "/protected");
 define('APP_PUBLIC_PATH', APP_PATH . "/public");
 
 //may need to be moved
+//shared composer path
 define('SHARED_COMPOSER_LIB', '/home/aptitude/vendor');
 
 if ($directory == 'Sites') { // then this is a local directory
