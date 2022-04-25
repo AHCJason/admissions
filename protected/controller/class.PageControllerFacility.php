@@ -1978,6 +1978,7 @@ elseif(input()->affirm == 'discharged_home') {
 
 		// get total number of patients on census per physician
 		$physicians = array();
+		$physicianTotalNum = 0;
 		foreach ($rooms as $room) {
 			if ($room->physician_id != '') {
 				#$physicians[$room->physician_id] += count($room->physician_id);
@@ -1986,7 +1987,8 @@ elseif(input()->affirm == 'discharged_home') {
 				else
 					$physicians[$room->physician_id] = 1;
 				#Not sure this is used, but counting the ID is an odd way to add.
-				#$physicianTotal += count($room->physician_id);
+				#$physicianTotalNum += count($room->physician_id);
+				$physicianTotalNum++;
 				if(isset($physicianTotal[$room->physician_id]))
 					$physicianTotal[$room->physician_id]+= 1;
 				else
@@ -2087,7 +2089,8 @@ elseif(input()->affirm == 'discharged_home') {
 		smarty()->assign("numOfRooms", $numOfRooms);
 		smarty()->assign("adc", $adc);		
 		smarty()->assign("physicians", $physicians);
-		smarty()->assign("physicianTotal", $physicianTotal);
+		//smarty()->assign("physicianTotal", $physicianTotal);
+		smarty()->assign("physicianTotal", $physicianTotalNum);
 		smarty()->assignByRef("emptyDates", $emptyDates);
 		smarty()->assignByRef("emptyRooms", $emptyRooms);
 		smarty()->assign("assignedRooms", $assignedRooms);
@@ -2105,7 +2108,7 @@ elseif(input()->affirm == 'discharged_home') {
 				
 		if (input()->export != '') {
 		
-			require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
+			//require_once APP_PROTECTED_PATH . "/lib/contrib/Classes/PHPExcel.php";
 			
 			$styleArray = array(
 				'font' => array(
