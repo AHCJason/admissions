@@ -36,7 +36,7 @@ function conflictAlert($params, &$smarty) {
 $smarty->registerPlugin("function", "scheduleMenu", "scheduleMenu");
 function scheduleMenu($params, $smarty) {
 	$schedule = $params['schedule'];
-	$weekSeed = $params['weekSeed'];
+	$weekSeed = @$params['weekSeed'];
 	$facility = CMS_Facility::generate();
 	$facility->load($schedule->facility);
 	$SITE_URL = SITE_URL;
@@ -115,7 +115,7 @@ function scheduleMenu($params, $smarty) {
 		
 	}
 	
-	if ($atHospitalRecord->id != '') {
+	if (@$atHospitalRecord->id != '') {
 		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Manage Hospital Stay</a></li>";
 	} elseif ($schedule->status == "Approved" || ($schedule->status == 'Discharged' && strtotime($schedule->datetime_discharge) >= strtotime('now'))) {
 		$options .= "\n<li><a href='{$SITE_URL}/?page=facility&amp;action=sendToHospital&amp;schedule={$schedule->pubid}&amp;path=" . urlencode(currentURL()) . "'>Initiate Hospital Stay</a></li>";
