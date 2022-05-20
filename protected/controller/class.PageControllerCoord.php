@@ -18,7 +18,11 @@ class PageControllerCoord extends PageController {
 		$user = auth()->getRecord();
 		
 		smarty()->assign('user', $user);
-		
+		if(isset($_SESSION["AptitudeCare"]["modules"]) && is_array($_SESSION["AptitudeCare"]["modules"])) {
+			smarty()->assignByRef("modules", $_SESSION["AptitudeCare"]["modules"]);
+		} else {
+			smarty()->assign("modules", array());
+		}
 		
 		// Optionally use a different week
 		if (input()->weekSeed != '') {

@@ -36,7 +36,9 @@
 		var protocol = pathArray[0];
 		var host = pathArray[2];
 		var redirectUrl = protocol + '//' + host;
-		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val();
+		var selMod = $('#module option:selected').val();
+		//window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val();
+		window.location.href = redirectUrl + "/?module=" + selMod;
 
 	});
 
@@ -58,7 +60,18 @@
 
 {/jQueryReady}
 
+{if $modules|@count > 1}
+<div id="change-module">
+	Module:
+	<select name="module" id="module">
+{foreach $modules as $module}
+		<option value="{$module}">{$module}</option>
+{/foreach}
+	</select>
+</div>
+{/if}
 
+{*
 {if $auth->getRecord()->module_access}
 <div id="change-module">
 	Module:
@@ -69,7 +82,7 @@
 	<input type="hidden" id="username" value="{$auth->getRecord()->email}" />
 	<input type="hidden" id="user-id" value="{$auth->getRecord()->pubid}" />
 </div>
-{/if}
+{/if}*}
 
 <div id="facility-admit-section">
 	<h1 class="text-center">{$week[0]|date_format:"%B %d, %Y"} <span class="text-16">to</span> {$week[6]|date_format:"%B %d, %Y"}

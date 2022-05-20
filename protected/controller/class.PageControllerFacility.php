@@ -39,6 +39,11 @@ class PageControllerFacility extends PageController {
 			}
 		}
 		smarty()->assignByRef("prevFacility", $prevFacility);
+		if(isset($_SESSION["AptitudeCare"]["modules"]) && is_array($_SESSION["AptitudeCare"]["modules"])) {
+			smarty()->assignByRef("modules", $_SESSION["AptitudeCare"]["modules"]);
+		} else {
+			smarty()->assign("modules", array());
+		}
 		
 		
 		if ($facility->valid() == false) {

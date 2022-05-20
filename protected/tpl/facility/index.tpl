@@ -45,7 +45,7 @@ $("#alt-week").datepicker({
 		var host = pathArray[2];
 		var redirectUrl = protocol + '//' + host;
 		var selMod = $('#module option:selected').val();
-		window.location.href = redirectUrl + "/?page=login&action=admission_login&username=" + $("#username").val() + "&id=" + $("#user-id").val() + "&module=" + selMod;
+		window.location.href = redirectUrl + "/?module=" + selMod;
 
 	});
 
@@ -86,7 +86,18 @@ $(window).load(function() {
 	});
 </script>
 
+{if $modules|@count > 1}
+<div id="change-module">
+	Module:
+	<select name="module" id="module">
+{foreach $modules as $module}
+		<option value="{$module}">{$module}</option>
+{/foreach}
+	</select>
+</div>
+{/if}
 
+{*
 {if $auth->getRecord()->module_access}
 <div id="change-module">
 	Module:
@@ -100,7 +111,7 @@ $(window).load(function() {
 	<input type="hidden" id="user-id" value="{$auth->getRecord()->pubid}" />
 </div>
 {/if}
-
+*}
 <div id="two-week-view"><a href="{$SITE_URL}/?page=facility&amp;action=two_week_view&amp;id={$facility->pubid}&amp;weekSeed={$weekSeed}&type=excel"><img src="{$SITE_URL}/images/icons/file_xls.png" style="height: 42px;" /></a> <a href="{$SITE_URL}/?page=facility&amp;action=two_week_view&amp;id={$facility->pubid}&amp;weekSeed={$weekSeed}&type=pdf" target="_blank"><img src="{$SITE_URL}/images/icons/file_pdf.png" style="height: 42px;" /></a></div>
 <br />
 
