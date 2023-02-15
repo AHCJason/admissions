@@ -183,7 +183,8 @@ $(window).load(function() {
 		{foreach $admits as $admit}
 			{$onsiteVisit = CMS_Onsite_Visit::generate()}
 			{$onsite = $onsiteVisit->fetchVisitInfo($admit->id)}
-			<div class="{if (($facility->id == 4 || $facility->id == 23) && $admit->paymethod == "HMO")}facility-hmo{elseif $admit->status == 'Under Consideration' && $admit->referral} facility-admit-pending{elseif $admit->status == 'Under Consideration'}facility-pending-no-referral{else}facility-admit{/if}">
+			<!-- !ABQ !CDA !NSH specific functionality -->
+			<div class="{if (($facility->id == 4 || $facility->id == 23 || $facility->id == 32) && $admit->paymethod == "HMO")}facility-hmo{elseif $admit->status == 'Under Consideration' && $admit->referral} facility-admit-pending{elseif $admit->status == 'Under Consideration'}facility-pending-no-referral{else}facility-admit{/if}">
 				{if $admit->transfer_facility != ''}
 					{$transferFacility = CMS_Facility::generate()}
 					{$transferFacility->load($admit->transfer_facility)}
@@ -231,8 +232,8 @@ $(window).load(function() {
 					{if $admit->transfer_facility != ''}{$transferFacility->name}{elseif $admit->admit_from != ''}{$admitFrom->name}{else}{$admit->getPatient()->referral_org_name}{/if}<br />
 					
 					
-					<!-- !ABQ specific functionality -->
-					{if $facility->id == 4 || $facility->id == 23}
+					<!-- !ABQ !CDA !NSH specific functionality -->
+					{if $facility->id == 4 || $facility->id == 23 || $facility->id == 32 }
 						{if ($admit->datetime_pickup != '')}
 							Pickup: {$admit->datetime_pickup}<br />
 						{/if}
@@ -348,7 +349,8 @@ $(window).load(function() {
 						{$discharge->getRoomNumber()} <strong>{$ptName}</strong><br />
 						Dr. {$physician}
 					{else}
-						Room {$discharge->getRoomNumber()} <br /><strong>{if (($facility->id == 4 || $facility->id == 23) && $discharge->discharge_to == 'Co-Pay')}<span class="text-11">$ </span>{/if}{$discharge->getPatient()->fullName()}</strong><br />Physician: {if $discharge->getPatient()->physician_id != ''}{$dPhysician->last_name}, {$dPhysician->first_name}{else}{$discharge->getPatient()->physician_name}{/if}{if $discharge->discharge_to == 'Discharge to Hospital (Bed Hold)'}<br />Bed hold until {$discharge->datetime_discharge_bedhold_end|date_format: "%m/%d/%Y"}{/if}
+						<!-- !ABQ !CDA !NSH specific functionality -->
+						Room {$discharge->getRoomNumber()} <br /><strong>{if (($facility->id == 4 || $facility->id == 23 || $facility->id == 32) && $discharge->discharge_to == 'Co-Pay')}<span class="text-11">$ </span>{/if}{$discharge->getPatient()->fullName()}</strong><br />Physician: {if $discharge->getPatient()->physician_id != ''}{$dPhysician->last_name}, {$dPhysician->first_name}{else}{$discharge->getPatient()->physician_name}{/if}{if $discharge->discharge_to == 'Discharge to Hospital (Bed Hold)'}<br />Bed hold until {$discharge->datetime_discharge_bedhold_end|date_format: "%m/%d/%Y"}{/if}
 						
 						<br />
 						{if ($discharge->discharge_to == "Transfer to another AHC facility")}
