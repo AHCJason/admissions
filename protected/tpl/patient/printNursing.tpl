@@ -7,7 +7,62 @@ $("#nursing-form input, #nursing-form select, #nursing-form textarea").attr("dis
 {/if}
 {/jQueryReady}
 
+<link rel="preload" href="{$SITE_URL}/fonts/glyphicons-halflings-regular.otf" as="font" type="font/otf" crossorigin>
 <style type="text/css">
+@media print {
+	input[type='checkbox'][disabled] {
+		display:absolute;
+		-webkit-appearance: none;
+		appearance: none;
+		background-color: #fff;
+		/* Not removed via appearance */
+		margin: 0;
+		margin-left: 3px;
+		margin-right: 3px;
+    }
+    input[type='radio'][disabled] {
+		display:absolute;
+		-webkit-appearance: none;
+		appearance: none;
+		background-color: #fff;
+		/* Not removed via appearance */
+		margin: 0;
+		margin-left: 3px;
+		margin-right: 3px;
+    }
+    input[type='checkbox'][disabled]:before {
+		content:'\e059'; position:static; 
+
+		display:inline-block;
+		font-family: 'Glyphicons Halflings Set';
+		font-style: normal;
+		font-weight: normal;
+    }
+    input[type='checkbox'][disabled][checked]:before {
+		content:'\e076';
+		position:static; 
+		display:inline-block;
+		font-family: 'Glyphicons Halflings Set';
+		font-style: normal;
+		font-weight: normal;
+    }
+    input[type='radio'][disabled]:before {
+		content:'\e123';
+		position:static; 
+		display:inline-block;
+		font-family: 'Glyphicons Halflings Set';
+		font-style: normal;
+		font-weight: normal;
+    }
+    input[type='radio'][disabled][checked]:before {
+		content:'\e124';
+		position:static; 
+		display:inline-block;
+		font-family: 'Glyphicons Halflings Set';
+		font-style: normal;
+		font-weight: normal;
+    }
+}
 html, body {
 	background: none;
 	font-size: 13px;
