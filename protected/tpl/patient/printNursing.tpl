@@ -9,6 +9,10 @@ $("#nursing-form input, #nursing-form select, #nursing-form textarea").attr("dis
 
 <link rel="preload" href="{$SITE_URL}/fonts/glyphicons-halflings-regular.otf" as="font" type="font/otf" crossorigin>
 <style type="text/css">
+@font-face {
+    font-family: 'Glyphicons Halflings Set';
+    src: url('https://ahc.aptitudecare.com/admission//fonts/glyphicons-halflings-regular.otf');
+}
 @media print {
 	input[type='checkbox'][disabled] {
 		display:absolute;
