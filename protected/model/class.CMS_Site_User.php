@@ -27,7 +27,6 @@ class CMS_Site_User extends CMS_Table {
 	);
 	protected static $metaLoaded = false;
 	protected $vc = null;
-	protected $default_facility_vouch = null;
 
 	public function getTitle() {
 		return "{$this->first} {$this->last}";
@@ -103,6 +102,8 @@ class CMS_Site_User extends CMS_Table {
 					//fix hanging fencewire.
 					$sql = trim($sql, ", ");
 					$sql .= ")";
+					#Debug header
+					#header("x-link-sql: $sql");
 					$this->_facilities = array();
 					$this->_facilities = db()->getRowsCustom($sql, $params, Model::clsname("facility"));
 					//die(db()->debugSQL());
@@ -162,9 +163,16 @@ class CMS_Site_User extends CMS_Table {
 		if ($this->isAdmissionsCoordinator() == 1) {
 			return SITE_URL . "?page=coord";
 		} else {
-			$facility = new CMS_Facility($this->getDefaultFacility()->pubid);
-			return SITE_URL . "?page=facility&id={$facility->pubid}";
-			//return SITE_URL . "/?page=facility&id={$this->default_facility}";
+			//if ($this->default_facility != '') {
+				//$facility = new CMS_Facility($this->getDefaultFacility()->pubid);
+				return SITE_URL . "?page=facility&id={$this->getDefaultFacility()->pubid}";
+				//return SITE_URL . "/?page=facility&id={$this->default_facility}";
+			//	} 
+			echo("going round in circles. HomeURL");
+			//let's not go round in circles
+			//else {
+			//	return SITE_URL . "?page=home";
+			//}
 		}
 	}
 	
@@ -317,7 +325,8 @@ class CMS_Site_User extends CMS_Table {
 	{
 		if(is_null($this->vc) && isset($_COOKIE['VouchCookie'])){
 			$ch = curl_init();
-			curl_setopt( $ch, CURLOPT_URL, "http://localhost:9090/vp_in_a_path/validate");
+			#curl_setopt( $ch, CURLOPT_URL, "http://localhost:9090/vp_in_a_path/validate");
+			curl_setopt( $ch, CURLOPT_URL, "http://".VOUCH_HOST . ":" . VOUCH_PORT . "/vp_in_a_path/validate");
 			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_HEADERFUNCTION,
 				function($curl, $header) use (&$headers)

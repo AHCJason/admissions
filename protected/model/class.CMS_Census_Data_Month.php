@@ -4,7 +4,8 @@ class CMS_Census_Data_Month extends CMS_Table {
 	public static $table = "census_data_month";
 	
 	public static function clearTable() {
-		db()->query("delete from census_data_month");
+		$obj = static::generate();
+		$obj->fetchCustom("delete from census_data_month");
 		return true;
 	}
 	

@@ -35,6 +35,7 @@ require_once APP_PROTECTED_PATH . "/lib/common.php";
  */
  
 require_once APP_PROTECTED_PATH . "/config/database.php";
+require_once APP_PROTECTED_PATH . "/config/config.php";
 
 
 

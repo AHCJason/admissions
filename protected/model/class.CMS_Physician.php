@@ -30,4 +30,14 @@ class CMS_Physician extends CMS_Table {
 		
 		return true;
 	}
+
+	public function load($id) {
+		try {
+			$obj = parent::load($id);
+			return $obj;
+		} catch (Throwable $e) {
+			return null;
+			//echo 'Caught exception physician: ',  $e->getMessage(), "\n";
+		}
+	}
 }

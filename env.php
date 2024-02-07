@@ -101,7 +101,7 @@ if ($directory == 'Sites') { // then this is a local directory
 
 
 } else {
-	$directory = array_pop(explode('/', dirname(dirname(__FILE__))));
+	$directory = @array_pop(explode('/', dirname(dirname(__FILE__))));
 	
 	if (file_exists(dirname(__FILE__) . "/.development")) { // if this file exists then it is a dev directory
 		define('APP_NAME', "{$directory}_dev");
