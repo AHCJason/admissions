@@ -15,6 +15,17 @@ if (DEVELOPMENT == true) {
 	ini_set('display_errors', 'off');
 }
 
+	// **PREVENTING SESSION HIJACKING**
+	// Prevents javascript XSS attacks aimed to steal the session ID
+	ini_set('session.cookie_httponly', 1);
+
+	// **PREVENTING SESSION FIXATION**
+	// Session ID cannot be passed through URLs
+	ini_set('session.use_only_cookies', 1);
+
+	// Uses a secure connection (HTTPS) if possible
+	ini_set('session.cookie_secure', 1);
+
 //Before anything heavy gets loaded, branch out to image subsystem if necessary.
 if (isset($_REQUEST['image']) && $_REQUEST['image'] != '') {
 		require_once ENGINE_PUBLIC_PATH . "/image.php";

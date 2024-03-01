@@ -1387,7 +1387,7 @@ class PageControllerPatient extends PageController {
 		try {
 			$obj->save();
 			$schedule->save();
-			feedback()->conf("Inquiry record for %s has been saved and entered into the system.", "<b>{$obj->first_name} {$obj->last_name}</b>");
+			feedback()->conf("Inquiry record for %s has been saved and entered into the system.", "{$obj->first_name} {$obj->last_name}");
 		} catch (ORMException $e) {
 			feedback()->error("An error was encountered while trying to save this patient record.");
 		}
@@ -1514,7 +1514,7 @@ class PageControllerPatient extends PageController {
 		
 		try {
 			$obj->save();
-			feedback()->conf("The on-site assessment for %s has been saved.", "<b>{$patient->first_name} {$patient->last_name}</b>");
+			feedback()->conf("The on-site assessment for %s has been saved.", "{$patient->first_name} {$patient->last_name}");
 		} catch (ORMException $e) {
 			feedback()->error("An error was encountered while trying to save the on-site assessment.");
 		}
@@ -2069,7 +2069,7 @@ class PageControllerPatient extends PageController {
 				
 				try {
 					$schedule->save();
-					feedback()->conf("The first visit for %s has been saved.", "<b>{$patient->first_name} {$patient->last_name}</b>");
+					feedback()->conf("The first visit for %s has been saved.", "{$patient->first_name} {$patient->last_name}");
 				} catch (ORMException $e) {
 					feedback()->error("An error was encountered while trying to save this patient record.");
 				}
@@ -2199,11 +2199,14 @@ class PageControllerPatient extends PageController {
 		return false;
 	}
 	
-	
+	/*
+	delete the _upload template, but it had been disconnected.
+	//Depricated functionality.
 	public function upload() {
 		$facilities = auth()->getRecord()->getFacilities();
 		smarty()->assign('facilities', $facilities);
 	}
+	/*
 	
 	public function uploadData() {
 		// Get CSV info and assign to the correct variables prior to saving
@@ -2320,5 +2323,5 @@ class PageControllerPatient extends PageController {
 		}
         
 	}
-	
+	*/
 }

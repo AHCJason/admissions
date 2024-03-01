@@ -70,7 +70,7 @@ $("#state").change(function() {
 	</tr>
 	{foreach $caseManagers as $cm}
 		<tr bgcolor="{cycle values="#d0e2f0,#ffffff"}">
-			<td><a href="{$SITE_URL}/?page=caseManager&amp;action=edit&amp;case_manager={$cm->pubid}">{$cm->last_name|default: '<span class="text-grey text-10">no last name</span>' nofilter}, {$cm->first_name}</a></td>
+			<td><a href="{$SITE_URL}/?page=caseManager&amp;action=edit&amp;case_manager={$cm->pubid}">{$cm->last_name|default: ***no last name***}, {$cm->first_name}</a></td> {*'<span class="text-grey text-10">no last name</span>' nofilter *}
 			<td>{$cm->phone}</td>
 			<td>{$cm->name}</td>
 		</tr>

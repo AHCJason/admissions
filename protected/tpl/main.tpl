@@ -24,13 +24,16 @@
  -->
  <script type="text/javascript" src="{$SITE_URL}js/general.js"></script>
 
+
+{*
+ #Used on ADC, HTML was commented out, so removed library JH Q1 2024
 <!-- Highcharts js framework -->
 <script src="{$SITE_URL}js/highcharts/js/highcharts.js"></script>
 
 <!-- Leaflet map framework -->
 <script src="{$SITE_URL}js/leaflet-0.7.2/leaflet.js"></script>
 <link rel="stylesheet" href="{$SITE_URL}js/leaflet-0.7.2/leaflet.css" />
-
+*}
 <script>
 	Shadowbox.init({
 		height: 425,
@@ -77,8 +80,8 @@
 		
 			<div id="user-info">
 				
-				Welcome, <a href="{$HOMEHEALTH_URL}?page=users&amp;action=user&amp;type=edit&amp;id={$auth->getRecord()->pubid}">{$auth->getRecord()->getFullName()}</a>{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>
-			
+				Welcome, <a href="{$HOMEHEALTH_URL}?page=users&amp;action=my_info">{$auth->getRecord()->getFullName()}</a>{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>
+				{*Welcome, <a href="{$HOMEHEALTH_URL}?page=users&amp;action=user&amp;type=edit&amp;id={$auth->getRecord()->pubid}">{$auth->getRecord()->getFullName()}</a>{if $isTV == 1} | <a href="{setURLVar(currentURL(), 'resOverride', 'desktop')}">Desktop Mode</a>{else} | <a href="{setURLVar(currentURL(), 'resOverride', 'TV')}">TV Mode</a>{/if} | <a href="{$SITE_URL}?page=login&amp;action=logout">Logout</a>*}
 			</div>
 			
 			<img src="{$SITE_URL}images/{$logo}" alt="AptitudeCare Logo" class="logo" />
@@ -93,10 +96,10 @@
 								<li><a href="{$SITE_URL}?page=hospital&amp;action=manage">Healthcare Facilities</a></li>
 								<li><a href="{$SITE_URL}?page=pharmacy&amp;action=manage">Pharmacies</a></li>
 								<li><a href="{$SITE_URL}?page=physician&amp;action=manage">Physicians/Surgeons</a></li>
-								{if $auth->getRecord()->isAdmissionsCoordinator() == 1}
+								{*{if $auth->getRecord()->isAdmissionsCoordinator() == 1}
 									<li><a href="{$HOMEHEALTH_URL}?page=users&amp;action=manage">Users</a></li>
-								{/if}
-								<li><a href="{$SITE_URL}?page=patient&amp;action=upload">Upload Patients</a></li>
+								{/if}*}
+								{*<li><a href="{$SITE_URL}?page=patient&amp;action=upload">Upload Patients</a></li>*}
 							</ul>
 						</li>	
 					<li><a href="#">Facility Info</a>

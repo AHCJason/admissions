@@ -1,6 +1,7 @@
 {setTitle title="ADC Report"}
 {*{include file="patient/export_icons.tpl"}*}
-
+{*Fully Remove Highcharts*}
+{*
 {if $view != 'year'}
 	{jQueryReady}		
 			
@@ -52,7 +53,7 @@
 					
 	{/jQueryReady}
 {/if}
-
+*}
 <div id="facility-id" class="hidden">{$facilityId}</div>
 <div id="page-view" class="hidden">{$view}</div>
 <div id="page-year" class="hidden">{$year}</div>
@@ -60,9 +61,12 @@
 <h1 class="text-center">Average Daily Census Report<br /><span class="text-16">for {$facility->name}</h1>
 {include file="report/index.tpl"}
 
+{* Highcharts Line Graph Removed before JH*}
+{*
 {if $view != 'year'}
 <!-- <div id="container" style="width:100%; height:400px;"></div> -->
 {/if}
+*}
 
 <table id="report-table" cellpadding="5" cellspacing="0">
 	<tr class="report-total">
